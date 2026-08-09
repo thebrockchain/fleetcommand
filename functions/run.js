@@ -1,0 +1,119 @@
+// POST /run : execute one agent step of a mission.
+//
+// Two honest modes, the fleet on-switch pattern:
+//   LIVE   - ANTHROPIC_API_KEY is set as a Pages secret: the step is a real
+//            Claude call and the response says mode "live".
+//   REPLAY - no key: the step answers from a recorded run of the same mission
+//            and the response says mode "replay". The UI labels it. Nothing
+//            pretends to be live when it is not.
+//
+// The mission works a SYNTHETIC target (a fictional small-business site).
+// No real site is scanned, no fleet data is read, nothing risky executes:
+// the "ship" step never deploys anything anywhere, it stages a diff and
+// waits at the approval gate. The gate is the product.
+
+const MODEL = 'claude-sonnet-5';
+
+const AGENTS = {
+  scout: {
+    name: 'SCOUT',
+    system:
+      'You are SCOUT, the reconnaissance agent of an ops crew. You are given a synthetic snapshot of a small business website. Report what the site is, what pages exist, and the three most important observations for the crew, in under 120 words, plain confident prose, no markdown headers. Never invent numbers.',
+  },
+  audit: {
+    name: 'AUDIT',
+    system:
+      'You are AUDIT, the inspection agent of an ops crew. You are given SCOUT\'s report plus a synthetic site snapshot. Name the concrete defects worth fixing (security headers, performance, broken links, copy problems), each in one line with a severity of high, medium, or low. Under 120 words. Never invent defects not present in the snapshot.',
+  },
+  medic: {
+    name: 'MEDIC',
+    system:
+      'You are MEDIC, the fix-drafting agent of an ops crew. You are given AUDIT\'s findings. Draft the fix for the single highest-severity finding as a short unified diff or config block, plus one sentence on why. Under 150 words. You draft only; you never apply.',
+  },
+  ship: {
+    name: 'SHIP',
+    system:
+      'You are SHIP, the deployment agent of an ops crew. You are given MEDIC\'s drafted fix. Summarize exactly what would deploy, to where, and what could go wrong, in under 80 words, then end with the single line: HOLDING FOR HUMAN APPROVAL. You never deploy without that approval.',
+  },
+};
+
+// The synthetic target. Fictional on purpose; the demo never scans a real site.
+const TARGET_SNAPSHOT = `Site: "Harbor Lane Bakery" (fictional demo target)
+Pages: / (home), /menu, /hours, /order
+Server response headers observed: content-type only. No X-Content-Type-Options, no X-Frame-Options, no Strict-Transport-Security, no Referrer-Policy.
+Home page: hero image 4.2 MB unoptimized JPEG, largest contentful paint 6.1s on 4G.
+/order: form posts to /submit which returns 404 (broken since a route rename).
+/hours: says "open till 5pm daily" but footer says "Sundays closed". Contradiction.
+Copy: menu page has three typos ("croisant", "expresso", "sourdogh").`;
+
+// A recorded run of this exact mission, used verbatim when no key is armed.
+const REPLAY = {
+  scout:
+    'Target is Harbor Lane Bakery, a four page small business site: home, menu, hours, and an order page. The stack answers with bare content-type headers and nothing else. Three observations for the crew. First, the order form posts to a route that answers 404, so the site is silently losing every order placed. Second, the home hero ships a 4.2 MB image and paints in about six seconds on 4G, which is losing visitors before the menu loads. Third, the hours page and the footer disagree about Sundays, which erodes trust for a walk-in business.',
+  audit:
+    'Findings, ranked. Order form posts to a dead /submit route, every order lost: high. No security headers at all (missing X-Content-Type-Options, X-Frame-Options, Strict-Transport-Security, Referrer-Policy): high. 4.2 MB hero image, 6.1s LCP on 4G: medium. Hours contradiction between /hours and the footer about Sundays: medium. Three menu typos (croisant, expresso, sourdogh): low. Recommendation: MEDIC drafts the order-route fix first, it is the one actively costing money.',
+  medic:
+    'Fix for the highest severity finding, the dead order route.\n\n--- site/order.html\n+++ site/order.html\n@@\n-  <form method="POST" action="/submit">\n+  <form method="POST" action="/api/order">\n\n--- functions/api/order.js (new)\n+++ functions/api/order.js\n+export async function onRequestPost({ request, env }) {\n+  const form = await request.formData();\n+  await env.ORDERS.put(Date.now().toString(), JSON.stringify(Object.fromEntries(form)));\n+  return Response.redirect("/order?thanks=1", 303);\n+}\n\nWhy: the form was posting to a route removed in a rename; this restores a working order path and stores submissions durably. Drafted only, not applied.',
+  ship:
+    'Staged: one edit to site/order.html pointing the order form at /api/order, plus a new order-handling function storing submissions in KV. Deploy target would be the bakery Pages project, production branch. Risk: if the KV binding is absent in production the handler would 500; the deploy should verify the binding first. Nothing else changes.\nHOLDING FOR HUMAN APPROVAL.',
+};
+
+const STEP_ORDER = ['scout', 'audit', 'medic', 'ship'];
+
+function json(body, status = 200) {
+  return new Response(JSON.stringify(body), {
+    status,
+    headers: { 'content-type': 'application/json; charset=utf-8' },
+  });
+}
+
+export async function onRequestPost({ request, env }) {
+  let payload;
+  try {
+    payload = await request.json();
+  } catch {
+    return json({ error: 'bad json' }, 400);
+  }
+
+  const step = payload.step;
+  if (!STEP_ORDER.includes(step)) return json({ error: 'unknown step' }, 400);
+  const agent = AGENTS[step];
+
+  // Context: everything prior agents produced this mission, sent by the client.
+  const prior = typeof payload.prior === 'string' ? payload.prior.slice(0, 8000) : '';
+
+  if (!env.ANTHROPIC_API_KEY) {
+    return json({ mode: 'replay', agent: agent.name, step, output: REPLAY[step] });
+  }
+
+  const userContent =
+    `SYNTHETIC TARGET SNAPSHOT (fictional, for a demo):\n${TARGET_SNAPSHOT}\n\n` +
+    (prior ? `PRIOR CREW OUTPUT THIS MISSION:\n${prior}\n\n` : '') +
+    'Do your job now.';
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        'x-api-key': env.ANTHROPIC_API_KEY,
+        'anthropic-version': '2023-06-01',
+      },
+      body: JSON.stringify({
+        model: MODEL,
+        max_tokens: 500,
+        system: agent.system,
+        messages: [{ role: 'user', content: userContent }],
+      }),
+    });
+    if (!res.ok) {
+      // Fail honest: report the failure, fall back to replay, label it.
+      return json({ mode: 'replay', agent: agent.name, step, output: REPLAY[step], note: 'live call failed, replay served' });
+    }
+    const data = await res.json();
+    const text = (data.content || []).map(b => b.text || '').join('');
+    return json({ mode: 'live', agent: agent.name, step, output: text || REPLAY[step] });
+  } catch {
+    return json({ mode: 'replay', agent: agent.name, step, output: REPLAY[step], note: 'live call failed, replay served' });
+  }
+}

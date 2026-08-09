@@ -1,0 +1,15 @@
+# Fleet Command: public agentic ops command center. The hackathon entry.
+# Cloudflare Pages project `fleetcommand`. Born public on purpose: 100%
+# synthetic demo data, zero fleet secrets, never touches the walled ainow
+# deploy. The real crew room stays private; this is the showpiece.
+#
+# Deploy: npx wrangler pages deploy --branch main   (from this folder)
+#
+# ON-SWITCH (fleet pattern): live agent runs arm only when ANTHROPIC_API_KEY
+# is set as a Pages secret (Brock's hands, a live secret key is human-only).
+# Until then /run answers in replay mode, and the UI says so honestly.
+#   cd fleetcommand && npx wrangler pages secret put ANTHROPIC_API_KEY
+
+name = "fleetcommand"
+compatibility_date = "2026-08-01"
+pages_build_output_dir = "site"

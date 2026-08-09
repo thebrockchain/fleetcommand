@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fleet Command</title>
+<meta name="description" content="An agentic operations command center. A crew of AI agents does the work; a human approval gate holds the trigger.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0d1018; --charcoal:#0f1320; --surf:#151a29; --line:#283150;
+  --ink:#eef1fb; --cream:#eaf0f7; --muted:#8b93af; --stone:#79839a; --faint:#565f7c;
+  --indigo:#7c6cff; --indigo-d:#5a4bd6; --indigo-soft:#a99dff;
+  --teal:#2dd4bf; --go:#2dd4bf; --teal-d:#1f9e8f; --amber:#f5b23d;
+  --disp:'Space Grotesk',sans-serif; --body:'Montserrat',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  background:var(--bg); color:var(--ink); font-family:var(--body);
+  height:100vh; overflow:hidden; display:flex; flex-direction:column;
+  font-size:clamp(12px,1.05vw,15px);
+}
+header{
+  display:flex; align-items:center; gap:1rem;
+  padding:.7rem 1.2rem; border-bottom:1px solid var(--line); background:var(--charcoal);
+}
+.mark{font-family:var(--disp); font-weight:700; font-size:1.25em; letter-spacing:.06em}
+.mark b{color:var(--indigo)}
+.sub{color:var(--muted); font-size:.85em}
+.spacer{flex:1}
+.chip{
+  font-size:.72em; letter-spacing:.12em; padding:.28em .7em; border-radius:999px;
+  border:1px solid var(--line); color:var(--muted); text-transform:uppercase;
+}
+.chip.live{border-color:var(--teal); color:var(--teal)}
+.chip.replay{border-color:var(--amber); color:var(--amber)}
+button.run{
+  font-family:var(--disp); font-weight:600; font-size:.95em; letter-spacing:.04em;
+  background:var(--indigo); color:#fff; border:0; border-radius:.55em;
+  padding:.55em 1.3em; cursor:pointer; transition:background .15s;
+}
+button.run:hover{background:var(--indigo-d)}
+button.run:disabled{background:var(--faint); cursor:default}
+main{
+  flex:1; display:grid; min-height:0;
+  grid-template-columns:1fr 2.1fr 1.15fr; gap:.8rem; padding:.8rem 1.2rem;
+}
+.col{display:flex; flex-direction:column; gap:.8rem; min-height:0}
+.panel{
+  background:var(--surf); border:1px solid var(--line); border-radius:.7em;
+  padding:.85em .95em; display:flex; flex-direction:column; min-height:0;
+}
+.panel h2{
+  font-family:var(--disp); font-size:.78em; font-weight:600; letter-spacing:.16em;
+  text-transform:uppercase; color:var(--stone); margin-bottom:.7em;
+}
+.agent{
+  display:flex; align-items:center; gap:.7em; padding:.55em .6em;
+  border:1px solid var(--line); border-radius:.55em; margin-bottom:.55em;
+  transition:border-color .2s, background .2s;
+}
+.agent:last-child{margin-bottom:0}
+.agent .dot{width:.6em;height:.6em;border-radius:50%;background:var(--faint);flex:none}
+.agent.working{border-color:var(--indigo); background:rgba(124,108,255,.07)}
+.agent.working .dot{background:var(--indigo); animation:pulse 1s infinite}
+.agent.done{border-color:var(--teal-d)}
+.agent.done .dot{background:var(--teal)}
+.agent.holding{border-color:var(--amber)}
+.agent.holding .dot{background:var(--amber); animation:pulse 1.4s infinite}
+@keyframes pulse{50%{opacity:.35}}
+.agent .aname{font-family:var(--disp); font-weight:600; letter-spacing:.08em}
+.agent .arole{color:var(--muted); font-size:.8em}
+.agent .astate{margin-left:auto; font-size:.72em; letter-spacing:.1em; color:var(--stone); text-transform:uppercase}
+#console{flex:1; overflow-y:auto; font-size:.92em; line-height:1.55; scrollbar-width:thin}
+#console .entry{margin-bottom:1em}
+#console .tag{
+  font-family:var(--disp); font-weight:600; font-size:.8em; letter-spacing:.12em;
+  color:var(--indigo-soft); margin-bottom:.25em; display:flex; gap:.6em; align-items:baseline;
+}
+#console .tag .mode{font-size:.85em; color:var(--amber); letter-spacing:.08em}
+#console .tag .mode.live{color:var(--teal)}
+#console .body{color:var(--cream); white-space:pre-wrap}
+#console .sys{color:var(--stone); font-style:italic}
+.target p{color:var(--muted); font-size:.86em; line-height:1.5}
+.target .tname{color:var(--cream); font-weight:600}
+#gate{border-color:var(--line)}
+#gate.armed{border-color:var(--amber); box-shadow:0 0 24px rgba(245,178,61,.12)}
+#gate .gbody{color:var(--muted); font-size:.88em; line-height:1.5; flex:1}
+#gate .gactions{display:flex; gap:.6em; margin-top:.8em}
+#gate button{
+  flex:1; font-family:var(--disp); font-weight:600; font-size:.88em;
+  border-radius:.5em; padding:.55em 0; cursor:pointer; border:1px solid var(--line);
+  background:transparent; color:var(--faint);
+}
+#gate.armed button.approve{background:var(--teal); border-color:var(--teal); color:#06211d}
+#gate.armed button.reject{border-color:var(--line); color:var(--muted)}
+#gate button:disabled{cursor:default; opacity:.45}
+.why p{color:var(--muted); font-size:.86em; line-height:1.55}
+.why b{color:var(--cream)}
+footer{
+  padding:.5rem 1.2rem; border-top:1px solid var(--line); background:var(--charcoal);
+  color:var(--faint); font-size:.78em; display:flex; gap:1em;
+}
+footer .f-right{margin-left:auto}
+@media (max-width:900px){
+  body{overflow:auto} main{grid-template-columns:1fr; overflow:visible}
+}
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <div class="mark">FLEET <b>COMMAND</b></div>
+    <div class="sub">An AI ops crew that does the work. A human gate that holds the trigger.</div>
+  </div>
+  <div class="spacer"></div>
+  <span class="chip" id="modeChip">standby</span>
+  <button class="run" id="runBtn">Run mission</button>
+</header>
+
+<main>
+  <div class="col">
+    <section class="panel">
+      <h2>The Crew</h2>
+      <div class="agent" id="ag-scout"><span class="dot"></span><div><div class="aname">SCOUT</div><div class="arole">Reconnaissance</div></div><span class="astate">idle</span></div>
+      <div class="agent" id="ag-audit"><span class="dot"></span><div><div class="aname">AUDIT</div><div class="arole">Inspection</div></div><span class="astate">idle</span></div>
+      <div class="agent" id="ag-medic"><span class="dot"></span><div><div class="aname">MEDIC</div><div class="arole">Fix drafting</div></div><span class="astate">idle</span></div>
+      <div class="agent" id="ag-ship"><span class="dot"></span><div><div class="aname">SHIP</div><div class="arole">Deployment</div></div><span class="astate">idle</span></div>
+    </section>
+    <section class="panel target">
+      <h2>Mission Target</h2>
+      <p><span class="tname">Harbor Lane Bakery</span> (a fictional demo site, synthetic on purpose). Four pages, a broken order form, no security headers, a six second load. The crew finds it, drafts the fix, and stages the ship.</p>
+    </section>
+  </div>
+
+  <div class="col">
+    <section class="panel" style="flex:1">
+      <h2>Mission Console</h2>
+      <div id="console">
+        <div class="entry"><div class="body sys">Crew standing by. Run the mission to watch four agents work a target in sequence: recon, inspection, fix drafting, and a staged deploy that stops at the human gate. Every risky action waits for a person. That is the product.</div></div>
+      </div>
+    </section>
+  </div>
+
+  <div class="col">
+    <section class="panel" id="gate">
+      <h2>Approval Gate</h2>
+      <div class="gbody" id="gateBody">Nothing staged. When SHIP stages a deploy it holds here, and only a human click releases it. AI drafts; people decide.</div>
+      <div class="gactions">
+        <button class="approve" id="approveBtn" disabled>Approve</button>
+        <button class="reject" id="rejectBtn" disabled>Send back</button>
+      </div>
+    </section>
+    <section class="panel why" style="flex:1">
+      <h2>Why This Matters</h2>
+      <p><b>Small teams cannot staff an ops crew.</b> Fleet Command gives one person four specialists that never sleep: recon, audit, fixes, and deploys.</p>
+      <p style="margin-top:.6em"><b>Autonomy without the gate is a liability.</b> Every consequential action stops at a named human. The gate is not a limitation of the product. The gate is the product.</p>
+      <p style="margin-top:.6em"><b>This engine runs a real fleet.</b> The same pattern operates a private production ops room managing dozens of live sites today.</p>
+    </section>
+  </div>
+</main>
+
+<footer>
+  <span>Built on Cloudflare Pages + Functions and the Anthropic API.</span>
+  <span class="f-right" id="modeNote">Mode is detected on first run.</span>
+</footer>
+
+<script>
+const STEPS = ['scout','audit','medic','ship'];
+const ROLE_VERBS = {scout:'scouting the target', audit:'inspecting findings', medic:'drafting the fix', ship:'staging the deploy'};
+const consoleEl = document.getElementById('console');
+const runBtn = document.getElementById('runBtn');
+const gate = document.getElementById('gate');
+const gateBody = document.getElementById('gateBody');
+const approveBtn = document.getElementById('approveBtn');
+const rejectBtn = document.getElementById('rejectBtn');
+const modeChip = document.getElementById('modeChip');
+const modeNote = document.getElementById('modeNote');
+
+function setAgent(step, state, label){
+  const el = document.getElementById('ag-' + step);
+  el.className = 'agent' + (state ? ' ' + state : '');
+  el.querySelector('.astate').textContent = label;
+}
+function addEntry(tagText, modeText, body, sys){
+  const e = document.createElement('div'); e.className = 'entry';
+  if(tagText){
+    const t = document.createElement('div'); t.className = 'tag';
+    t.textContent = tagText;
+    if(modeText){
+      const m = document.createElement('span');
+      m.className = 'mode' + (modeText === 'live' ? ' live' : '');
+      m.textContent = modeText;
+      t.appendChild(m);
+    }
+    e.appendChild(t);
+  }
+  const b = document.createElement('div'); b.className = 'body' + (sys ? ' sys' : '');
+  e.appendChild(b);
+  consoleEl.appendChild(e);
+  return b;
+}
+function typeInto(el, text){
+  // Wall-time based so a throttled background tab still finishes the mission.
+  return new Promise(resolve => {
+    const start = performance.now();
+    const total = Math.max(400, Math.min(2800, text.length * 4));
+    const t = setInterval(() => {
+      const frac = Math.min(1, (performance.now() - start) / total);
+      el.textContent = text.slice(0, Math.round(frac * text.length));
+      consoleEl.scrollTop = consoleEl.scrollHeight;
+      if(frac >= 1){ clearInterval(t); resolve(); }
+    }, 12);
+  });
+}
+
+async function runMission(){
+  runBtn.disabled = true;
+  approveBtn.disabled = true; rejectBtn.disabled = true;
+  gate.classList.remove('armed');
+  gateBody.textContent = 'Mission running. SHIP will hold here.';
+  STEPS.forEach(s => setAgent(s, '', 'idle'));
+  let prior = '';
+  for(const step of STEPS){
+    setAgent(step, 'working', 'working');
+    const sys = addEntry('', '', step.toUpperCase() + ' is ' + ROLE_VERBS[step] + '...', true);
+    let data;
+    try{
+      const res = await fetch('/run', {method:'POST', headers:{'content-type':'application/json'}, body:JSON.stringify({step, prior})});
+      data = await res.json();
+    }catch(err){
+      sys.textContent = 'The crew lost contact on ' + step.toUpperCase() + '. Run again.';
+      setAgent(step, '', 'error'); runBtn.disabled = false; return;
+    }
+    sys.parentElement.remove();
+    modeChip.textContent = data.mode;
+    modeChip.className = 'chip ' + data.mode;
+    modeNote.textContent = data.mode === 'live'
+      ? 'Live mode: each step is a real Claude call.'
+      : 'Replay mode: a recorded run of this mission, served honestly until the live key is armed.';
+    const body = addEntry(data.agent, data.mode, '', false);
+    await typeInto(body, data.output);
+    prior += '\n\n' + data.agent + ':\n' + data.output;
+    setAgent(step, step === 'ship' ? 'holding' : 'done', step === 'ship' ? 'holding' : 'done');
+  }
+  gate.classList.add('armed');
+  gateBody.textContent = 'SHIP has staged the order-route fix and is holding. Nothing deploys until you decide. This is the moment the whole product exists for.';
+  approveBtn.disabled = false; rejectBtn.disabled = false;
+  runBtn.disabled = false;
+}
+
+approveBtn.addEventListener('click', () => {
+  gate.classList.remove('armed');
+  approveBtn.disabled = true; rejectBtn.disabled = true;
+  setAgent('ship', 'done', 'released');
+  gateBody.textContent = 'Approved. In production this releases the staged deploy. In this demo nothing actually ships, and it says so, because honesty is a feature.';
+  addEntry('GATE', '', '', false).textContent = 'Human approval given. Deploy released (simulated in this demo). Mission complete.';
+  consoleEl.scrollTop = consoleEl.scrollHeight;
+});
+rejectBtn.addEventListener('click', () => {
+  gate.classList.remove('armed');
+  approveBtn.disabled = true; rejectBtn.disabled = true;
+  setAgent('ship', '', 'sent back');
+  setAgent('medic', 'working', 'revising');
+  gateBody.textContent = 'Sent back. MEDIC gets the fix again with your objection attached. The crew iterates; the gate holds.';
+  addEntry('GATE', '', '', false).textContent = 'Human sent the staged deploy back to MEDIC. Nothing shipped.';
+  consoleEl.scrollTop = consoleEl.scrollHeight;
+  setTimeout(() => setAgent('medic', 'done', 'done'), 1500);
+});
+runBtn.addEventListener('click', runMission);
+</script>
+</body>
+</html>
