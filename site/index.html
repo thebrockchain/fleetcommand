@@ -169,6 +169,10 @@ footer .f-right{margin-left:auto}
 </footer>
 
 <script>
+// ?pace=video stretches the mission to the demo video's voice-over timeline
+// (slower typing, a breath between agents). Content is identical either way.
+const PACE_VIDEO = new URLSearchParams(location.search).get('pace') === 'video';
+const sleep = ms => new Promise(r => setTimeout(r, ms));
 const STEPS = ['scout','audit','medic','ship'];
 const ROLE_VERBS = {scout:'scouting the target', audit:'inspecting findings', medic:'drafting the fix', ship:'staging the deploy'};
 const consoleEl = document.getElementById('console');
@@ -207,7 +211,7 @@ function typeInto(el, text){
   // Wall-time based so a throttled background tab still finishes the mission.
   return new Promise(resolve => {
     const start = performance.now();
-    const total = Math.max(400, Math.min(2800, text.length * 4));
+    const total = PACE_VIDEO ? text.length * 25 : Math.max(400, Math.min(2800, text.length * 4));
     const t = setInterval(() => {
       const frac = Math.min(1, (performance.now() - start) / total);
       el.textContent = text.slice(0, Math.round(frac * text.length));
@@ -245,6 +249,7 @@ async function runMission(){
     await typeInto(body, data.output);
     prior += '\n\n' + data.agent + ':\n' + data.output;
     setAgent(step, step === 'ship' ? 'holding' : 'done', step === 'ship' ? 'holding' : 'done');
+    if(PACE_VIDEO && step !== 'ship') await sleep(6000);
   }
   gate.classList.add('armed');
   gateBody.textContent = 'SHIP has staged the order-route fix and is holding. Nothing deploys until you decide. This is the moment the whole product exists for.';

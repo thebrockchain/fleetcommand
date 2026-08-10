@@ -1,5 +1,30 @@
 # Fleet Command demo video script (3:00)
 
+## THE CAPTURE IS RECORDED. Voice to these marks.
+
+`~/Desktop/fleetcommand-demo-capture.mp4` (2:44, 1920x1080, silent) was
+recorded 2026-08-10 by `submission/record.mjs` driving the live site in
+`?pace=video` mode. Read the VO below against these actual timestamps:
+
+| Mark | What is on screen | VO section below |
+|---|---|---|
+| 0:00 to 0:19 | idle cockpit, cursor still | 0:00 the problem |
+| 0:19 to 0:32 | cursor passes down the four crew cards | 0:20 the crew |
+| 0:33 | Run mission clicked | 0:35 mission starts |
+| 0:33 to 1:42 | SCOUT, AUDIT, MEDIC, SHIP report in turn | mission narration |
+| 1:42 | gate arms amber, SHIP holding | 1:45 the gate |
+| 1:54 | cursor hovers Send back | "I can send it back" |
+| 2:03 | Approve clicked, deploy released | "Or I approve" |
+| 2:12 to 2:37 | console drifts up to MEDIC's diff and back | 2:20 why it is real |
+| 2:37 to 2:44 | full cockpit, mission complete | 2:50 close |
+
+The chip reads REPLAY in this capture and the VO's replay line covers it
+honestly. To put the LIVE chip on camera instead: arm the key, then re-run
+`node record.mjs` from the capture rig (or ask a session to re-stage it).
+
+---
+
+
 One continuous screen capture of https://fleetcommand-2u0.pages.dev with voice
 over. No slides, no logo reel: judges reward watching the real thing work.
 Record at 1920x1080, cursor visible, room quiet. If live mode is armed before
