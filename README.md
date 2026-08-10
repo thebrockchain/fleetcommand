@@ -23,9 +23,16 @@ same engine in the open.
 
 ## Deploy
 
+LIVE at https://fleetcommand-2u0.pages.dev (Cloudflare Pages project
+`fleetcommand`; custom domain still an open decision in NEXT.md).
+
 `npx wrangler pages deploy --branch main` from this folder. No build step,
 zero dependencies. Security headers ride every response via
 `functions/_middleware.js`.
+
+Live-mode spend has no code cap on purpose: the guard is the KEY, armed only
+as a spend-capped key per NEXT.md, which is the fleet's prepaid-ceiling
+pattern. Replay mode costs nothing and is the default.
 
 ## Hackathon targets
 

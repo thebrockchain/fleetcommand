@@ -23,7 +23,9 @@
   `submission/ENTRY-IBM-BOB.md` (battle plan; that build happens inside its
   Sep 25 to 27 window by rule).
 - Custom domain decision: fleetcommand.thebrockchain.com or keep pages.dev.
-- Add to brock/CLAUDE.md creations table + README (scaffold told us).
+- Add to brock/CLAUDE.md creations table + README: DONE 2026-08-10, plus the
+  portfolio card and the live URL in this repo's README (audit.sh discovers
+  the live check from there).
 - Add the live surface to the /avery registry once deployed.
 - Consider a "send back" round trip that actually re-runs MEDIC with the
   objection (currently simulated client side).
