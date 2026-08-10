@@ -15,8 +15,13 @@
 
 ## Build follow-ups
 
-- Demo video (3 min, screen capture of a full mission run + gate decision).
-- Entry copy per event (no-slop pass, no em/en dashes).
+- Demo video: RECORDING is the open step; the script with timecodes and VO
+  is staged at `submission/VIDEO-SCRIPT.md`. Record, upload public to
+  YouTube, drop the link into both entry files.
+- Entry copy: STAGED and no-slop passed. `submission/ENTRY-DEVNETWORK.md`
+  (paste-ready), `submission/ENTRY-AIIFY-AGENTIC.md` (paste-ready),
+  `submission/ENTRY-IBM-BOB.md` (battle plan; that build happens inside its
+  Sep 25 to 27 window by rule).
 - Custom domain decision: fleetcommand.thebrockchain.com or keep pages.dev.
 - Add to brock/CLAUDE.md creations table + README (scaffold told us).
 - Add the live surface to the /avery registry once deployed.
