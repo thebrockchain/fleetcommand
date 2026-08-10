@@ -43,4 +43,13 @@ One build, three submissions (registration and submission are Brock's taps):
 2. Aiify Agentic AI World w/ Fetch.ai, $5,000 cash, submit by Sep 22.
 3. IBM Bob 2.0 Hackathon, $10,000, online 48 hour build Sep 25 to 27.
 
-`NEXT.md` carries what is still open.
+## The submission kit
+
+Everything an entry needs lives in `submission/`: paste-ready copy per event,
+the 3 minute VO script, the Playwright capture rig (`record.mjs`), and the
+marks table for the demo capture recorded 2026-08-10 (the silent mp4 sits at
+`~/Desktop/fleetcommand-demo-capture.mp4` awaiting Brock's voice). The site
+takes `?pace=video`, which only slows the mission to the VO timeline for
+recording; content is identical.
+
+`NEXT.md` carries what is still open, with tomorrow's resume point on top.

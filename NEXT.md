@@ -13,11 +13,25 @@
    gated edge). The 3 minute demo video + entry copy will be staged one tap
    ready before the DevNetwork window closes Sep 3.
 
+## Tomorrow (2026-08-11), the resume point
+
+The build, kit, and capture are DONE. The next three moves, in order:
+
+1. Brock voices the capture: play `~/Desktop/fleetcommand-demo-capture.mp4`
+   (2:44, silent) and read the VO against the marks table at the top of
+   `submission/VIDEO-SCRIPT.md`. Optional stronger take: arm the key first
+   (tap 1 below) and have a session re-run `submission/record.mjs` so the
+   LIVE chip is on camera.
+2. Upload the voiced video public to YouTube, drop the link into both entry
+   files in `submission/`.
+3. DevNetwork registration window opens Aug 17: register (tap 2), then
+   submit with `submission/ENTRY-DEVNETWORK.md` (tap 3). Closes Sep 3.
+
 ## Build follow-ups
 
-- Demo video: RECORDING is the open step; the script with timecodes and VO
-  is staged at `submission/VIDEO-SCRIPT.md`. Record, upload public to
-  YouTube, drop the link into both entry files.
+- Demo video: CAPTURE RECORDED 2026-08-10 (`~/Desktop/
+  fleetcommand-demo-capture.mp4`, rig at `submission/record.mjs`, marks in
+  `submission/VIDEO-SCRIPT.md`). Open: Brock's voice track + YouTube upload.
 - Entry copy: STAGED and no-slop passed. `submission/ENTRY-DEVNETWORK.md`
   (paste-ready), `submission/ENTRY-AIIFY-AGENTIC.md` (paste-ready),
   `submission/ENTRY-IBM-BOB.md` (battle plan; that build happens inside its
