@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{width:1200px;height:630px}
+  body{
+    font-family:'Montserrat',system-ui,sans-serif;color:#eef1fb;
+    background:
+      radial-gradient(60% 70% at 88% 6%, rgba(124,108,255,.20), transparent 62%),
+      radial-gradient(52% 62% at 6% 96%, rgba(45,212,191,.13), transparent 60%),
+      #0d1018;
+    padding:58px 64px;display:flex;flex-direction:column;justify-content:center;
+    position:relative;overflow:hidden;
+  }
+  .eyebrow{display:flex;align-items:center;gap:13px;margin-bottom:26px}
+  .dot{width:11px;height:11px;border-radius:50%;background:#2dd4bf;
+    box-shadow:0 0 0 5px rgba(45,212,191,.16)}
+  .eyebrow b{font-family:'Space Grotesk';font-weight:700;font-size:20px;
+    letter-spacing:.22em;text-transform:uppercase}
+  .eyebrow s{text-decoration:none;color:#565f7c;font-size:15px;font-weight:600;
+    letter-spacing:.14em;text-transform:uppercase}
+  h1{font-family:'Space Grotesk';font-weight:700;font-size:82px;line-height:.98;
+    letter-spacing:-.03em;max-width:16ch}
+  h1 b{font-weight:700;color:#7c6cff}
+  .lede{margin-top:20px;font-size:21px;line-height:1.4;color:#8b93af;max-width:46ch}
+  /* The crew, in order, with the gate drawn where it actually falls. */
+  .crew{margin-top:38px;display:flex;align-items:stretch;gap:0}
+  .ag{border:1px solid #283150;background:#151a29;padding:14px 20px;
+    display:flex;flex-direction:column;gap:4px;min-width:132px;border-radius:12px}
+
+  .ag n{font-family:'Space Grotesk';font-weight:700;font-size:19px;letter-spacing:.10em}
+  .ag e{font-size:13px;color:#565f7c;letter-spacing:.03em}
+  .arrow{display:flex;align-items:center;padding:0 12px;color:#565f7c;font-size:19px}
+  .gate{border-color:#f5b23d;
+    background:linear-gradient(180deg, rgba(245,178,61,.13), rgba(245,178,61,.05))}
+  .gate n{color:#f5b23d}
+  .gate e{color:#f5b23d;opacity:.85}
+  .stamp{position:absolute;right:60px;bottom:52px;font-size:14px;font-weight:600;
+    letter-spacing:.16em;text-transform:uppercase;color:#565f7c}
+</style></head>
+<body>
+  <div class="eyebrow"><span class="dot"></span><b>Fleet Command</b><s>Agentic ops</s></div>
+  <h1>The gate is the <b>product</b>.</h1>
+  <p class="lede">Four AI agents do the work. Every consequential action stops at a named human.</p>
+  <div class="crew">
+    <div class="ag"><n>SCOUT</n><e>recon</e></div><div class="arrow">&rsaquo;</div>
+    <div class="ag"><n>AUDIT</n><e>defects</e></div><div class="arrow">&rsaquo;</div>
+    <div class="ag"><n>MEDIC</n><e>the fix</e></div><div class="arrow">&rsaquo;</div>
+    <div class="ag gate"><n>SHIP</n><e>holds</e></div>
+  </div>
+  <div class="stamp">Synthetic demo target</div>
+</body></html>
