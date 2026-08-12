@@ -47,18 +47,24 @@ The build, kit, and capture are DONE. The next three moves, in order:
   og gate passes. But the row immediately surfaced TEN findings that were
   invisible before, and they are open:
 
-  **Four FAIL:** no `sitemap.xml` (404), no `rel=canonical`, no `<h1>` (the
-  "FLEET COMMAND" lockup is a styled `div`, so the page has no heading at all,
-  which is an accessibility defect before it is an SEO one), and no JSON to LD
-  structured data.
-  **Six WARN:** robots.txt has no `Sitemap:` line, thin 13 char title, no
-  `rel=icon` (search prints a blank square), no `/llms.txt`, no FAQPage or
-  HowTo schema, weak `cache-control` on the document.
+  **ALL FOUR FAILS ARE FIXED 2026-08-10** (commit `b0ac01a`, verified live):
+  the lockup is now a real `<h1>`, plus `rel=canonical`, `sitemap.xml` with the
+  robots `Sitemap:` line, a `WebApplication` JSON-LD block, and an SVG favicon.
+  Score went 16 of 26 to **22 of 26, zero fails**. The h1 swap was measured,
+  not assumed: the rendered box is identical to the `div` it replaced on x, y,
+  width, height, font, weight and letter spacing, so the recorded demo capture
+  still matches the live page exactly.
 
-  Score today is 16 of 26 clean. None of this was fixed in the same pass on
-  purpose: the demo capture is already recorded against the current markup and
-  the entry is about to be submitted, so changing the page's heading structure
-  is a decision to make deliberately, not a side effect of adding a row. The
-  `<h1>` and the favicon are the two that a judge could actually notice.
+  **Two things a future session must not undo.** The JSON-LD and canonical live
+  OUTSIDE the `share:start`/`share:end` markers on purpose, because
+  `tools/build-og.mjs` strips everything between them on every rebuild. And the
+  `<h1>` carries `class="mark"`, which is what keeps it visually identical; a
+  restyle that drops that class changes the header's appearance.
+
+  **Four WARN remain, each a real decision rather than an oversight:** thin 13
+  char title ("Fleet Command", left alone because it is the product name and
+  the og title judges see), no `/llms.txt`, no FAQPage or HowTo schema, and
+  weak `cache-control` on the document. The cache one is arguably correct for a
+  page whose mode chip must never be served stale.
 - Consider a "send back" round trip that actually re-runs MEDIC with the
   objection (currently simulated client side).
