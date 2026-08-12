@@ -1,2 +1,4 @@
 User-agent: *
 Allow: /
+
+Sitemap: https://fleetcommand-2u0.pages.dev/sitemap.xml
