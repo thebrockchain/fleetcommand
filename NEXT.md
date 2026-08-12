@@ -61,10 +61,21 @@ The build, kit, and capture are DONE. The next three moves, in order:
   `<h1>` carries `class="mark"`, which is what keeps it visually identical; a
   restyle that drops that class changes the header's appearance.
 
-  **Four WARN remain, each a real decision rather than an oversight:** thin 13
-  char title ("Fleet Command", left alone because it is the product name and
-  the og title judges see), no `/llms.txt`, no FAQPage or HowTo schema, and
-  weak `cache-control` on the document. The cache one is arguably correct for a
-  page whose mode chip must never be served stale.
+  **llms.txt and the answerable schema landed 2026-08-10** (commit `d366446`),
+  taking the score to **24 of 26**. `site/llms.txt` states what the site is,
+  including the honest notes (fictional target, the replay and live modes, and
+  that the private production room is not this site).
+
+  The markup is **HowTo, deliberately not FAQPage.** Google wants FAQ question
+  and answer text VISIBLE on the page carrying the markup, and this page is one
+  screen with zero scroll, so an honest FAQ block has nowhere to live here.
+  Every HowTo step is already on screen: the four agents in the crew column and
+  the human decision at the gate. If a future session adds a scrolling page,
+  FAQPage becomes available honestly at that point.
+
+  **Two WARN remain, both deliberate, do not "fix" them blindly.** The 13 char
+  title is the product name and is what judges see on the share card. The weak
+  `cache-control` is arguably correct here: the mode chip must never be served
+  stale, and a cached document could show REPLAY after the key is armed.
 - Consider a "send back" round trip that actually re-runs MEDIC with the
   objection (currently simulated client side).
