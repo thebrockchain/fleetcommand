@@ -26,9 +26,16 @@ same engine in the open.
 LIVE at https://fleetcommand-2u0.pages.dev (Cloudflare Pages project
 `fleetcommand`; custom domain still an open decision in NEXT.md).
 
-`npx wrangler pages deploy --branch main` from this folder. No build step,
-zero dependencies. Security headers ride every response via
-`functions/_middleware.js`.
+`npx wrangler pages deploy --branch main` from this folder. Deploying needs no
+build step and the site has zero runtime dependencies. Security headers ride
+every response via `functions/_middleware.js`.
+
+**The link preview card is generated, so do not hand edit it.** The block
+between the `share:start` and `share:end` markers in `site/index.html` and
+`site/404.html` is written by `node tools/build-og.mjs`, which renders
+`brand/og-card.html` into a hashed `site/og-*.png` and rewrites the tags to
+match. Change the card or the copy in those two sources, then re-run the tool
+and deploy. A hand edit inside the markers is overwritten on the next run.
 
 Live-mode spend has no code cap on purpose: the guard is the KEY, armed only
 as a spend-capped key per NEXT.md, which is the fleet's prepaid-ceiling

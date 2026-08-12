@@ -9,9 +9,10 @@
 2. **Register for the three events** (accepting ToS is human only):
    DevNetwork API+Cloud+AI (devpost), Aiify Agentic World (devpost), IBM Bob
    2.0. Links in README.
-3. **Submit** when the entry is staged (publishing under Brock's name is a
-   gated edge). The 3 minute demo video + entry copy will be staged one tap
-   ready before the DevNetwork window closes Sep 3.
+3. **Submit** (publishing under Brock's name is a gated edge). The entry copy
+   and the VO script are STAGED in `submission/` as of 2026-08-10, and the
+   silent capture is recorded. What is left before submitting is Brock's voice
+   track and the YouTube upload. DevNetwork closes Sep 3.
 
 ## Tomorrow (2026-08-11), the resume point
 
