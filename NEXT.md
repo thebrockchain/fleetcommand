@@ -42,5 +42,13 @@ The build, kit, and capture are DONE. The next three moves, in order:
   portfolio card and the live URL in this repo's README (audit.sh discovers
   the live check from there).
 - Add the live surface to the /avery registry once deployed.
+- **NO sites.mjs ROW, so no jack gate has ever graded this surface (verified
+  2026-08-10: `grep -c fleetcommand sites.mjs` returns 0).** This is the
+  silence bug that let the missing og tags ship on the hackathon entry: a
+  surface with no row in `brock/.claude/skills/jack/scripts/sites.mjs` gets
+  zero checks, and zero findings reads like a pass. Add the row
+  (`fleetcommand-2u0.pages.dev`, public, no wall) so the og, header, and
+  404 gates start covering it. Note that file lives in the `brock` repo, and
+  other sessions commit there, so stage the path by name, never `git add -A`.
 - Consider a "send back" round trip that actually re-runs MEDIC with the
   objection (currently simulated client side).

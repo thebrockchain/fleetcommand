@@ -10,9 +10,24 @@
  * HACKATHON ENTRY. The link is what a judge sees before the page loads, and a
  * grey tile is the first impression on the one thing being submitted.
  *
- * It went unnoticed for a structural reason worth writing down: the repo
- * existed on GitHub and was LIVE, but had never been cloned to this Mac, so
- * every local sweep skipped it. Same blind spot that hid volunteerz.
+ * It went unnoticed for a structural reason worth writing down, and the first
+ * telling of it here was wrong, so here is the checked version. This repo was
+ * NOT an uncloned repo: `git log --reverse` shows `commit (initial): Start
+ * fleetcommand` on 2026-08-09, `.git/logs/HEAD` carries no clone entry, and
+ * the folder was created on this Mac by `brock/tools/creation.mjs`. It has
+ * been on disk since birth, so "every local sweep skipped it" was not the
+ * cause.
+ *
+ * The real cause is the SILENCE BUG, the same one named in sites.mjs for ainow
+ * and allswept: a surface is only checked if it has a ROW in jack's site table
+ * (`brock/.claude/skills/jack/scripts/sites.mjs`), and this creation was born
+ * the same day and never got one. Zero rows means zero gates looked, and zero
+ * findings reads exactly like a pass. The repo being local was never enough;
+ * being LISTED is what earns a check.
+ *
+ * STILL OPEN as of 2026-08-10: fleetcommand has no sites.mjs row. Until it
+ * does, no jack sweep will ever grade this surface, including the og gate that
+ * would have caught the missing tags in the first place. Tracked in NEXT.md.
  *
  *   node tools/build-og.mjs
  *
