@@ -42,13 +42,23 @@ The build, kit, and capture are DONE. The next three moves, in order:
   portfolio card and the live URL in this repo's README (audit.sh discovers
   the live check from there).
 - Add the live surface to the /avery registry once deployed.
-- **NO sites.mjs ROW, so no jack gate has ever graded this surface (verified
-  2026-08-10: `grep -c fleetcommand sites.mjs` returns 0).** This is the
-  silence bug that let the missing og tags ship on the hackathon entry: a
-  surface with no row in `brock/.claude/skills/jack/scripts/sites.mjs` gets
-  zero checks, and zero findings reads like a pass. Add the row
-  (`fleetcommand-2u0.pages.dev`, public, no wall) so the og, header, and
-  404 gates start covering it. Note that file lives in the `brock` repo, and
-  other sessions commit there, so stage the path by name, never `git add -A`.
+- **DONE 2026-08-10: the sites.mjs row is added** (`brock` commit `dfc9496`),
+  listed `public`/`product`, so every jack gate now grades this surface. The
+  og gate passes. But the row immediately surfaced TEN findings that were
+  invisible before, and they are open:
+
+  **Four FAIL:** no `sitemap.xml` (404), no `rel=canonical`, no `<h1>` (the
+  "FLEET COMMAND" lockup is a styled `div`, so the page has no heading at all,
+  which is an accessibility defect before it is an SEO one), and no JSON to LD
+  structured data.
+  **Six WARN:** robots.txt has no `Sitemap:` line, thin 13 char title, no
+  `rel=icon` (search prints a blank square), no `/llms.txt`, no FAQPage or
+  HowTo schema, weak `cache-control` on the document.
+
+  Score today is 16 of 26 clean. None of this was fixed in the same pass on
+  purpose: the demo capture is already recorded against the current markup and
+  the entry is about to be submitted, so changing the page's heading structure
+  is a decision to make deliberately, not a side effect of adding a row. The
+  `<h1>` and the favicon are the two that a judge could actually notice.
 - Consider a "send back" round trip that actually re-runs MEDIC with the
   objection (currently simulated client side).
