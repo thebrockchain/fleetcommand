@@ -37,6 +37,16 @@ between the `share:start` and `share:end` markers in `site/index.html` and
 match. Change the card or the copy in those two sources, then re-run the tool
 and deploy. A hand edit inside the markers is overwritten on the next run.
 
+**The rest of the head sits OUTSIDE those markers on purpose.** `rel=canonical`,
+both JSON-LD blocks (`WebApplication` and `HowTo`), and the two icon links are
+deliberately above the `share:start` line, because the generator strips
+everything between the markers on every rebuild and anything tidied inside them
+would vanish silently. Two more things a cold session should not undo: the
+`<h1>` carries `class="mark"`, which is what keeps the header pixel identical to
+the `div` it replaced (the recorded demo capture depends on that), and the
+schema is `HowTo` rather than `FAQPage` because Google wants FAQ text visible on
+the page and this page is one screen with zero scroll. Reasoning in `NEXT.md`.
+
 Live-mode spend has no code cap on purpose: the guard is the KEY, armed only
 as a spend-capped key per NEXT.md, which is the fleet's prepaid-ceiling
 pattern. Replay mode costs nothing and is the default.
