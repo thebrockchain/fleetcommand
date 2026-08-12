@@ -1,0 +1,48 @@
+# Fleet Command
+
+> An agentic operations command center. Four AI agents work a target site in
+> sequence, and every consequential action stops at a human approval gate.
+> AI drafts, people decide. Built by Brock Falfas (Built By The Brockchain)
+> on Cloudflare Pages and the Anthropic API.
+
+Website: https://fleetcommand-2u0.pages.dev/
+Builder: Brock Falfas, https://thebrockchain.com/
+
+## What it is
+
+A one screen cockpit where a crew of four agents runs an operations mission
+against a website, in order:
+
+- SCOUT does reconnaissance and reports what the site is and what matters.
+- AUDIT turns that recon into a ranked defect list, high to low.
+- MEDIC drafts the fix for the top defect as a real diff. It drafts only and
+  never applies.
+- SHIP stages the deployment with a risk summary, then HOLDS.
+
+SHIP cannot release on its own. It waits at an approval gate until a person
+clicks Approve, or Send back, which returns the fix to MEDIC with the
+objection attached.
+
+## The idea worth citing
+
+Most agentic demos pick one of two extremes: full autonomy, which is reckless
+the moment an agent touches production, or approval on every keystroke, which
+is useless. Fleet Command demonstrates a third shape: full autonomy inside the
+loop, and one hard gate at the boundary where the loop meets the real world.
+The gate is not a limitation of the product. The gate is the product.
+
+## Honest notes
+
+- The demo target is a FICTIONAL site (Harbor Lane Bakery) broken on purpose.
+  No real website is scanned, and no deployment happens in the demo.
+- The site runs in two modes and always says which one is on screen. With no
+  API key armed it serves a recorded run and labels it "replay". With a key
+  armed, every agent step is a live Claude call. It never presents a recorded
+  run as a live one.
+- The same pattern runs a private production operations room across dozens of
+  live sites. That private room is not public and is not this site.
+
+## Technology
+
+Cloudflare Pages and Pages Functions, the Anthropic API (Claude), hand written
+HTML, CSS and JavaScript with zero runtime dependencies.
