@@ -3,8 +3,9 @@
 Event: https://api-cloud-ai-hackathon-2026.devpost.com/
 Window: Aug 17 to Sep 3, 2026. $45,500 cash pool, $12,500 overall winner.
 Tracks entered: the general API + Cloud + AI category (our stack IS the track),
-plus the **SerpApi challenge** ($3,000, 2 winners) which SCOUT genuinely uses.
-See the addendum at the bottom, written for that track's own judges.
+plus the **SerpApi challenge** ($3,000, 2 winners) which SCOUT genuinely uses,
+plus the **name.com challenge** ($2,000, 2 winners) which SHIP genuinely uses.
+See the addenda at the bottom, each written for that track's own judges.
 Registration and submission are Brock's taps. Everything below pastes in.
 
 ## Project name
@@ -34,10 +35,10 @@ every consequential action.
 
 Fleet Command is a one screen command center. Four specialist agents work a
 target site in sequence: SCOUT does reconnaissance on both the site and the
-market around it, AUDIT ranks the defects,
-MEDIC drafts the actual fix as a diff, and SHIP stages the deployment with a
-risk summary. Then SHIP stops. It holds at the approval gate until a human
-clicks Approve or Send back. Send back returns the fix to MEDIC with the
+market around it, AUDIT ranks the defects, MEDIC drafts the actual fix as a
+diff, and SHIP checks the deploy target's own domain and stages the deployment
+with a risk summary. Then SHIP stops. It holds at the approval gate until a
+human clicks Approve or Send back. Send back returns the fix to MEDIC with the
 objection attached. Approve releases the deploy. The hold is structural:
 SHIP has no code path that releases without the click.
 
@@ -49,18 +50,20 @@ loop without any real site being touched.
 
 Cloudflare Pages hosts the cockpit; a Pages Function (POST /run) runs each
 agent step against the Anthropic API (claude-sonnet-5), each agent with its
-own system prompt and the prior crew output as context. SCOUT additionally
-queries SerpApi for live Google results about the market the target competes
-in, cached in Workers KV. Zero dependencies, no build step, no framework:
-hand rolled HTML, CSS, and JS on the front, one Function on the back,
-security headers on every response via middleware.
+own system prompt and the prior crew output as context. Two agents reach
+outside: SCOUT queries SerpApi for live Google results about the market the
+target competes in, and SHIP queries the name.com registrar about the target's
+own domain before it stages. Both are cached in Workers KV. Zero dependencies,
+no build step, no framework: hand rolled HTML, CSS, and JS on the front, one
+Function on the back, security headers on every response via middleware.
 
-Two honest modes, on two independent switches. With no Anthropic key set,
-/run serves a recorded run and the UI labels it "replay". With no SerpApi key
-set, SCOUT gets clearly marked sample data and a second chip reads "serpapi
-sample". Arm either key and that half goes live on the same code path. The app
-never pretends a canned answer is live; we think honesty is a feature judges
-can verify, so both modes are always on screen.
+Three honest modes on three independent switches. With no Anthropic key set,
+/run serves a recorded run and the UI labels it "replay". With no SerpApi key,
+SCOUT gets clearly marked sample data and a chip reads "serpapi sample". With
+no name.com credential, SHIP's registrar check is labelled sample in the
+console the same way. Arm any key and that half goes live on the same code
+path. The app never pretends a canned answer is live; we think honesty is a
+feature judges can verify, so the mode is always on screen.
 
 ### Challenges we ran into
 
@@ -94,7 +97,7 @@ Command is the version everyone gets.
 ## Built with
 
 javascript, cloudflare-pages, cloudflare-workers, cloudflare-kv, anthropic,
-claude, serpapi
+claude, serpapi, name.com
 
 ## Links
 
@@ -158,3 +161,73 @@ results with the chip in teal.
 - `tools/test-market.mjs` - runs with `node tools/test-market.mjs`, proves the
   parser against a real SerpApi payload shape plus the ugly cases (missing
   snippet, missing position, question-less related_questions entry, junk).
+
+---
+
+# Addendum: name.com challenge ($2,000, 2 winners)
+
+Paste this into the name.com challenge submission. Written for that track's own
+judges, who will read the integration rather than the pitch.
+
+## How Fleet Command uses name.com
+
+SHIP is the deployment agent. Its job is to stage a change and name the risks
+before a human decides, and "where does this actually land" is one of those
+risks. For a small business it is the one nobody checks.
+
+The demo mission ends with the crew shipping an ORDERING flow onto a bakery's
+site. So before SHIP stages, it asks name.com whether that bakery owns its own
+name. In the demo it does not: harborlanebakery.com is still unregistered. That
+turns into a second line in SHIP's risk summary, and it is a genuine one. A shop
+about to take money online, on a name anyone could register tomorrow, is an
+exposure worth a human decision, and it is exactly the sort of thing that gets
+noticed a year too late.
+
+That is the whole reason this integration is here and not bolted on: a domain
+lookup is not decoration on a deploy agent, it is part of the pre-flight.
+
+## Available is not clear, and we say so
+
+`purchasable` from a registrar means registrable. It does not mean safe to use.
+Trademark is a separate question and this crew does not answer it, so SHIP is
+instructed in its own system prompt to raise the finding and state the limit
+plainly rather than tell an owner a name is theirs. The caveat travels inside
+the data block itself, so the model cannot lose it.
+
+We learned this the hard way elsewhere in our fleet: we once shortlisted two
+"available" .com names that turned out to be live nonprofits operating under
+those exact names. Registrable and clear are different questions.
+
+## Discipline with your API
+
+- One lookup per mission at most, and only SHIP. The other three agents never
+  touch the registrar.
+- The candidate list is fixed and the result caches in Cloudflare Workers KV for
+  12 hours, so a public page with a Run button never becomes a stream of
+  registrar calls.
+- Both halves of the credential are required or we do not call at all. A
+  half-armed integration that 401s on every mission is worse than an honestly
+  labelled sample.
+- `purchasePrice` is conditional in your own docs (it comes back only for
+  purchasable names), so the parser omits it rather than printing a confident
+  $0.00 on a taken domain. There is a test asserting exactly that.
+- Failure is honest and non blocking: a non 200, a timeout, or an empty result
+  falls back to clearly labelled sample data with the reason attached, and the
+  mission still completes at the gate.
+
+## Honesty about what a judge will see
+
+If the name.com credential is not armed on the public demo at judging time, the
+console entry is labelled "sample" in amber. We would rather show a labelled
+sample than pass canned data off as a real registrar answer. Arm the credential
+and the identical code path returns live results. `NAMECOM_ENV=dev` points the
+same code at your sandbox host.
+
+## Where the code is
+
+- `functions/_lib/domains.js` - the whole integration, commented.
+- `functions/run.js` - SHIP's step calls `domainCheck(env)` and puts
+  `formatDomains()` into the prompt.
+- `tools/test-domains.mjs` - runs with `node tools/test-domains.mjs`. Proves the
+  parser against a real core/v1 payload plus the ugly cases: a taken domain with
+  no price, a price arriving as a string, a result with no domainName, and junk.

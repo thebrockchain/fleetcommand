@@ -12,11 +12,14 @@
 // the "ship" step never deploys anything anywhere, it stages a diff and
 // waits at the approval gate. The gate is the product.
 //
-// SCOUT carries a third switch of its own: SERPAPI_KEY turns its market lens
-// into real Google results. See _lib/market.js for that contract. Searching the
-// open market is not scanning the target, so it stays inside the same promise.
+// Two agents carry a switch of their own, each honest about it on screen:
+//   SCOUT  SERPAPI_KEY               -> real Google results for the market lens
+//   SHIP   NAMECOM_USER + _TOKEN     -> a real registrar check on the deploy target
+// Both read public records about the open market, not the target's systems, so
+// they stay inside the same promise: nothing scans a real site.
 
 import { marketIntel, formatMarket, marketRows } from './_lib/market.js';
+import { domainCheck, formatDomains, domainRows } from './_lib/domains.js';
 
 const MODEL = 'claude-sonnet-5';
 
@@ -39,7 +42,7 @@ const AGENTS = {
   ship: {
     name: 'SHIP',
     system:
-      'You are SHIP, the deployment agent of an ops crew. You are given MEDIC\'s drafted fix. Summarize exactly what would deploy, to where, and what could go wrong, in under 80 words, then end with the single line: HOLDING FOR HUMAN APPROVAL. You never deploy without that approval.',
+      'You are SHIP, the deployment agent of an ops crew. You are given MEDIC\'s drafted fix plus a registrar check on the deploy target\'s own domain. Summarize exactly what would deploy, to where, and what could go wrong, in under 110 words. If the business does not appear to hold its own name, raise that as a risk worth a human decision, and say plainly that available means registrable and not cleared for use. Then end with the single line: HOLDING FOR HUMAN APPROVAL. You never deploy without that approval.',
   },
 };
 
@@ -61,7 +64,7 @@ const REPLAY = {
   medic:
     'Fix for the highest severity finding, the dead order route.\n\n--- site/order.html\n+++ site/order.html\n@@\n-  <form method="POST" action="/submit">\n+  <form method="POST" action="/api/order">\n\n--- functions/api/order.js (new)\n+++ functions/api/order.js\n+export async function onRequestPost({ request, env }) {\n+  const form = await request.formData();\n+  await env.ORDERS.put(Date.now().toString(), JSON.stringify(Object.fromEntries(form)));\n+  return Response.redirect("/order?thanks=1", 303);\n+}\n\nWhy: the form was posting to a route removed in a rename; this restores a working order path and stores submissions durably. Drafted only, not applied.',
   ship:
-    'Staged: one edit to site/order.html pointing the order form at /api/order, plus a new order-handling function storing submissions in KV. Deploy target would be the bakery Pages project, production branch. Risk: if the KV binding is absent in production the handler would 500; the deploy should verify the binding first. Nothing else changes.\nHOLDING FOR HUMAN APPROVAL.',
+    'Staged: one edit to site/order.html pointing the order form at /api/order, plus a new order-handling function storing submissions in KV. Deploy target would be the bakery Pages project, production branch. Risk: if the KV binding is absent in production the handler would 500; the deploy should verify the binding first. Second risk, and it needs a person: the registrar check says harborlanebakery.com is still unregistered, so this shop is about to take online orders on a name it does not own. Available means registrable, not cleared for use; a trademark search is a separate job this crew does not do. Nothing else changes.\nHOLDING FOR HUMAN APPROVAL.',
 };
 
 const STEP_ORDER = ['scout', 'audit', 'medic', 'ship'];
@@ -92,15 +95,29 @@ export async function onRequestPost({ request, env }) {
   // search per mission is the entire cost of the market lens. The rest of the
   // crew works from SCOUT's report, the way a real crew would.
   const market = step === 'scout' ? await marketIntel(env) : null;
-  const intel = market
-    ? {
-        market: market.source,
-        marketQuery: market.query,
-        marketCache: market.cache,
-        marketRows: marketRows(market),
-        ...(market.note ? { marketNote: market.note } : {}),
-      }
-    : {};
+
+  // SHIP is the only agent that touches the registrar, and only once, right
+  // before it stages. Nothing earlier in the chain needs it.
+  const domains = step === 'ship' ? await domainCheck(env) : null;
+
+  const intel = {
+    ...(market
+      ? {
+          market: market.source,
+          marketQuery: market.query,
+          marketCache: market.cache,
+          marketRows: marketRows(market),
+          ...(market.note ? { marketNote: market.note } : {}),
+        }
+      : {}),
+    ...(domains
+      ? {
+          domains: domains.source,
+          domainRows: domainRows(domains),
+          ...(domains.note ? { domainNote: domains.note } : {}),
+        }
+      : {}),
+  };
 
   if (!env.ANTHROPIC_API_KEY) {
     return json({ mode: 'replay', agent: agent.name, step, output: REPLAY[step], ...intel });
@@ -109,6 +126,7 @@ export async function onRequestPost({ request, env }) {
   const userContent =
     `SYNTHETIC TARGET SNAPSHOT (fictional, for a demo):\n${TARGET_SNAPSHOT}\n\n` +
     (market ? `${formatMarket(market)}\n\n` : '') +
+    (domains ? `${formatDomains(domains)}\n\n` : '') +
     (prior ? `PRIOR CREW OUTPUT THIS MISSION:\n${prior}\n\n` : '') +
     'Do your job now.';
 

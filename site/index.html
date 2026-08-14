@@ -252,7 +252,7 @@ footer .f-right{margin-left:auto}
 </main>
 
 <footer>
-  <span>Built on Cloudflare Pages + Functions, the Anthropic API, and SerpApi.</span>
+  <span>Built on Cloudflare Pages + Functions, the Anthropic API, SerpApi, and name.com.</span>
   <span class="f-right" id="modeNote">Mode is detected on first run.</span>
 </footer>
 
@@ -347,6 +347,10 @@ async function runMission(){
     if(step === 'scout' && Array.isArray(data.marketRows) && data.marketRows.length){
       const mb = addEntry('MARKET / SERPAPI', data.market, '', false);
       await typeInto(mb, 'Google search: "' + data.marketQuery + '"\n' + data.marketRows.join('\n'));
+    }
+    if(step === 'ship' && Array.isArray(data.domainRows) && data.domainRows.length){
+      const db = addEntry('DEPLOY TARGET / NAME.COM', data.domains, '', false);
+      await typeInto(db, 'Registrar check: does this business own its own name?\n' + data.domainRows.join('\n'));
     }
     prior += '\n\n' + data.agent + ':\n' + data.output;
     setAgent(step, step === 'ship' ? 'holding' : 'done', step === 'ship' ? 'holding' : 'done');
