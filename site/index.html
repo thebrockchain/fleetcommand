@@ -105,7 +105,8 @@ header{
   border:1px solid var(--line); color:var(--muted); text-transform:uppercase;
 }
 .chip.live{border-color:var(--teal); color:var(--teal)}
-.chip.replay{border-color:var(--amber); color:var(--amber)}
+.chip.replay,.chip.sample{border-color:var(--amber); color:var(--amber)}
+.chip[hidden]{display:none}
 button.run{
   font-family:var(--disp); font-weight:600; font-size:.95em; letter-spacing:.04em;
   background:var(--indigo); color:#fff; border:0; border-radius:.55em;
@@ -202,6 +203,8 @@ footer .f-right{margin-left:auto}
     <div class="sub">An AI ops crew that does the work. A human gate that holds the trigger.</div>
   </div>
   <div class="spacer"></div>
+  <!-- Hidden until a mission reports, so the opening frame stays as recorded. -->
+  <span class="chip" id="searchChip" hidden>search</span>
   <span class="chip" id="modeChip">standby</span>
   <button class="run" id="runBtn">Run mission</button>
 </header>
@@ -249,7 +252,7 @@ footer .f-right{margin-left:auto}
 </main>
 
 <footer>
-  <span>Built on Cloudflare Pages + Functions and the Anthropic API.</span>
+  <span>Built on Cloudflare Pages + Functions, the Anthropic API, and SerpApi.</span>
   <span class="f-right" id="modeNote">Mode is detected on first run.</span>
 </footer>
 
@@ -267,6 +270,7 @@ const gateBody = document.getElementById('gateBody');
 const approveBtn = document.getElementById('approveBtn');
 const rejectBtn = document.getElementById('rejectBtn');
 const modeChip = document.getElementById('modeChip');
+const searchChip = document.getElementById('searchChip');
 const modeNote = document.getElementById('modeNote');
 
 function setAgent(step, state, label){
@@ -330,8 +334,20 @@ async function runMission(){
     modeNote.textContent = data.mode === 'live'
       ? 'Live mode: each step is a real Claude call.'
       : 'Replay mode: a recorded run of this mission, served honestly until the live key is armed.';
+    // SCOUT's market lens, shown as its own entry so the search layer is
+    // visible and not just inferred from SCOUT's prose. Labelled live or sample
+    // exactly like the crew is.
+    if(data.market){
+      searchChip.hidden = false;
+      searchChip.textContent = 'serpapi ' + data.market;
+      searchChip.className = 'chip ' + (data.market === 'live' ? 'live' : 'sample');
+    }
     const body = addEntry(data.agent, data.mode, '', false);
     await typeInto(body, data.output);
+    if(step === 'scout' && Array.isArray(data.marketRows) && data.marketRows.length){
+      const mb = addEntry('MARKET / SERPAPI', data.market, '', false);
+      await typeInto(mb, 'Google search: "' + data.marketQuery + '"\n' + data.marketRows.join('\n'));
+    }
     prior += '\n\n' + data.agent + ':\n' + data.output;
     setAgent(step, step === 'ship' ? 'holding' : 'done', step === 'ship' ? 'holding' : 'done');
     if(PACE_VIDEO && step !== 'ship') await sleep(6000);

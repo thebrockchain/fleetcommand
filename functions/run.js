@@ -11,6 +11,12 @@
 // No real site is scanned, no fleet data is read, nothing risky executes:
 // the "ship" step never deploys anything anywhere, it stages a diff and
 // waits at the approval gate. The gate is the product.
+//
+// SCOUT carries a third switch of its own: SERPAPI_KEY turns its market lens
+// into real Google results. See _lib/market.js for that contract. Searching the
+// open market is not scanning the target, so it stays inside the same promise.
+
+import { marketIntel, formatMarket, marketRows } from './_lib/market.js';
 
 const MODEL = 'claude-sonnet-5';
 
@@ -18,7 +24,7 @@ const AGENTS = {
   scout: {
     name: 'SCOUT',
     system:
-      'You are SCOUT, the reconnaissance agent of an ops crew. You are given a synthetic snapshot of a small business website. Report what the site is, what pages exist, and the three most important observations for the crew, in under 120 words, plain confident prose, no markdown headers. Never invent numbers.',
+      'You are SCOUT, the reconnaissance agent of an ops crew. You are given a synthetic snapshot of a small business website, plus a market search showing who ranks for the trade this business is in. Report what the site is, what the market around it looks like, and the three most important observations for the crew, in under 140 words, plain confident prose, no markdown headers. Never invent numbers. If the market search is labelled SAMPLE, never present it as real search data.',
   },
   audit: {
     name: 'AUDIT',
@@ -49,7 +55,7 @@ Copy: menu page has three typos ("croisant", "expresso", "sourdogh").`;
 // A recorded run of this exact mission, used verbatim when no key is armed.
 const REPLAY = {
   scout:
-    'Target is Harbor Lane Bakery, a four page small business site: home, menu, hours, and an order page. The stack answers with bare content-type headers and nothing else. Three observations for the crew. First, the order form posts to a route that answers 404, so the site is silently losing every order placed. Second, the home hero ships a 4.2 MB image and paints in about six seconds on 4G, which is losing visitors before the menu loads. Third, the hours page and the footer disagree about Sundays, which erodes trust for a walk-in business.',
+    'Target is Harbor Lane Bakery, a four page small business site: home, menu, hours, and an order page. The stack answers with bare content-type headers and nothing else. The market it sits in is already settled: every shop ranking for bakery online ordering sells order-ahead with pickup slots, and buyers are actively searching how to set that up. Three observations for the crew. First, the order form posts to a route that answers 404, so the site is silently losing every order placed, in a market where ordering is the whole battleground. Second, the home hero ships a 4.2 MB image and paints in about six seconds on 4G, which is losing visitors before the menu loads. Third, the hours page and the footer disagree about Sundays, which erodes trust for a walk-in business.',
   audit:
     'Findings, ranked. Order form posts to a dead /submit route, every order lost: high. No security headers at all (missing X-Content-Type-Options, X-Frame-Options, Strict-Transport-Security, Referrer-Policy): high. 4.2 MB hero image, 6.1s LCP on 4G: medium. Hours contradiction between /hours and the footer about Sundays: medium. Three menu typos (croisant, expresso, sourdogh): low. Recommendation: MEDIC drafts the order-route fix first, it is the one actively costing money.',
   medic:
@@ -82,12 +88,27 @@ export async function onRequestPost({ request, env }) {
   // Context: everything prior agents produced this mission, sent by the client.
   const prior = typeof payload.prior === 'string' ? payload.prior.slice(0, 8000) : '';
 
+  // SCOUT is the only agent that searches. Recon is its job, and one cached
+  // search per mission is the entire cost of the market lens. The rest of the
+  // crew works from SCOUT's report, the way a real crew would.
+  const market = step === 'scout' ? await marketIntel(env) : null;
+  const intel = market
+    ? {
+        market: market.source,
+        marketQuery: market.query,
+        marketCache: market.cache,
+        marketRows: marketRows(market),
+        ...(market.note ? { marketNote: market.note } : {}),
+      }
+    : {};
+
   if (!env.ANTHROPIC_API_KEY) {
-    return json({ mode: 'replay', agent: agent.name, step, output: REPLAY[step] });
+    return json({ mode: 'replay', agent: agent.name, step, output: REPLAY[step], ...intel });
   }
 
   const userContent =
     `SYNTHETIC TARGET SNAPSHOT (fictional, for a demo):\n${TARGET_SNAPSHOT}\n\n` +
+    (market ? `${formatMarket(market)}\n\n` : '') +
     (prior ? `PRIOR CREW OUTPUT THIS MISSION:\n${prior}\n\n` : '') +
     'Do your job now.';
 
@@ -108,12 +129,12 @@ export async function onRequestPost({ request, env }) {
     });
     if (!res.ok) {
       // Fail honest: report the failure, fall back to replay, label it.
-      return json({ mode: 'replay', agent: agent.name, step, output: REPLAY[step], note: 'live call failed, replay served' });
+      return json({ mode: 'replay', agent: agent.name, step, output: REPLAY[step], note: 'live call failed, replay served', ...intel });
     }
     const data = await res.json();
     const text = (data.content || []).map(b => b.text || '').join('');
-    return json({ mode: 'live', agent: agent.name, step, output: text || REPLAY[step] });
+    return json({ mode: 'live', agent: agent.name, step, output: text || REPLAY[step], ...intel });
   } catch {
-    return json({ mode: 'replay', agent: agent.name, step, output: REPLAY[step], note: 'live call failed, replay served' });
+    return json({ mode: 'replay', agent: agent.name, step, output: REPLAY[step], note: 'live call failed, replay served', ...intel });
   }
 }
