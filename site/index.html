@@ -79,11 +79,22 @@
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#0d1018; --charcoal:#0f1320; --surf:#151a29; --line:#283150;
+  --bg:#0b0e15; --charcoal:#0d1119; --surf:#141926; --surf-hi:#1a2032; --line:#232b45;
   --ink:#eef1fb; --cream:#eaf0f7; --muted:#8b93af; --stone:#79839a; --faint:#565f7c;
   --indigo:#7c6cff; --indigo-d:#5a4bd6; --indigo-soft:#a99dff;
-  --teal:#2dd4bf; --go:#2dd4bf; --teal-d:#1f9e8f; --amber:#f5b23d;
+  --teal:#2dd4bf; --go:#2dd4bf; --teal-d:#1f9e8f;
+
+  /* AMBER IS RESERVED. It appears on this screen at exactly one moment: when
+     SHIP holds at the approval gate. No chip, no label, no status may wear it.
+     That is what teaches the colour a meaning, and it is the whole design idea.
+     See DESIGN.md before spending it anywhere else. */
+  --amber:#f5b23d;
+
   --disp:'Space Grotesk',sans-serif; --body:'Montserrat',sans-serif;
+
+  --dur-fast:150ms; --dur:220ms; --dur-slow:380ms;
+  --ease:cubic-bezier(.2,.7,.2,1);
+  --ease-out:cubic-bezier(0,0,.2,1);
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%}
@@ -92,11 +103,22 @@ body{
   height:100vh; overflow:hidden; display:flex; flex-direction:column;
   font-size:clamp(12px,1.05vw,15px);
 }
+/* One soft radial behind the stage so the page is not a grid of flat
+   rectangles. Fixed, non-interactive, costs nothing and never animates. */
+body::before{
+  content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
+  background:
+    radial-gradient(60% 50% at 50% 34%, rgba(124,108,255,.10), transparent 70%),
+    radial-gradient(40% 40% at 82% 82%, rgba(45,212,191,.05), transparent 70%);
+}
+header,main,footer{position:relative; z-index:1}
 header{
   display:flex; align-items:center; gap:1rem;
   padding:.7rem 1.2rem; border-bottom:1px solid var(--line); background:var(--charcoal);
 }
-.mark{font-family:var(--disp); font-weight:700; font-size:1.25em; letter-spacing:.06em}
+/* The display moment. Real scale and tight tracking here so everything else can
+   stay quiet; contrast is what makes a page look decided rather than themed. */
+.mark{font-family:var(--disp); font-weight:700; font-size:1.62em; letter-spacing:-.005em; line-height:1}
 .mark b{color:var(--indigo)}
 .sub{color:var(--muted); font-size:.85em}
 .spacer{flex:1}
@@ -105,7 +127,9 @@ header{
   border:1px solid var(--line); color:var(--muted); text-transform:uppercase;
 }
 .chip.live{border-color:var(--teal); color:var(--teal)}
-.chip.replay,.chip.sample{border-color:var(--amber); color:var(--amber)}
+/* Deliberately NOT amber. A mode label is housekeeping; amber belongs to the
+   gate alone. Replay and sample are honest states, not warnings. */
+.chip.replay,.chip.sample{border-color:var(--line); color:var(--stone)}
 .chip[hidden]{display:none}
 button.run{
   font-family:var(--disp); font-weight:600; font-size:.95em; letter-spacing:.04em;
@@ -119,9 +143,17 @@ main{
   grid-template-columns:1fr 2.1fr 1.15fr; gap:.8rem; padding:.8rem 1.2rem;
 }
 .col{display:flex; flex-direction:column; gap:.8rem; min-height:0}
+/* Elevation with intent. Side panels recede; the console is the stage and sits
+   nearest. Same 1px border everywhere was the flatness problem. */
 .panel{
   background:var(--surf); border:1px solid var(--line); border-radius:.7em;
   padding:.85em .95em; display:flex; flex-direction:column; min-height:0;
+  transition:opacity var(--dur-slow) var(--ease), transform var(--dur-slow) var(--ease);
+}
+.col:first-child .panel{background:var(--charcoal)}
+#stage{
+  background:var(--surf-hi);
+  box-shadow:0 1px 0 rgba(255,255,255,.04) inset, 0 18px 50px -24px rgba(0,0,0,.9);
 }
 .panel h2{
   font-family:var(--disp); font-size:.78em; font-weight:600; letter-spacing:.16em;
@@ -150,24 +182,61 @@ main{
   font-family:var(--disp); font-weight:600; font-size:.8em; letter-spacing:.12em;
   color:var(--indigo-soft); margin-bottom:.25em; display:flex; gap:.6em; align-items:baseline;
 }
-#console .tag .mode{font-size:.85em; color:var(--amber); letter-spacing:.08em}
+#console .tag .mode{font-size:.85em; color:var(--stone); letter-spacing:.08em}
 #console .tag .mode.live{color:var(--teal)}
 #console .body{color:var(--cream); white-space:pre-wrap}
 #console .sys{color:var(--stone); font-style:italic}
 .target p{color:var(--muted); font-size:.86em; line-height:1.5}
 .target .tname{color:var(--cream); font-weight:600}
-#gate{border-color:var(--line)}
-#gate.armed{border-color:var(--amber); box-shadow:0 0 24px rgba(245,178,61,.12)}
+/* ---- THE ONE MOTION IDEA ----------------------------------------------
+   SHIP holds, and the screen answers: the crew and the target settle back a
+   step, the gate lifts and takes the only amber on the page, and Approve
+   becomes the only lit control. Nothing else on this screen animates on its
+   own. Remove this and the product's whole point becomes a border colour. */
+#gate{border-color:var(--line); transition:border-color var(--dur-slow) var(--ease),
+      box-shadow var(--dur-slow) var(--ease), transform var(--dur-slow) var(--ease-out)}
+#gate.armed{
+  border-color:var(--amber);
+  box-shadow:0 0 0 1px rgba(245,178,61,.35), 0 22px 60px -26px rgba(245,178,61,.55);
+  transform:translateY(-4px) scale(1.012);
+}
+body.gated .col:first-child .panel{opacity:.55; transform:scale(.985)}
+body.gated .why{opacity:.55}
+#gate .ghead{
+  font-family:var(--disp); font-weight:700; font-size:1.5em; letter-spacing:-.01em;
+  line-height:1.1; color:var(--ink); margin-bottom:.35em;
+  opacity:0; transform:translateY(6px);
+  transition:opacity var(--dur-slow) var(--ease-out), transform var(--dur-slow) var(--ease-out);
+}
+#gate.armed .ghead{opacity:1; transform:none; color:var(--amber)}
 #gate .gbody{color:var(--muted); font-size:.88em; line-height:1.5; flex:1}
 #gate .gactions{display:flex; gap:.6em; margin-top:.8em}
 #gate button{
   flex:1; font-family:var(--disp); font-weight:600; font-size:.88em;
-  border-radius:.5em; padding:.55em 0; cursor:pointer; border:1px solid var(--line);
+  border-radius:.5em; padding:.6em 0; cursor:pointer; border:1px solid var(--line);
   background:transparent; color:var(--faint);
+  transition:background var(--dur-fast) var(--ease), transform var(--dur-fast) var(--ease),
+             color var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease),
+             box-shadow var(--dur) var(--ease);
 }
-#gate.armed button.approve{background:var(--teal); border-color:var(--teal); color:#06211d}
+/* Approve is the only lit control on the screen at this moment. That is the
+   point: the decision is a person's, and it should be the brightest thing here. */
+#gate.armed button.approve{
+  background:var(--teal); border-color:var(--teal); color:#06211d;
+  box-shadow:0 8px 24px -10px rgba(45,212,191,.7);
+}
+#gate.armed button.approve:hover{transform:translateY(-1px)}
+#gate.armed button.approve:active{transform:translateY(0)}
 #gate.armed button.reject{border-color:var(--line); color:var(--muted)}
-#gate button:disabled{cursor:default; opacity:.45}
+#gate.armed button.reject:hover{border-color:var(--stone); color:var(--ink)}
+#gate button:disabled{cursor:default; opacity:.45; transform:none; box-shadow:none}
+
+/* Some people get motion sick. State changes stay instant for them; nothing
+   above is load bearing on the animation itself, only on the end state. */
+@media (prefers-reduced-motion: reduce){
+  *{animation-duration:.01ms !important; animation-iteration-count:1 !important;
+    transition-duration:.01ms !important}
+}
 .why p{color:var(--muted); font-size:.86em; line-height:1.55}
 .why b{color:var(--cream)}
 footer{
@@ -225,7 +294,7 @@ footer .f-right{margin-left:auto}
   </div>
 
   <div class="col">
-    <section class="panel" style="flex:1">
+    <section class="panel" id="stage" style="flex:1">
       <h2>Mission Console</h2>
       <div id="console">
         <div class="entry"><div class="body sys">Crew standing by. Run the mission to watch four agents work a target in sequence: recon, inspection, fix drafting, and a staged deploy that stops at the human gate. Every risky action waits for a person. That is the product.</div></div>
@@ -236,6 +305,7 @@ footer .f-right{margin-left:auto}
   <div class="col">
     <section class="panel" id="gate">
       <h2>Approval Gate</h2>
+      <div class="ghead" id="gateHead">Your call.</div>
       <div class="gbody" id="gateBody">Nothing staged. When SHIP stages a deploy it holds here, and only a human click releases it. AI drafts; people decide.</div>
       <div class="gactions">
         <button class="approve" id="approveBtn" disabled>Approve</button>
@@ -267,6 +337,7 @@ const consoleEl = document.getElementById('console');
 const runBtn = document.getElementById('runBtn');
 const gate = document.getElementById('gate');
 const gateBody = document.getElementById('gateBody');
+const gateHead = document.getElementById('gateHead');
 const approveBtn = document.getElementById('approveBtn');
 const rejectBtn = document.getElementById('rejectBtn');
 const modeChip = document.getElementById('modeChip');
@@ -314,6 +385,8 @@ async function runMission(){
   runBtn.disabled = true;
   approveBtn.disabled = true; rejectBtn.disabled = true;
   gate.classList.remove('armed');
+  document.body.classList.remove('gated');
+  gateHead.textContent = 'Your call.';
   gateBody.textContent = 'Mission running. SHIP will hold here.';
   STEPS.forEach(s => setAgent(s, '', 'idle'));
   let prior = '';
@@ -356,7 +429,11 @@ async function runMission(){
     setAgent(step, step === 'ship' ? 'holding' : 'done', step === 'ship' ? 'holding' : 'done');
     if(PACE_VIDEO && step !== 'ship') await sleep(6000);
   }
+  // The one moment. The crew settles back, the gate takes the only amber on
+  // the screen, and Approve becomes the only lit control.
   gate.classList.add('armed');
+  document.body.classList.add('gated');
+  gateHead.textContent = 'Your call.';
   gateBody.textContent = 'SHIP has staged the order-route fix and is holding. Nothing deploys until you decide. This is the moment the whole product exists for.';
   approveBtn.disabled = false; rejectBtn.disabled = false;
   runBtn.disabled = false;
@@ -364,6 +441,7 @@ async function runMission(){
 
 approveBtn.addEventListener('click', () => {
   gate.classList.remove('armed');
+  document.body.classList.remove('gated');
   approveBtn.disabled = true; rejectBtn.disabled = true;
   setAgent('ship', 'done', 'released');
   gateBody.textContent = 'Approved. In production this releases the staged deploy. In this demo nothing actually ships, and it says so, because honesty is a feature.';
@@ -372,6 +450,7 @@ approveBtn.addEventListener('click', () => {
 });
 rejectBtn.addEventListener('click', () => {
   gate.classList.remove('armed');
+  document.body.classList.remove('gated');
   approveBtn.disabled = true; rejectBtn.disabled = true;
   setAgent('ship', '', 'sent back');
   setAgent('medic', 'working', 'revising');
