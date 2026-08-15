@@ -1,39 +1,41 @@
-# Fleet Command demo video script (2:44)
+# Fleet Command demo video script (2:42)
 
-## THE CAPTURE IS FINAL. Voice to these marks.
+## THE FILM IS CUT. Voice to these marks.
 
-`~/Desktop/fleetcommand-demo-capture.mp4` (2:44, 1920x1080, silent), recorded
-against the live site with everything in: the frosted cockpit, the living
-field, the slam, the crew telemetry, the SerpApi market lens and the name.com
-registrar check. `-PREV.mp4` beside it is the older take and shows opaque
-panels. Do not voice that one.
+`~/Desktop/fleetcommand-demo.mp4` (2:42, 1920x1080, 30fps, silent).
+
+**This is an edited piece, not a screen recording.** It was captured at true 4K
+(3840x2160, the page rendered at deviceScaleFactor 2 so text is genuinely retina
+rather than upscaled), then cut down to 1080p. Every close up is a 1:1 crop of
+the 4K master, so a shot on the gate is exactly as sharp as the wide.
+`fleetcommand-demo-4k-master.mp4` beside it is the uncut 4K original.
 
 **It opens cold on the moment the software stops.** The mission in that cold
 open is real and complete, rendered fast so the gate arrives in seconds.
 
-**2:44 leaves 16 seconds under the 3:00 cut. Do not rush.**
+**2:42 leaves 18 seconds under the 3:00 cut. Do not rush.**
 
-| Mark | On screen | VO |
-|---|---|---|
-| 0:00 to 0:04 | cold open: a real mission tears past, telemetry ticking | **say nothing** |
-| **0:04** | **THE SLAM.** Wave cuts the whole screen, colour drains, field freezes | 0:04 the hook |
-| 0:04 to 0:10 | held on the drained screen, gate blazing, "Your call." | |
-| 0:10 | hard cut back to the idle cockpit | 0:10 the reset |
-| 0:15 to 0:23 | cursor passes down the crew | 0:15 the crew |
-| 0:23 | Run mission clicked | 0:23 the target |
-| 0:43 | SCOUT reports, MARKET / SERPAPI lands | 0:43 the market lens |
-| 0:45 to 1:58 | AUDIT, MEDIC, SHIP report; telemetry fills in | mission narration |
-| **1:58** | **THE SLAM, earned** | **1:58 the gate** |
-| 2:11 | DEPLOY TARGET / NAME.COM registrar check | 2:11 the second risk |
-| 2:16 | hover Send back | "I can send it back" |
-| 2:25 | Approve clicked | "Or I approve" |
-| 2:31 to 2:39 | console revisits the market lens, then MEDIC's diff | 2:31 why it is real |
-| 2:40 to 2:44 | full cockpit | 2:40 close |
+| Mark | Shot | On screen | VO |
+|---|---|---|---|
+| 0:00 | close, drifting | a real mission tears past, telemetry ticking | **say nothing** |
+| **0:03** | **WIDE, still** | **THE SLAM.** Wave crosses everything, colour drains, field freezes | 0:03 the hook |
+| 0:09 | wide | hard cut back to the idle cockpit | 0:09 the reset |
+| 0:14 | **close on the crew** | the four agents and their live telemetry | 0:14 the crew |
+| 0:22 | medium, console | Run mission clicked | 0:22 the target |
+| 0:42 | closer | SCOUT reports, MARKET / SERPAPI lands | 0:42 the market lens |
+| | medium, slow drift | AUDIT, MEDIC, SHIP report; telemetry fills in | mission narration |
+| **1:57** | **WIDE, still** | **THE SLAM, earned** | **1:57 the gate** |
+| 2:10 | close, console | DEPLOY TARGET / NAME.COM registrar check | 2:10 the second risk |
+| 2:16 | **close on the gate** | hover Send back, then Approve | the decision |
+| 2:30 | medium | back over the market lens and MEDIC's diff | why it is real |
+| 2:37 | wide | full cockpit | close |
 
-Watch the field behind the glass while you read: it drifts at idle, agitates
-while the crew works, and stops dead at the gate. Chips read sample and replay
-in this capture and the VO covers that honestly. Arm the keys and re-run the
-rig to put LIVE on camera.
+The scale changes on the cut, never mid-sentence, and the two slams are the only
+shots that stay wide the whole way through: the wave crosses the entire screen,
+so cutting in would cut off the reason the shot exists.
+
+Marks come from `submission/marks.json`, which the rig writes and the edit reads.
+Do not retype them: they were hardcoded once and a re-record moved every beat.
 
 ---
 

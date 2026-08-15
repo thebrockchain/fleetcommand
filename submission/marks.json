@@ -1,0 +1,61 @@
+{
+  "duration": 161.97457313537598,
+  "marks": [
+    {
+      "t": 2.42,
+      "name": "cold open: mission running fast"
+    },
+    {
+      "t": 3.51,
+      "name": "COLD OPEN SLAM"
+    },
+    {
+      "t": 9.8,
+      "name": "cut to idle cockpit"
+    },
+    {
+      "t": 14.8,
+      "name": "crew pass"
+    },
+    {
+      "t": 22.89,
+      "name": "click Run mission"
+    },
+    {
+      "t": 42.43,
+      "name": "SCOUT market lens on screen"
+    },
+    {
+      "t": 117.34,
+      "name": "GATE ARMS"
+    },
+    {
+      "t": 130.35,
+      "name": "registrar check on screen"
+    },
+    {
+      "t": 136.07,
+      "name": "hover Send back"
+    },
+    {
+      "t": 144.45,
+      "name": "click Approve"
+    },
+    {
+      "t": 150.36,
+      "name": "market lens revisited"
+    },
+    {
+      "t": 153.37,
+      "name": "MEDIC diff"
+    },
+    {
+      "t": 157.99,
+      "name": "close on cockpit"
+    },
+    {
+      "t": 161.99,
+      "name": "cut"
+    }
+  ]
+}
