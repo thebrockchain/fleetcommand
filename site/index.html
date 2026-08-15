@@ -106,12 +106,12 @@ body{
 /* One soft radial behind the stage so the page is not a grid of flat
    rectangles. Fixed, non-interactive, costs nothing and never animates. */
 body::before{
-  content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
+  content:''; position:fixed; inset:0; pointer-events:none; z-index:1;
   background:
     radial-gradient(60% 50% at 50% 34%, rgba(124,108,255,.10), transparent 70%),
     radial-gradient(40% 40% at 82% 82%, rgba(45,212,191,.05), transparent 70%);
 }
-header,main,footer{position:relative; z-index:1}
+header,main,footer{position:relative; z-index:2}
 header{
   display:flex; align-items:center; gap:1rem;
   padding:.7rem 1.2rem; border-bottom:1px solid var(--line); background:var(--charcoal);
@@ -249,6 +249,30 @@ body.gated .why{opacity:.55}
 #gate button:disabled{cursor:default; opacity:.45; transform:none; box-shadow:none}
 
 
+
+/* ---- THE FIELD --------------------------------------------------------
+   The cockpit had no presence at rest. It was correct and it was quiet, and
+   quiet loses in a feed of dozens of entries. 61% of Awwwards Site of the Day
+   winners in Q1 2026 are real-time graphics, and the two Developer Award
+   winners this week hand rolled theirs, so this is hand rolled too.
+
+   It is NOT wallpaper, and that distinction is the whole reason it is allowed
+   to exist on a screen whose one motion idea is the gate. The field is the
+   fleet the crew watches, and it answers the mission:
+     idle     slow drift, dim, alive but patient
+     working  agitated and brighter, the system under load
+     GATE     it FREEZES, completely, and the colour goes out of it
+   That freeze is the point. When a human is needed, the whole world stops,
+   not just a panel. It makes the slam bigger than the slam could ever be
+   on its own.
+
+   Costs one canvas and no dependency. Sleeps when the tab is hidden so it
+   never burns a phone battery in a background tab. */
+#bg{position:fixed; inset:0; z-index:0; pointer-events:none;
+    transition:opacity 900ms linear, filter 900ms linear}
+body.gated #bg{filter:saturate(0) brightness(.55); opacity:.5}
+@media (prefers-reduced-motion: reduce){ #bg{display:none} }
+
 /* ---- THE SLAM ---------------------------------------------------------
    Hand rolled, no library, ~90 lines of canvas. The two Developer Award
    winners on the Awwwards portfolio page this week ship raw canvas and a 10kb
@@ -332,6 +356,7 @@ footer .f-right{margin-left:auto}
   <!-- share:end -->
 </head>
 <body>
+<canvas id="bg" aria-hidden="true"></canvas>
 <canvas id="fx" aria-hidden="true"></canvas>
 <header>
   <div>
@@ -420,6 +445,96 @@ const searchChip = document.getElementById('searchChip');
 const modeNote = document.getElementById('modeNote');
 
 
+
+// Declared HERE, above both the field and the slam, because both read it at
+// module init. It used to live down in the slam block, and the field's first
+// paint hit the temporal dead zone and threw, which killed the whole module:
+// no mission, no gate, no console, a page that looked fine and did nothing.
+const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+// ---- THE FIELD -----------------------------------------------------------
+// Hand rolled, no dependency. A slow current of short strokes behind the
+// cockpit: the fleet the crew is watching. It reacts to mission state, which is
+// what earns it a place on a screen whose one motion idea is the gate.
+//   idle     slow, dim
+//   working  faster and brighter, the system under load
+//   frozen   the gate armed and a person is needed, so the world stops dead
+const bg = document.getElementById('bg');
+const bgc = bg.getContext('2d');
+let strokes = [], bgRaf = 0, energy = 0, targetEnergy = 0, frozen = false;
+
+function seedField(){
+  const d = Math.min(devicePixelRatio || 1, 2);
+  bg.width = Math.round(innerWidth * d);
+  bg.height = Math.round(innerHeight * d);
+  bgc.setTransform(d, 0, 0, d, 0, 0);
+  // Density scales with area so a laptop and a monitor look like the same
+  // design rather than the same number of dots spread thinner.
+  const n = Math.round((innerWidth * innerHeight) / 4200);
+  strokes = Array.from({ length: n }, () => ({
+    x: Math.random() * innerWidth,
+    y: Math.random() * innerHeight,
+    a: Math.random() * Math.PI * 2,
+    s: 0.10 + Math.random() * 0.34,          // base speed
+    l: 10 + Math.random() * 30,              // stroke length
+    o: 0.16 + Math.random() * 0.40,          // base opacity
+    t: Math.random() < 0.13,                 // a few carry the teal
+  }));
+}
+
+// paint=true renders one frame and returns, with no loop and no motion. Used on
+// load and on resize so the field is ALWAYS on screen, even in a tab that is
+// not focused yet. Animating a hidden tab is waste; showing nothing until
+// somebody clicks is a blank screen, and those are different problems.
+function drawField(_ts, paint){
+  bgRaf = 0;
+  if(REDUCED) return;
+  // Ease toward the target so the field swells and settles rather than
+  // snapping between states, which would read as a bug.
+  energy += (targetEnergy - energy) * 0.045;
+
+  bgc.clearRect(0, 0, innerWidth, innerHeight);
+  bgc.lineCap = 'round';
+  for(const p of strokes){
+    if(!frozen && !paint){
+      // A slow curl so the current wanders instead of marching in a line.
+      p.a += Math.sin((p.x + p.y) * 0.0016) * 0.004;
+      const v = p.s * (0.5 + energy * 2.4);
+      p.x += Math.cos(p.a) * v;
+      p.y += Math.sin(p.a) * v;
+      if(p.x < -30) p.x = innerWidth + 30; else if(p.x > innerWidth + 30) p.x = -30;
+      if(p.y < -30) p.y = innerHeight + 30; else if(p.y > innerHeight + 30) p.y = -30;
+    }
+    const len = p.l * (1 + energy * 0.75);
+    const o = p.o * (0.75 + energy * 0.95);
+    bgc.beginPath();
+    bgc.moveTo(p.x, p.y);
+    bgc.lineTo(p.x - Math.cos(p.a) * len, p.y - Math.sin(p.a) * len);
+    bgc.strokeStyle = p.t ? `rgba(45,212,191,${o})` : `rgba(124,108,255,${o})`;
+    bgc.lineWidth = 1.35;
+    bgc.stroke();
+  }
+  // Freeze still needs one last paint to land, then the loop stops entirely
+  // so a held gate costs nothing.
+  if(paint) return;
+  if(!frozen || Math.abs(targetEnergy - energy) > 0.01) bgRaf = requestAnimationFrame(drawField);
+}
+function fieldRun(){ if(!bgRaf && !REDUCED && !document.hidden) bgRaf = requestAnimationFrame(drawField); }
+function fieldState(next){
+  if(next === 'frozen'){ frozen = true; targetEnergy = 0; }
+  else { frozen = false; targetEnergy = next === 'working' ? 1 : 0.12; }
+  fieldRun();
+}
+addEventListener('resize', () => { seedField(); drawField(0, true); fieldRun(); });
+// Never animate for a tab nobody is looking at.
+addEventListener('visibilitychange', () => {
+  if(document.hidden){ cancelAnimationFrame(bgRaf); bgRaf = 0; } else fieldRun();
+});
+seedField();
+energy = 0.12;
+drawField(0, true);   // on screen from the first paint
+fieldState('idle');
+
 // ---- THE SLAM ------------------------------------------------------------
 // A pressure wave that leaves the gate when SHIP holds. Hand rolled canvas,
 // no library, one shot, never a loop.
@@ -436,7 +551,6 @@ const modeNote = document.getElementById('modeNote');
 // prefers-reduced-motion, where the end state still applies via CSS.
 const fx = document.getElementById('fx');
 const fxc = fx.getContext('2d');
-const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 function sizeFx(){
   const d = Math.min(devicePixelRatio || 1, 2);
@@ -479,7 +593,12 @@ function slam(){
   fx.classList.add('on');
 
   requestAnimationFrame(function frame(now){
-    const t = Math.min(1, (now - t0) / DUR);
+    // Clamp BOTH ends. A rAF timestamp is the frame's start time, which can
+    // precede the moment the callback was queued, so `now - t0` comes back
+    // slightly NEGATIVE on the first frame. That made t negative, which made
+    // the radius negative, and arc() throws on a negative radius. It only
+    // showed up against production, never in a hand driven test.
+    const t = Math.min(1, Math.max(0, (now - t0) / DUR));
     // Fast out, soft land. A linear wave reads like a machine, not a force.
     const e = 1 - Math.pow(1 - t, 3);
     const rad = e * far;
@@ -495,7 +614,7 @@ function slam(){
 
     // The front itself.
     fxc.beginPath();
-    fxc.arc(ox, oy, rad, 0, Math.PI * 2);
+    fxc.arc(ox, oy, Math.max(0, rad), 0, Math.PI * 2);
     fxc.lineWidth = 3 + 16 * (1 - t);
     fxc.strokeStyle = `rgba(245,178,61,${0.9 * (1 - t)})`;
     fxc.stroke();
@@ -503,7 +622,7 @@ function slam(){
     if(t < 1) requestAnimationFrame(frame);
   });
 }
-function unslam(){ releaseSlam(); }
+function unslam(){ releaseSlam(); fieldState('idle'); }
 
 function setAgent(step, state, label){
   const el = document.getElementById('ag-' + step);
@@ -551,6 +670,7 @@ function typeInto(el, text){
 }
 
 async function runMission(){
+  fieldState('working');
   runBtn.disabled = true;
   approveBtn.disabled = true; rejectBtn.disabled = true;
   gate.classList.remove('armed');
@@ -614,6 +734,7 @@ async function runMission(){
   // the screen, and Approve becomes the only lit control.
   gate.classList.add('armed');
   document.body.classList.add('gated');
+  fieldState('frozen');
   slam();
   gateHead.textContent = 'Your call.';
   gateBody.textContent = 'SHIP has staged the order-route fix and is holding. Nothing deploys until you decide. This is the moment the whole product exists for.';
