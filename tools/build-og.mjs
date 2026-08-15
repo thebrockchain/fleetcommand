@@ -45,7 +45,16 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const SITE = join(ROOT, 'site');
 const CHROME = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 const ORIGIN = 'https://fleetcommand-2u0.pages.dev';
-const W = 1200, H = 630;
+// W/H are CSS pixels: the 1.91:1 box every platform expects. SCALE is the
+// device pixel ratio the card is RENDERED at, so the actual PNG is 2400x1260.
+//
+// WHY 2x AND NOT 4K. A share card is not a video. Every platform lays the card
+// out at roughly 1200 wide and caps what it will display, so pixels past 2x are
+// bytes nobody ever sees. 2x is exactly the retina treatment: on the display a
+// judge is actually using, every glyph and hairline is sampled at the density
+// the screen can show. Beyond that is waste, and a card that is too heavy gets
+// re-compressed by the platform, which is worse than shipping fewer pixels.
+const W = 1200, H = 630, SCALE = 2;
 
 /* Tokens READ OUT OF site/index.html :root rather than copied, because copying
    is what let them drift. The design pass on 2026-08-14 changed --bg, --line
@@ -66,6 +75,20 @@ const T = {
 };
 
 const DONE = [['SCOUT', 'recon'], ['AUDIT', 'defects'], ['MEDIC', 'the fix']];
+
+// The same living field that runs behind the cockpit, so the card looks like
+// the product instead of a poster about it. SEEDED on purpose: the PNG is
+// content-hashed for its filename, so a random field would mint a new file and
+// a new deploy on every build.
+let _s = 1337;
+const rnd = () => ((_s = (_s * 1103515245 + 12345) & 0x7fffffff) / 0x7fffffff);
+const FIELD = Array.from({ length: 52 }, () => {
+  const a = rnd() * Math.PI * 2, len = 14 + rnd() * 46;
+  const x = rnd() * W, y = rnd() * H;
+  return { x1: x.toFixed(1), y1: y.toFixed(1),
+           x2: (x - Math.cos(a) * len).toFixed(1), y2: (y - Math.sin(a) * len).toFixed(1),
+           o: (0.06 + rnd() * 0.16).toFixed(2), teal: rnd() < 0.14 };
+});
 
 /* THE CARD'S ONE JOB. A judge sees this in a feed beside dozens of entries and
    gives it about a second. The old card LISTED four agents and coloured the
@@ -93,6 +116,7 @@ const html = `<!doctype html>
     padding:56px 64px;display:flex;flex-direction:column;justify-content:center;
     position:relative;overflow:hidden;
   }
+  .eyebrow,h1,.lede,.crew,.stamp{position:relative;z-index:1}
   .eyebrow{display:flex;align-items:center;gap:13px;margin-bottom:22px}
   .dot{width:11px;height:11px;border-radius:50%;background:${T.teal};
     box-shadow:0 0 0 5px rgba(45,212,191,.16)}
@@ -107,7 +131,10 @@ const html = `<!doctype html>
 
   /* The flow. Three finished, then the stop. */
   .crew{margin-top:40px;display:flex;align-items:center;gap:0}
-  .ag{border:1px solid ${T.line};background:${T.surf};padding:13px 19px;
+  .field{position:absolute;inset:0;z-index:0}
+  .ag{border:1px solid ${T.line};background:rgba(20,25,38,.62);
+    -webkit-backdrop-filter:blur(14px) saturate(1.25);
+    backdrop-filter:blur(14px) saturate(1.25);padding:13px 19px;
     display:flex;flex-direction:column;gap:3px;min-width:152px;border-radius:12px}
   .ag n{font-family:'Space Grotesk';font-weight:700;font-size:18px;letter-spacing:.10em;
     color:${T.stone}}
@@ -120,7 +147,8 @@ const html = `<!doctype html>
     box-shadow:0 0 22px rgba(245,178,61,.5)}
 
   .gate{border-color:${T.amber};min-width:214px;padding:16px 22px;
-    background:linear-gradient(180deg, rgba(245,178,61,.15), rgba(245,178,61,.05));
+    background:linear-gradient(180deg, rgba(245,178,61,.17), rgba(245,178,61,.06));
+    -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
     box-shadow:0 0 0 1px rgba(245,178,61,.30), 0 20px 46px -20px rgba(245,178,61,.6);
     transform:translateY(-7px)}
   .gate n{color:${T.amber};font-size:19px}
@@ -133,6 +161,9 @@ const html = `<!doctype html>
     letter-spacing:.16em;text-transform:uppercase;color:${T.faint}}
 </style></head>
 <body>
+  <svg class="field" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">
+    ${FIELD.map(f => `<line x1="${f.x1}" y1="${f.y1}" x2="${f.x2}" y2="${f.y2}" stroke="${f.teal ? T.teal : T.indigo}" stroke-opacity="${f.o}" stroke-width="1.3" stroke-linecap="round"/>`).join('')}
+  </svg>
   <div class="eyebrow"><span class="dot"></span><b>Fleet Command</b><s>Agentic ops</s></div>
   <h1>The gate is the <b>product</b>.</h1>
   <p class="lede">Four AI agents do the work. Every consequential action stops at a named human.</p>
@@ -154,7 +185,7 @@ writeFileSync(src, html);
 const tmp = join(ROOT, '.og-tmp.png');
 execFileSync(CHROME, [
   '--headless=new', '--disable-gpu', '--hide-scrollbars',
-  '--force-device-scale-factor=1', `--window-size=${W},${H}`,
+  `--force-device-scale-factor=${SCALE}`, `--window-size=${W},${H}`,
   '--virtual-time-budget=6000',
   `--screenshot=${tmp}`, `file://${src}`,
 ], { stdio: 'pipe' });
@@ -175,8 +206,11 @@ const TAGS = (url) => [
   `<meta property="og:description" content="An agentic operations command center. A crew of AI agents does the work; a human approval gate holds the trigger.">`,
   `<meta property="og:url" content="${ORIGIN}/">`,
   `<meta property="og:image" content="${url}">`,
-  `<meta property="og:image:width" content="${W}">`,
-  `<meta property="og:image:height" content="${H}">`,
+  // The real pixel dimensions of the file, not the CSS box it was laid out in.
+  // Same 1.91:1 ratio either way, but a scraper that trusts these for layout
+  // should be told the truth about what it is fetching.
+  `<meta property="og:image:width" content="${W * SCALE}">`,
+  `<meta property="og:image:height" content="${H * SCALE}">`,
   `<meta property="og:image:alt" content="Fleet Command: SCOUT, AUDIT and MEDIC feed into SHIP, which holds at the human approval gate.">`,
   `<meta name="twitter:card" content="summary_large_image">`,
   `<meta name="twitter:title" content="Fleet Command">`,
