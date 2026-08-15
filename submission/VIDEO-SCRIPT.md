@@ -1,26 +1,33 @@
-# Fleet Command demo video script (3:00)
+# Fleet Command demo video script (2:41)
 
-## THE CAPTURE IS RECORDED. Voice to these marks.
+## THE CAPTURE IS RE-RECORDED. Voice to these marks.
 
-`~/Desktop/fleetcommand-demo-capture.mp4` (2:44, 1920x1080, silent) was
-recorded 2026-08-10 by `submission/record.mjs` driving the live site in
-`?pace=video` mode. Read the VO below against these actual timestamps:
+`~/Desktop/fleetcommand-demo-capture.mp4` (2:41, 1920x1080, silent) was
+recorded 2026-08-14 by `submission/record.mjs` driving the LIVE site in
+`?pace=video` mode, after the design pass and after SCOUT gained the SerpApi
+market lens and SHIP gained the name.com registrar check. The previous take
+(2:44, Aug 10) is preserved beside it as `-OLD-aug10.mp4` and no longer matches
+the site: do not voice that one.
+
+**2:41 leaves 19 seconds of headroom under the 3:00 cut most Devpost events
+enforce.** Read at a measured pace; do not rush to fill.
 
 | Mark | What is on screen | VO section below |
 |---|---|---|
-| 0:00 to 0:19 | idle cockpit, cursor still | 0:00 the problem |
-| 0:19 to 0:32 | cursor passes down the four crew cards | 0:20 the crew |
-| 0:33 | Run mission clicked | 0:35 mission starts |
-| 0:33 to 1:42 | SCOUT, AUDIT, MEDIC, SHIP report in turn | mission narration |
-| 1:42 | gate arms amber, SHIP holding | 1:45 the gate |
-| 1:54 | cursor hovers Send back | "I can send it back" |
-| 2:03 | Approve clicked, deploy released | "Or I approve" |
-| 2:12 to 2:37 | console drifts up to MEDIC's diff and back | 2:20 why it is real |
-| 2:37 to 2:44 | full cockpit, mission complete | 2:50 close |
+| 0:00 to 0:09 | idle cockpit, cursor still, no amber anywhere | 0:00 the problem |
+| 0:09 to 0:18 | cursor passes down the four crew cards | 0:10 the crew |
+| 0:18 | Run mission clicked | 0:18 mission starts |
+| 0:37 | SCOUT reports, then the MARKET / SERPAPI entry lands | 0:37 the market lens |
+| 0:45 to 1:52 | AUDIT, MEDIC, SHIP report in turn | mission narration |
+| **1:52** | **GATE ARMS.** Crew dims, gate lifts, amber for the first time | **1:52 the gate** |
+| 2:05 | the DEPLOY TARGET / NAME.COM registrar check on screen | 2:05 the second risk |
+| 2:11 | cursor hovers Send back | "I can send it back" |
+| 2:18 | Approve clicked, deploy released | "Or I approve" |
+| 2:23 to 2:34 | console revisits the market lens, then MEDIC's diff | 2:23 why it is real |
+| 2:35 to 2:41 | full cockpit, mission complete | 2:35 close |
 
-The chip reads REPLAY in this capture and the VO's replay line covers it
-honestly. To put the LIVE chip on camera instead: arm the key, then re-run
-`node record.mjs` from the capture rig (or ask a session to re-stage it).
+Both chips read sample/replay in this capture and the VO covers that honestly in
+1:40. To put LIVE chips on camera instead, arm the keys and re-run the rig.
 
 ---
 
@@ -34,77 +41,96 @@ better than hiding it.
 
 Do a full silent practice run first so the mission timing is familiar.
 
-## 0:00 to 0:20 - the problem, over the idle cockpit
+## 0:00 to 0:09 - the problem, over the idle cockpit
 
-On screen: the standby cockpit, cursor still.
+On screen: the standby cockpit, cursor still. Note there is no amber anywhere
+on the screen yet. That is deliberate and it pays off at 1:52.
 
-"This is Fleet Command. If you run a small business or a small team, you
-cannot afford an operations crew. Nobody is watching your site, nobody is
-auditing it, and when something breaks, you find out from a customer. The
-other option, full AI autonomy, means software shipping changes to your
-business with nobody's hand on the wheel. Neither one is acceptable."
+"This is Fleet Command. If you run a small business, you cannot afford an
+operations crew. Nobody is watching your site, and when something breaks you
+find out from a customer. The other option, full AI autonomy, means software
+shipping changes to your business with nobody's hand on the wheel."
 
-## 0:20 to 0:35 - the crew, slow mouse pass down the left column
+## 0:09 to 0:18 - the crew, mouse pass down the left column
 
-"So we built a crew of four AI agents. SCOUT does reconnaissance. AUDIT
-inspects what SCOUT found. MEDIC drafts the fix. And SHIP stages the
-deployment. Four specialists that never sleep, working for one person."
+"So we built a crew of four agents. SCOUT does reconnaissance. AUDIT inspects
+what SCOUT found. MEDIC drafts the fix. SHIP stages the deployment."
 
-## 0:35 to 1:45 - run the mission, narrate as each agent reports
+## 0:18 to 0:37 - run the mission
 
-Click Run mission at 0:35. Let the console carry the visuals.
+Click lands at 0:18.
 
-"The target today is a fictional bakery site we broke on purpose: dead order
-form, no security headers, a six second page load."
+"Today's target is a bakery site we broke on purpose: a dead order form, no
+security headers, a six second load."
 
-As SCOUT finishes: "SCOUT maps the site and flags what matters. Notice it
-found the order form posting into a dead route. Every order this business
-takes is silently vanishing."
+## 0:37 to 0:45 - the market lens
 
-As AUDIT finishes: "AUDIT turns recon into a ranked defect list. High,
-medium, low. The dead order route is on top because it is the one actively
-costing money."
+The MARKET / SERPAPI entry lands under SCOUT's report.
 
-As MEDIC finishes: "MEDIC writes the actual fix. That is a real diff on
-screen: repoint the form, add the handler. Drafted, not applied. MEDIC never
-touches production."
+"SCOUT does not just read the site. It reads the market around it, live through
+SerpApi. And that changes the finding: the order form posting into a dead route
+is not just a bug, it is a bug in the exact place every competitor is winning.
+Every order this bakery takes is silently vanishing."
 
-If LIVE: "Every report you just watched was a live Claude call through
-Cloudflare Pages Functions. Nothing here is canned."
-If REPLAY: "The chip up top says replay: this run is a recording of the same
-mission, and the app labels it honestly rather than faking a live call. Arm
-one API key and every step becomes a live Claude call."
+## 0:45 to 1:52 - the crew works
 
-## 1:45 to 2:20 - the gate, the whole point
+As AUDIT finishes: "AUDIT ranks the defects. High, medium, low. The dead order
+route is on top because it is the one actively costing money."
 
-SHIP finishes and the gate arms. Pause one full beat on the amber panel.
+As MEDIC finishes: "MEDIC writes the actual fix. That is a real diff: repoint
+the form, add the handler. Drafted, not applied. MEDIC never touches
+production."
 
-"And here is the moment this product exists for. SHIP staged the deploy,
-summarized the risk, and stopped. It is holding for human approval, and the
-hold is structural. The agent has no path forward until a person decides."
+Honesty line, over the chips: "Those chips say replay and sample. This run is a
+recording and the app labels it rather than faking a live call. Arm the keys and
+the identical code path goes live. We would rather show you a labelled sample
+than lie to you."
 
-Hover Send back: "I can send it back, and MEDIC revises with my objection."
+## 1:52 to 2:11 - THE GATE. Do not talk over the first two seconds.
 
-Click Approve: "Or I approve, and only then does the deploy release. AI does
-the work. A person holds the trigger. The gate is not a limitation of the
-product. The gate is the product."
+SHIP finishes and the screen changes: the crew settles back, the gate lifts, and
+amber appears for the first time in the whole video. Let that land silently.
 
-## 2:20 to 2:50 - why it is real, back at the completed mission
+"And there it is. SHIP staged the deploy, summarized the risk, and stopped.
+It is holding for a human, and the hold is structural. The agent has no code
+path forward until a person decides. Notice the screen: everything else just
+stepped back, and the only lit control left is the one that belongs to you."
 
-"This pattern is not a demo concept. The same engine runs our private
-production ops room, managing dozens of live sites today. What you are
-looking at is the public version: Cloudflare Pages and Functions, the
-Anthropic API, zero dependencies, one screen."
+## 2:05 to 2:11 - the second risk
 
-## 2:50 to 3:00 - close
+The registrar check comes on screen.
 
-"Fleet Command. An AI ops crew that does the work, and a human gate that
-holds the trigger. Try it yourself at the link below."
+"And SHIP raised something nobody asked it to. It checked with name.com, and
+this bakery does not own its own name. It is about to start taking money online
+on a domain anyone could register tomorrow. That is a person's decision, not
+software's."
+
+## 2:11 to 2:23 - the decision
+
+Hover Send back: "I can send it back, and MEDIC revises with my objection
+attached."
+
+Click Approve: "Or I approve, and only then does anything release. AI does the
+work. A person holds the trigger. The gate is not a limitation of the product.
+The gate is the product."
+
+## 2:23 to 2:35 - why it is real
+
+"This is not a demo concept. The same engine runs our private production ops
+room across dozens of live sites today. What you are looking at is the public
+version: Cloudflare Pages and Functions, SerpApi, name.com, zero dependencies,
+one screen, no scroll."
+
+## 2:35 to 2:41 - close
+
+"Fleet Command. An AI ops crew that does the work, and a human gate that holds
+the trigger."
 
 ## Recording checklist
 
-- [ ] Arm ANTHROPIC_API_KEY first if we want the LIVE chip on camera
-- [ ] Practice run done, mission timing familiar
+- [ ] Arm the keys first if we want LIVE chips on camera (ANTHROPIC_API_KEY,
+      SERPAPI_KEY, NAMECOM_USER + NAMECOM_TOKEN)
 - [ ] 1920x1080, cursor visible, notifications off
 - [ ] Upload public to YouTube, title "Fleet Command demo"
-- [ ] Under 3:00 total (hard limit on most Devpost events)
+- [ ] Under 3:00 total. This capture is 2:41, so there is room, but the rig
+      prints its own total and warns past 2:52.
