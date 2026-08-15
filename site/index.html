@@ -143,17 +143,37 @@ main{
   grid-template-columns:1fr 2.1fr 1.15fr; gap:.8rem; padding:.8rem 1.2rem;
 }
 .col{display:flex; flex-direction:column; gap:.8rem; min-height:0}
-/* Elevation with intent. Side panels recede; the console is the stage and sits
-   nearest. Same 1px border everywhere was the flatness problem. */
+/* FROSTED, so the field runs UNDER the whole interface instead of only in the
+   margins. Three opaque boxes on a dark ground is a dashboard; one continuous
+   surface with something alive behind it is a place. The blur is what keeps it
+   legible: the field never competes with a word of text, it only gives the
+   glass something to be glass over.
+   Alpha is deliberately high (.62 to .70). Lower looked better in a still and
+   started costing contrast on the console, which is the one panel a judge
+   actually has to read. */
 .panel{
-  background:var(--surf); border:1px solid var(--line); border-radius:.7em;
+  background:rgba(20,25,38,.62);
+  -webkit-backdrop-filter:blur(18px) saturate(1.25);
+  backdrop-filter:blur(18px) saturate(1.25);
+  border:1px solid var(--line); border-radius:.7em;
   padding:.85em .95em; display:flex; flex-direction:column; min-height:0;
   transition:opacity var(--dur-slow) var(--ease), transform var(--dur-slow) var(--ease);
 }
-.col:first-child .panel{background:var(--charcoal)}
+.col:first-child .panel{background:rgba(13,17,25,.66)}
 #stage{
-  background:var(--surf-hi);
-  box-shadow:0 1px 0 rgba(255,255,255,.04) inset, 0 18px 50px -24px rgba(0,0,0,.9);
+  background:rgba(26,32,50,.70);
+  box-shadow:0 1px 0 rgba(255,255,255,.05) inset, 0 18px 50px -24px rgba(0,0,0,.9);
+}
+header{background:rgba(13,17,25,.72);
+  -webkit-backdrop-filter:blur(18px); backdrop-filter:blur(18px)}
+/* Blur is expensive to composite and the browsers that lack it are the ones
+   least able to afford it, so they get solid panels and lose nothing but the
+   glass. */
+@supports not (backdrop-filter: blur(1px)){
+  .panel{background:var(--surf)}
+  .col:first-child .panel{background:var(--charcoal)}
+  #stage{background:var(--surf-hi)}
+  header{background:var(--charcoal)}
 }
 .panel h2{
   font-family:var(--disp); font-size:.78em; font-weight:600; letter-spacing:.16em;
@@ -486,9 +506,18 @@ function seedField(){
 // load and on resize so the field is ALWAYS on screen, even in a tab that is
 // not focused yet. Animating a hidden tab is waste; showing nothing until
 // somebody clicks is a blank screen, and those are different problems.
-function drawField(_ts, paint){
+let bgLast = 0;
+function drawField(ts, paint){
   bgRaf = 0;
   if(REDUCED) return;
+  // Throttled to about 30fps. The panels are frosted glass, so every field
+  // frame forces the browser to re-composite the blur behind three large
+  // surfaces, and that is the expensive part, not the strokes. At a drift this
+  // slow 30 and 60 are indistinguishable, and 30 halves the cost.
+  if(!paint){
+    if(ts - bgLast < 32){ bgRaf = requestAnimationFrame(drawField); return; }
+    bgLast = ts;
+  }
   // Ease toward the target so the field swells and settles rather than
   // snapping between states, which would read as a bug.
   energy += (targetEnergy - energy) * 0.045;
