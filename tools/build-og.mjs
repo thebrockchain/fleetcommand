@@ -47,21 +47,35 @@ const CHROME = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 const ORIGIN = 'https://fleetcommand-2u0.pages.dev';
 const W = 1200, H = 630;
 
-/* Tokens copied from site/index.html :root so the card cannot drift from the
-   page it represents. */
+/* Tokens READ OUT OF site/index.html :root rather than copied, because copying
+   is what let them drift. The design pass on 2026-08-14 changed --bg, --line
+   and --surf on the page and this card silently kept the old palette until it
+   was caught by eye. A comment promising "cannot drift" did not stop it; only
+   parsing the real file does. If a token is ever missing the build FAILS
+   loudly instead of quietly rendering last year's colours. */
+const CSS = readFileSync(join(SITE, 'index.html'), 'utf8');
+const token = (name) => {
+  const m = CSS.match(new RegExp('--' + name + ':\\s*(#[0-9a-fA-F]{3,8})'));
+  if (!m) throw new Error(`token --${name} not found in site/index.html :root`);
+  return m[1];
+};
 const T = {
-  bg: '#0d1018', surf: '#151a29', line: '#283150',
-  ink: '#eef1fb', muted: '#8b93af', faint: '#565f7c',
-  indigo: '#7c6cff', teal: '#2dd4bf', amber: '#f5b23d',
+  bg: token('bg'), surf: token('surf'), 'surf-hi': token('surf-hi'), line: token('line'),
+  ink: token('ink'), muted: token('muted'), faint: token('faint'), stone: token('stone'),
+  indigo: token('indigo'), teal: token('teal'), amber: token('amber'),
 };
 
-const AGENTS = [
-  ['SCOUT', 'recon', T.teal],
-  ['AUDIT', 'defects', T.teal],
-  ['MEDIC', 'the fix', T.teal],
-  ['SHIP', 'holds', T.amber],
-];
+const DONE = [['SCOUT', 'recon'], ['AUDIT', 'defects'], ['MEDIC', 'the fix']];
 
+/* THE CARD'S ONE JOB. A judge sees this in a feed beside dozens of entries and
+   gives it about a second. The old card LISTED four agents and coloured the
+   last one, which reads as "four things, one highlighted". This one has to read
+   as MOTION ARRESTED: three agents ran and completed, and then something
+   stopped, hard, and is waiting on a person.
+   That is why there is a halt bar rather than a fourth arrow, why SHIP is
+   lifted and glowing while the other three sit flat, and why the only amber on
+   the card is on the thing that stopped. Same rule as the page and the video:
+   amber means a human is needed, and it is spent exactly once. */
 const html = `<!doctype html>
 <html lang="en"><head><meta charset="utf-8">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -73,36 +87,49 @@ const html = `<!doctype html>
   body{
     font-family:'Montserrat',system-ui,sans-serif;color:${T.ink};
     background:
-      radial-gradient(60% 70% at 88% 6%, rgba(124,108,255,.20), transparent 62%),
-      radial-gradient(52% 62% at 6% 96%, rgba(45,212,191,.13), transparent 60%),
+      radial-gradient(58% 62% at 14% 8%, rgba(124,108,255,.16), transparent 66%),
+      radial-gradient(46% 56% at 92% 88%, rgba(245,178,61,.09), transparent 62%),
       ${T.bg};
-    padding:58px 64px;display:flex;flex-direction:column;justify-content:center;
+    padding:56px 64px;display:flex;flex-direction:column;justify-content:center;
     position:relative;overflow:hidden;
   }
-  .eyebrow{display:flex;align-items:center;gap:13px;margin-bottom:26px}
+  .eyebrow{display:flex;align-items:center;gap:13px;margin-bottom:22px}
   .dot{width:11px;height:11px;border-radius:50%;background:${T.teal};
     box-shadow:0 0 0 5px rgba(45,212,191,.16)}
   .eyebrow b{font-family:'Space Grotesk';font-weight:700;font-size:20px;
     letter-spacing:.22em;text-transform:uppercase}
   .eyebrow s{text-decoration:none;color:${T.faint};font-size:15px;font-weight:600;
     letter-spacing:.14em;text-transform:uppercase}
-  h1{font-family:'Space Grotesk';font-weight:700;font-size:82px;line-height:.98;
-    letter-spacing:-.03em;max-width:16ch}
+  h1{font-family:'Space Grotesk';font-weight:700;font-size:92px;line-height:.94;
+    letter-spacing:-.035em;max-width:17ch}
   h1 b{font-weight:700;color:${T.indigo}}
-  .lede{margin-top:20px;font-size:21px;line-height:1.4;color:${T.muted};max-width:46ch}
-  /* The crew, in order, with the gate drawn where it actually falls. */
-  .crew{margin-top:38px;display:flex;align-items:stretch;gap:0}
-  .ag{border:1px solid ${T.line};background:${T.surf};padding:14px 20px;
-    display:flex;flex-direction:column;gap:4px;min-width:132px;border-radius:12px}
+  .lede{margin-top:18px;font-size:21px;line-height:1.4;color:${T.muted};max-width:52ch}
 
-  .ag n{font-family:'Space Grotesk';font-weight:700;font-size:19px;letter-spacing:.10em}
-  .ag e{font-size:13px;color:${T.faint};letter-spacing:.03em}
-  .arrow{display:flex;align-items:center;padding:0 12px;color:${T.faint};font-size:19px}
-  .gate{border-color:${T.amber};
-    background:linear-gradient(180deg, rgba(245,178,61,.13), rgba(245,178,61,.05))}
-  .gate n{color:${T.amber}}
-  .gate e{color:${T.amber};opacity:.85}
-  .stamp{position:absolute;right:60px;bottom:52px;font-size:14px;font-weight:600;
+  /* The flow. Three finished, then the stop. */
+  .crew{margin-top:40px;display:flex;align-items:center;gap:0}
+  .ag{border:1px solid ${T.line};background:${T.surf};padding:13px 19px;
+    display:flex;flex-direction:column;gap:3px;min-width:152px;border-radius:12px}
+  .ag n{font-family:'Space Grotesk';font-weight:700;font-size:18px;letter-spacing:.10em;
+    color:${T.stone}}
+  .ag e{font-size:12.5px;color:${T.faint};letter-spacing:.03em}
+  .arrow{display:flex;align-items:center;padding:0 15px;color:${T.faint};font-size:18px}
+
+  /* The halt. Not an arrow: a bar the sequence runs into and cannot pass. */
+  .halt{width:5px;height:78px;margin:0 28px;border-radius:3px;
+    background:linear-gradient(180deg, ${T.amber}, rgba(245,178,61,.35));
+    box-shadow:0 0 22px rgba(245,178,61,.5)}
+
+  .gate{border-color:${T.amber};min-width:214px;padding:16px 22px;
+    background:linear-gradient(180deg, rgba(245,178,61,.15), rgba(245,178,61,.05));
+    box-shadow:0 0 0 1px rgba(245,178,61,.30), 0 20px 46px -20px rgba(245,178,61,.6);
+    transform:translateY(-7px)}
+  .gate n{color:${T.amber};font-size:19px}
+  .gate e{color:${T.amber};opacity:.9;font-weight:600;letter-spacing:.10em;
+    text-transform:uppercase;font-size:11.5px}
+  .callout{position:absolute;right:64px;top:50%;transform:translateY(-50%);
+    font-family:'Space Grotesk';font-weight:700;font-size:34px;color:${T.amber};
+    letter-spacing:-.01em;opacity:.9}
+  .stamp{position:absolute;right:64px;bottom:44px;font-size:13px;font-weight:600;
     letter-spacing:.16em;text-transform:uppercase;color:${T.faint}}
 </style></head>
 <body>
@@ -110,11 +137,12 @@ const html = `<!doctype html>
   <h1>The gate is the <b>product</b>.</h1>
   <p class="lede">Four AI agents do the work. Every consequential action stops at a named human.</p>
   <div class="crew">
-    ${AGENTS.map(([n, e], i) => {
-      const last = i === AGENTS.length - 1;
-      return `<div class="ag${last ? ' gate' : ''}"><n>${n}</n><e>${e}</e></div>`
-        + (last ? '' : '<div class="arrow">&rsaquo;</div>');
-    }).join('\n    ')}
+    ${DONE.map(([n, e], i) =>
+      `<div class="ag"><n>${n}</n><e>${e}</e></div>`
+      + (i < DONE.length - 1 ? '<div class="arrow">&rsaquo;</div>' : '')
+    ).join('\n    ')}
+    <div class="halt"></div>
+    <div class="ag gate"><n>SHIP</n><e>Holding</e></div>
   </div>
   <div class="stamp">Synthetic demo target</div>
 </body></html>`;

@@ -9,36 +9,49 @@
   body{
     font-family:'Montserrat',system-ui,sans-serif;color:#eef1fb;
     background:
-      radial-gradient(60% 70% at 88% 6%, rgba(124,108,255,.20), transparent 62%),
-      radial-gradient(52% 62% at 6% 96%, rgba(45,212,191,.13), transparent 60%),
-      #0d1018;
-    padding:58px 64px;display:flex;flex-direction:column;justify-content:center;
+      radial-gradient(58% 62% at 14% 8%, rgba(124,108,255,.16), transparent 66%),
+      radial-gradient(46% 56% at 92% 88%, rgba(245,178,61,.09), transparent 62%),
+      #0b0e15;
+    padding:56px 64px;display:flex;flex-direction:column;justify-content:center;
     position:relative;overflow:hidden;
   }
-  .eyebrow{display:flex;align-items:center;gap:13px;margin-bottom:26px}
+  .eyebrow{display:flex;align-items:center;gap:13px;margin-bottom:22px}
   .dot{width:11px;height:11px;border-radius:50%;background:#2dd4bf;
     box-shadow:0 0 0 5px rgba(45,212,191,.16)}
   .eyebrow b{font-family:'Space Grotesk';font-weight:700;font-size:20px;
     letter-spacing:.22em;text-transform:uppercase}
   .eyebrow s{text-decoration:none;color:#565f7c;font-size:15px;font-weight:600;
     letter-spacing:.14em;text-transform:uppercase}
-  h1{font-family:'Space Grotesk';font-weight:700;font-size:82px;line-height:.98;
-    letter-spacing:-.03em;max-width:16ch}
+  h1{font-family:'Space Grotesk';font-weight:700;font-size:92px;line-height:.94;
+    letter-spacing:-.035em;max-width:17ch}
   h1 b{font-weight:700;color:#7c6cff}
-  .lede{margin-top:20px;font-size:21px;line-height:1.4;color:#8b93af;max-width:46ch}
-  /* The crew, in order, with the gate drawn where it actually falls. */
-  .crew{margin-top:38px;display:flex;align-items:stretch;gap:0}
-  .ag{border:1px solid #283150;background:#151a29;padding:14px 20px;
-    display:flex;flex-direction:column;gap:4px;min-width:132px;border-radius:12px}
+  .lede{margin-top:18px;font-size:21px;line-height:1.4;color:#8b93af;max-width:52ch}
 
-  .ag n{font-family:'Space Grotesk';font-weight:700;font-size:19px;letter-spacing:.10em}
-  .ag e{font-size:13px;color:#565f7c;letter-spacing:.03em}
-  .arrow{display:flex;align-items:center;padding:0 12px;color:#565f7c;font-size:19px}
-  .gate{border-color:#f5b23d;
-    background:linear-gradient(180deg, rgba(245,178,61,.13), rgba(245,178,61,.05))}
-  .gate n{color:#f5b23d}
-  .gate e{color:#f5b23d;opacity:.85}
-  .stamp{position:absolute;right:60px;bottom:52px;font-size:14px;font-weight:600;
+  /* The flow. Three finished, then the stop. */
+  .crew{margin-top:40px;display:flex;align-items:center;gap:0}
+  .ag{border:1px solid #232b45;background:#141926;padding:13px 19px;
+    display:flex;flex-direction:column;gap:3px;min-width:152px;border-radius:12px}
+  .ag n{font-family:'Space Grotesk';font-weight:700;font-size:18px;letter-spacing:.10em;
+    color:#79839a}
+  .ag e{font-size:12.5px;color:#565f7c;letter-spacing:.03em}
+  .arrow{display:flex;align-items:center;padding:0 15px;color:#565f7c;font-size:18px}
+
+  /* The halt. Not an arrow: a bar the sequence runs into and cannot pass. */
+  .halt{width:5px;height:78px;margin:0 28px;border-radius:3px;
+    background:linear-gradient(180deg, #f5b23d, rgba(245,178,61,.35));
+    box-shadow:0 0 22px rgba(245,178,61,.5)}
+
+  .gate{border-color:#f5b23d;min-width:214px;padding:16px 22px;
+    background:linear-gradient(180deg, rgba(245,178,61,.15), rgba(245,178,61,.05));
+    box-shadow:0 0 0 1px rgba(245,178,61,.30), 0 20px 46px -20px rgba(245,178,61,.6);
+    transform:translateY(-7px)}
+  .gate n{color:#f5b23d;font-size:19px}
+  .gate e{color:#f5b23d;opacity:.9;font-weight:600;letter-spacing:.10em;
+    text-transform:uppercase;font-size:11.5px}
+  .callout{position:absolute;right:64px;top:50%;transform:translateY(-50%);
+    font-family:'Space Grotesk';font-weight:700;font-size:34px;color:#f5b23d;
+    letter-spacing:-.01em;opacity:.9}
+  .stamp{position:absolute;right:64px;bottom:44px;font-size:13px;font-weight:600;
     letter-spacing:.16em;text-transform:uppercase;color:#565f7c}
 </style></head>
 <body>
@@ -48,8 +61,9 @@
   <div class="crew">
     <div class="ag"><n>SCOUT</n><e>recon</e></div><div class="arrow">&rsaquo;</div>
     <div class="ag"><n>AUDIT</n><e>defects</e></div><div class="arrow">&rsaquo;</div>
-    <div class="ag"><n>MEDIC</n><e>the fix</e></div><div class="arrow">&rsaquo;</div>
-    <div class="ag gate"><n>SHIP</n><e>holds</e></div>
+    <div class="ag"><n>MEDIC</n><e>the fix</e></div>
+    <div class="halt"></div>
+    <div class="ag gate"><n>SHIP</n><e>Holding</e></div>
   </div>
   <div class="stamp">Synthetic demo target</div>
 </body></html>
