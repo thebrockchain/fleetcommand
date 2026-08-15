@@ -231,6 +231,50 @@ body.gated .why{opacity:.55}
 #gate.armed button.reject:hover{border-color:var(--stone); color:var(--ink)}
 #gate button:disabled{cursor:default; opacity:.45; transform:none; box-shadow:none}
 
+
+/* ---- THE SLAM ---------------------------------------------------------
+   Hand rolled, no library, ~90 lines of canvas. The two Developer Award
+   winners on the Awwwards portfolio page this week ship raw canvas and a 10kb
+   WebGL wrapper respectively; the award for technique goes to the people who
+   wrote it themselves, and this fleet already hand rolls shaders elsewhere.
+
+   WHAT IT DOES. When SHIP holds, a pressure wave leaves the gate and washes
+   the screen. Colour drains out of everything the wave has passed, so the
+   whole interface visibly surrenders to the one panel that needs a person.
+   It fires ONCE, on a real state change, and never loops. Take it out and the
+   product's entire thesis goes back to being a border colour. */
+#fx{
+  position:fixed; inset:0; z-index:50; pointer-events:none;
+  opacity:0; transition:opacity 240ms linear;
+}
+#fx.on{opacity:1}
+/* The drain. Everything except the gate loses its colour and steps back while
+   a person is deciding. `filter` is the honest tool for this one: it is a
+   single one-shot transition on a static one-screen layout, not a loop. */
+header,main,footer{
+  transition:filter 620ms cubic-bezier(.2,.7,.2,1), transform 620ms cubic-bezier(.2,.7,.2,1);
+}
+body.slammed header,body.slammed footer{filter:saturate(.12) brightness(.72)}
+body.slammed .col:first-child,body.slammed #stage{filter:saturate(.1) brightness(.62)}
+/* What the screen settles BACK to once the wave has passed: deferential, still
+   clearly secondary to the gate, and fully readable. */
+body.gated:not(.slammed) header,body.gated:not(.slammed) footer{filter:saturate(.55)}
+body.gated:not(.slammed) #stage{filter:saturate(.8)}
+/* The gate is the exception. It keeps every bit of its colour, which is the
+   whole point of draining everything else. */
+body.slammed #gate{filter:none}
+body.gated #gate.armed{
+  transform:translateY(-6px) scale(1.028);
+  box-shadow:0 0 0 1px rgba(245,178,61,.55),
+             0 0 90px -10px rgba(245,178,61,.45),
+             0 30px 70px -28px rgba(245,178,61,.75);
+}
+@media (prefers-reduced-motion: reduce){
+  #fx{display:none}
+  body.slammed header,body.slammed footer,
+  body.slammed .col:first-child,body.slammed #stage{filter:saturate(.35)}
+}
+
 /* Some people get motion sick. State changes stay instant for them; nothing
    above is load bearing on the animation itself, only on the end state. */
 @media (prefers-reduced-motion: reduce){
@@ -266,6 +310,7 @@ footer .f-right{margin-left:auto}
   <!-- share:end -->
 </head>
 <body>
+<canvas id="fx" aria-hidden="true"></canvas>
 <header>
   <div>
     <h1 class="mark"><a href="/" style="color:inherit;text-decoration:none">FLEET <b>COMMAND</b></a></h1>
@@ -344,6 +389,92 @@ const modeChip = document.getElementById('modeChip');
 const searchChip = document.getElementById('searchChip');
 const modeNote = document.getElementById('modeNote');
 
+
+// ---- THE SLAM ------------------------------------------------------------
+// A pressure wave that leaves the gate when SHIP holds. Hand rolled canvas,
+// no library, one shot, never a loop.
+//
+// Three things happen on the same clock so it reads as one event:
+//   1. a hard ring expands from the gate at an easing that starts fast and
+//      settles, because real pressure does not travel linearly,
+//   2. a wide soft glow trails it, so the ring has weight rather than being a
+//      hairline, and
+//   3. the CSS drain (body.slammed) desaturates everything the wave passes,
+//      leaving the gate as the only coloured thing on the screen.
+//
+// It costs about 40 frames once per mission. It is skipped entirely under
+// prefers-reduced-motion, where the end state still applies via CSS.
+const fx = document.getElementById('fx');
+const fxc = fx.getContext('2d');
+const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+function sizeFx(){
+  const d = Math.min(devicePixelRatio || 1, 2);
+  fx.width = Math.round(innerWidth * d);
+  fx.height = Math.round(innerHeight * d);
+  fxc.setTransform(d, 0, 0, d, 0, 0);
+}
+addEventListener('resize', sizeFx);
+sizeFx();
+
+let slamRelease = 0;
+// The end state is released on WALL CLOCK, never on the animation finishing.
+// requestAnimationFrame does not fire in a hidden tab, so a mission completing
+// in a background tab would leave the screen desaturated forever, and the
+// person would come back to a page that looks broken. This codebase already
+// learned that once with the typewriter effect; the wave is the same trap.
+// The canvas is decoration and may be skipped. The state must be guaranteed.
+function releaseSlam(){
+  clearTimeout(slamRelease);
+  document.body.classList.remove('slammed');
+  fx.classList.remove('on');
+  fxc.clearRect(0, 0, innerWidth, innerHeight);
+}
+
+function slam(){
+  document.body.classList.add('slammed');
+  const DUR = 900;
+  clearTimeout(slamRelease);
+  slamRelease = setTimeout(releaseSlam, DUR + 300);
+
+  // No wave for people who opted out of motion, and none for a tab nobody is
+  // looking at. Both still get the end state from the timer above.
+  if(REDUCED || document.hidden) return;
+
+  const r = gate.getBoundingClientRect();
+  const ox = r.left + r.width / 2, oy = r.top + r.height / 2;
+  // Reach the far corner, so the wash never stops halfway across the screen.
+  const far = Math.hypot(Math.max(ox, innerWidth - ox), Math.max(oy, innerHeight - oy));
+  const t0 = performance.now();
+  fx.classList.add('on');
+
+  requestAnimationFrame(function frame(now){
+    const t = Math.min(1, (now - t0) / DUR);
+    // Fast out, soft land. A linear wave reads like a machine, not a force.
+    const e = 1 - Math.pow(1 - t, 3);
+    const rad = e * far;
+    fxc.clearRect(0, 0, innerWidth, innerHeight);
+
+    // The trailing glow, wide and soft, so the front carries weight.
+    const g = fxc.createRadialGradient(ox, oy, Math.max(0, rad - 190), ox, oy, rad + 30);
+    g.addColorStop(0, 'rgba(245,178,61,0)');
+    g.addColorStop(0.72, `rgba(245,178,61,${0.16 * (1 - t)})`);
+    g.addColorStop(1, 'rgba(245,178,61,0)');
+    fxc.fillStyle = g;
+    fxc.fillRect(0, 0, innerWidth, innerHeight);
+
+    // The front itself.
+    fxc.beginPath();
+    fxc.arc(ox, oy, rad, 0, Math.PI * 2);
+    fxc.lineWidth = 2 + 10 * (1 - t);
+    fxc.strokeStyle = `rgba(245,178,61,${0.55 * (1 - t)})`;
+    fxc.stroke();
+
+    if(t < 1) requestAnimationFrame(frame);
+  });
+}
+function unslam(){ releaseSlam(); }
+
 function setAgent(step, state, label){
   const el = document.getElementById('ag-' + step);
   el.className = 'agent' + (state ? ' ' + state : '');
@@ -386,6 +517,7 @@ async function runMission(){
   approveBtn.disabled = true; rejectBtn.disabled = true;
   gate.classList.remove('armed');
   document.body.classList.remove('gated');
+  unslam();
   gateHead.textContent = 'Your call.';
   gateBody.textContent = 'Mission running. SHIP will hold here.';
   STEPS.forEach(s => setAgent(s, '', 'idle'));
@@ -433,6 +565,7 @@ async function runMission(){
   // the screen, and Approve becomes the only lit control.
   gate.classList.add('armed');
   document.body.classList.add('gated');
+  slam();
   gateHead.textContent = 'Your call.';
   gateBody.textContent = 'SHIP has staged the order-route fix and is holding. Nothing deploys until you decide. This is the moment the whole product exists for.';
   approveBtn.disabled = false; rejectBtn.disabled = false;
@@ -442,6 +575,7 @@ async function runMission(){
 approveBtn.addEventListener('click', () => {
   gate.classList.remove('armed');
   document.body.classList.remove('gated');
+  unslam();
   approveBtn.disabled = true; rejectBtn.disabled = true;
   setAgent('ship', 'done', 'released');
   gateBody.textContent = 'Approved. In production this releases the staged deploy. In this demo nothing actually ships, and it says so, because honesty is a feature.';
@@ -451,6 +585,7 @@ approveBtn.addEventListener('click', () => {
 rejectBtn.addEventListener('click', () => {
   gate.classList.remove('armed');
   document.body.classList.remove('gated');
+  unslam();
   approveBtn.disabled = true; rejectBtn.disabled = true;
   setAgent('ship', '', 'sent back');
   setAgent('medic', 'working', 'revising');
