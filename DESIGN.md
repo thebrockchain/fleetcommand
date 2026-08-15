@@ -77,7 +77,18 @@ Everything else supports that:
 
 ## Constraints that do not bend
 
-- One screen, zero scroll. Vertical or horizontal.
+- One screen, zero scroll, **on the desktop cockpit**. Verified at 1440x900:
+  exactly one screen, 0px past the viewport. Never any horizontal scroll, at
+  any width.
+- **Below 900 the page scrolls, and that is the rule working rather than
+  breaking it.** Three columns stacked do not fit a phone, and the narrow band
+  used to keep `height:100vh` and hide the difference: The Crew lost 52px, the
+  whole SHIP row, on the page that is the hackathon entry. A clamp does not fit
+  a page, it hides the part that did not fit, and it blinds the one-screen gate
+  too, because a clamped body reports `scrollHeight === clientHeight`. Mobile is
+  allowed about a screen and a half by the fleet rule and now measures 1.167.
+  If you are tempted to put the clamp back to satisfy the line above, read the
+  fix commit first.
 - Zero dependencies. No framework, no animation library. This is in the entry copy
   and it is true, so it stays true.
 - `prefers-reduced-motion` honoured.
