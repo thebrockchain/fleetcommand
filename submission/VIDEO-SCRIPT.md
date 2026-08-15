@@ -1,37 +1,39 @@
-# Fleet Command demo video script (2:40)
+# Fleet Command demo video script (2:44)
 
 ## THE CAPTURE IS FINAL. Voice to these marks.
 
-`~/Desktop/fleetcommand-demo-capture.mp4` (2:40, 1920x1080, silent), recorded
-against the live site after the design pass, the slam, the crew telemetry, the
-SerpApi market lens and the name.com registrar check. Earlier takes beside it
-(`-PREV`, `-OLD-aug10`) no longer match the site. Do not voice those.
+`~/Desktop/fleetcommand-demo-capture.mp4` (2:44, 1920x1080, silent), recorded
+against the live site with everything in: the frosted cockpit, the living
+field, the slam, the crew telemetry, the SerpApi market lens and the name.com
+registrar check. `-PREV.mp4` beside it is the older take and shows opaque
+panels. Do not voice that one.
 
-**It opens cold on the moment the software stops.** Every other entry opens on a
-logo or a face. The mission in that cold open is real and complete, just
-rendered fast so the gate arrives in seconds.
+**It opens cold on the moment the software stops.** The mission in that cold
+open is real and complete, rendered fast so the gate arrives in seconds.
 
-**2:40 leaves 20 seconds under the 3:00 cut. Do not rush.**
+**2:44 leaves 16 seconds under the 3:00 cut. Do not rush.**
 
-| Mark | What is on screen | VO |
+| Mark | On screen | VO |
 |---|---|---|
-| 0:00 to 0:04 | cold open: a real mission runs at speed, telemetry ticking | **say nothing** |
-| **0:04** | **THE SLAM.** Wave leaves the gate, colour drains from everything else | 0:04 the hook |
+| 0:00 to 0:04 | cold open: a real mission tears past, telemetry ticking | **say nothing** |
+| **0:04** | **THE SLAM.** Wave cuts the whole screen, colour drains, field freezes | 0:04 the hook |
 | 0:04 to 0:10 | held on the drained screen, gate blazing, "Your call." | |
 | 0:10 | hard cut back to the idle cockpit | 0:10 the reset |
-| 0:15 to 0:21 | cursor passes down the crew | 0:15 the crew |
-| 0:21 | Run mission clicked | 0:21 the target |
-| 0:41 | SCOUT reports, MARKET / SERPAPI entry lands | 0:41 the market lens |
-| 0:45 to 1:56 | AUDIT, MEDIC, SHIP report; telemetry fills in | mission narration |
-| **1:56** | **THE SLAM, earned this time** | **1:56 the gate** |
-| 2:09 | DEPLOY TARGET / NAME.COM registrar check | 2:09 the second risk |
-| 2:13 | hover Send back | "I can send it back" |
-| 2:21 | Approve clicked | "Or I approve" |
-| 2:26 to 2:34 | console revisits the market lens, then MEDIC's diff | 2:26 why it is real |
-| 2:35 to 2:40 | full cockpit | 2:35 close |
+| 0:15 to 0:23 | cursor passes down the crew | 0:15 the crew |
+| 0:23 | Run mission clicked | 0:23 the target |
+| 0:43 | SCOUT reports, MARKET / SERPAPI lands | 0:43 the market lens |
+| 0:45 to 1:58 | AUDIT, MEDIC, SHIP report; telemetry fills in | mission narration |
+| **1:58** | **THE SLAM, earned** | **1:58 the gate** |
+| 2:11 | DEPLOY TARGET / NAME.COM registrar check | 2:11 the second risk |
+| 2:16 | hover Send back | "I can send it back" |
+| 2:25 | Approve clicked | "Or I approve" |
+| 2:31 to 2:39 | console revisits the market lens, then MEDIC's diff | 2:31 why it is real |
+| 2:40 to 2:44 | full cockpit | 2:40 close |
 
-Chips read sample and replay in this capture and the VO covers that honestly at
-1:20. Arm the keys and re-run the rig to put LIVE on camera.
+Watch the field behind the glass while you read: it drifts at idle, agitates
+while the crew works, and stops dead at the gate. Chips read sample and replay
+in this capture and the VO covers that honestly. Arm the keys and re-run the
+rig to put LIVE on camera.
 
 ---
 
@@ -65,7 +67,7 @@ Beat. Let the drained screen sit.
 
 "Here is how it got there."
 
-## 0:15 to 0:21 - the problem and the crew
+## 0:15 to 0:23 - the problem and the crew
 
 No amber anywhere on screen now. That is deliberate, and it is why the gate
 lands both times it appears.
@@ -79,14 +81,14 @@ Watch the numbers under each agent as the mission runs. Real round trip, real
 size of what came back, and where it came from. Nothing on that column is
 decorative.
 
-## 0:21 to 0:41 - run the mission
+## 0:23 to 0:43 - run the mission
 
-Click lands at 0:21.
+Click lands at 0:23.
 
 "Today's target is a bakery site we broke on purpose: a dead order form, no
 security headers, a six second load."
 
-## 0:41 to 0:45 - the market lens
+## 0:43 to 0:48 - the market lens
 
 The MARKET / SERPAPI entry lands under SCOUT's report.
 
@@ -95,7 +97,7 @@ SerpApi. And that changes the finding: the order form posting into a dead route
 is not just a bug, it is a bug in the exact place every competitor is winning.
 Every order this bakery takes is silently vanishing."
 
-## 0:45 to 1:56 - the crew works
+## 0:48 to 1:58 - the crew works
 
 As AUDIT finishes: "AUDIT ranks the defects. High, medium, low. The dead order
 route is on top because it is the one actively costing money."
@@ -109,7 +111,7 @@ recording and the app labels it rather than faking a live call. Arm the keys and
 the identical code path goes live. We would rather show you a labelled sample
 than lie to you."
 
-## 1:56 to 2:13 - THE GATE, earned. Do not talk over the first two seconds.
+## 1:58 to 2:16 - THE GATE, earned. Do not talk over the first two seconds.
 
 The same slam as the cold open, except now the viewer knows what it cost.
 Let it land silently, then:
@@ -119,7 +121,7 @@ It is holding for a human, and the hold is structural. The agent has no code
 path forward until a person decides. Notice the screen: everything else just
 stepped back, and the only lit control left is the one that belongs to you."
 
-## 2:09 to 2:13 - the second risk
+## 2:11 to 2:16 - the second risk
 
 The registrar check comes on screen.
 
@@ -128,7 +130,7 @@ this bakery does not own its own name. It is about to start taking money online
 on a domain anyone could register tomorrow. That is a person's decision, not
 software's."
 
-## 2:13 to 2:26 - the decision
+## 2:16 to 2:31 - the decision
 
 Hover Send back: "I can send it back, and MEDIC revises with my objection
 attached."
@@ -137,14 +139,14 @@ Click Approve: "Or I approve, and only then does anything release. AI does the
 work. A person holds the trigger. The gate is not a limitation of the product.
 The gate is the product."
 
-## 2:26 to 2:35 - why it is real
+## 2:31 to 2:40 - why it is real
 
 "This is not a demo concept. The same engine runs our private production ops
 room across dozens of live sites today. What you are looking at is the public
 version: Cloudflare Pages and Functions, SerpApi, name.com, zero dependencies,
 one screen, no scroll."
 
-## 2:35 to 2:40 - close
+## 2:40 to 2:44 - close
 
 "Fleet Command. An AI ops crew that does the work, and a human gate that holds
 the trigger."

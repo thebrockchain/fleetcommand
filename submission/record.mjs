@@ -59,13 +59,24 @@ await page.addInitScript(() => {
   });
 });
 
-const center = async sel => {
-  const b = await page.locator(sel).boundingBox();
-  return { x: b.x + b.width / 2, y: b.y + b.height / 2 };
-};
+// Read the rect straight out of the page. locator().boundingBox() runs
+// playwright's actionability checks and waits for the element to be STABLE,
+// and with a canvas field animating behind frosted panels nothing is ever
+// stable, so every glide silently cost about three extra seconds and pushed a
+// 2:40 capture to 3:04. This does no waiting because none is needed: the
+// layout is static, only the paint moves.
+const center = async sel => page.evaluate(q => {
+  const r = document.querySelector(q).getBoundingClientRect();
+  return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
+}, sel);
+// Step count is capped low on purpose. Every step is a separate round trip to
+// the browser, and once the page had a live field behind frosted glass a
+// 44-step glide cost seconds rather than milliseconds. Eighteen steps is still
+// perfectly smooth at the 25fps this records at.
 const glide = async (sel, ms = 900) => {
   const { x, y } = await center(sel);
-  await page.mouse.move(x, y, { steps: Math.max(20, Math.round(ms / 16)) });
+  await page.mouse.move(x, y, { steps: 18 });
+  await sleep(Math.max(0, ms - 300));
 };
 // Bring a console entry into view by its tag text, so the sponsor integrations
 // are actually on camera for the judges who grade them.
@@ -107,8 +118,8 @@ await sleep(5000);
 // Pass down the crew column.
 mark('crew pass');
 for (const id of ['#ag-scout', '#ag-audit', '#ag-medic', '#ag-ship']) {
-  await glide(id, 700);
-  await sleep(1000);
+  await glide(id, 600);
+  await sleep(700);
 }
 
 await glide('#runBtn', 700);
@@ -151,16 +162,16 @@ await sleep(5000);
 await page.mouse.move(770, 520, { steps: 30 });
 await showEntry('MARKET / SERPAPI');
 mark('market lens revisited');
-await sleep(4000);
+await sleep(3000);
 await showEntry('MEDIC');
 mark('MEDIC diff');
-await sleep(5000);
+await sleep(4000);
 
 // Close on the full cockpit.
 await page.evaluate(() => { const c = document.getElementById('console'); c.scrollTop = c.scrollHeight; });
 await page.mouse.move(960, 860, { steps: 40 });
 mark('close on cockpit');
-await sleep(5000);
+await sleep(4000);
 mark('cut');
 
 await context.close();
