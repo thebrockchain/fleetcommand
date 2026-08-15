@@ -354,8 +354,36 @@ footer{
   color:var(--faint); font-size:.78em; display:flex; gap:1em;
 }
 footer .f-right{margin-left:auto}
+/* NARROW: RELEASE THE ONE SCREEN CLAMP, do not just let it scroll.
+   This block used to say `body{overflow:auto}` and nothing else, which was a
+   fix that fixed nothing: `body{height:100vh}` above stayed in force, so the
+   body was still exactly one viewport tall and there was no overflow for
+   `auto` to scroll. The three columns stacked, needed more room than 100vh,
+   and every min-height:0 in the chain (main, .col, .panel, all correct for a
+   desktop cockpit) let them shrink under their own content instead of pushing
+   the page taller. Measured at 390 wide: The Crew hid 52px, which was the
+   whole SHIP row, .why hid 32px and main hid 18px, and NONE of it could be
+   scrolled to. The last agent in a four agent crew was simply not on the page.
+
+   It also made the gate blind rather than merely wrong: jack measures one
+   screen from scrollHeight, a clamped body reports scrollHeight === clientHeight,
+   so the sweep read "1 screens, inside the allowance" on a page hiding four
+   panels' worth of content. A clamp does not fit a page, it hides the part
+   that did not fit. Scale or reflow, never clamp.
+
+   So height goes to auto with the viewport as a FLOOR (svh, because 100vh on
+   iOS measures past the browser chrome), and the min-height:0 shrink rules are
+   released for this band only. The desktop cockpit above is untouched: one
+   screen, zero scroll, still true at 1440x900, which is the width the rule
+   names. Mobile is allowed about a screen and a half and now uses it honestly. */
 @media (max-width:900px){
-  body{overflow:auto} main{grid-template-columns:1fr; overflow:visible}
+  body{height:auto; min-height:100svh; overflow:auto}
+  main{grid-template-columns:1fr; overflow:visible; min-height:auto}
+  .col,.panel{min-height:auto}
+  /* The console is flex:1 of a formerly fixed height column. With the column
+     free to grow it would otherwise collapse to its content and lose the
+     terminal feel the mission log needs while it streams. */
+  #console{min-height:9.5em}
 }
 </style>
 
