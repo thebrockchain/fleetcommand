@@ -175,6 +175,23 @@ main{
 @keyframes pulse{50%{opacity:.35}}
 .agent .aname{font-family:var(--disp); font-weight:600; letter-spacing:.08em}
 .agent .arole{color:var(--muted); font-size:.8em}
+.agent .abody{min-width:0}
+/* LIVE TELEMETRY, NOT DECORATION. Every value on this line is measured on the
+   client as the step actually runs: real elapsed milliseconds, the real
+   character count of what came back, and for the two agents that reach outside,
+   whether the call was served live, from cache, or from labelled sample data.
+   Nothing here is invented and nothing loops. The crew reads as alive because
+   it is reporting, which is what an ops cockpit should do, not because
+   something is animating at you. */
+.agent .ameta{
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:.68em; letter-spacing:.02em; color:var(--faint);
+  margin-top:.15em; min-height:1.1em; white-space:nowrap;
+  overflow:hidden; text-overflow:ellipsis;
+}
+.agent.working .ameta{color:var(--indigo-soft)}
+.agent.done .ameta{color:var(--stone)}
+.agent.holding .ameta{color:var(--amber)}
 .agent .astate{margin-left:auto; font-size:.72em; letter-spacing:.1em; color:var(--stone); text-transform:uppercase}
 #console{flex:1; overflow-y:auto; font-size:.92em; line-height:1.55; scrollbar-width:thin}
 #console .entry{margin-bottom:1em}
@@ -245,9 +262,14 @@ body.gated .why{opacity:.55}
    product's entire thesis goes back to being a border colour. */
 #fx{
   position:fixed; inset:0; z-index:50; pointer-events:none;
-  opacity:0; transition:opacity 240ms linear;
+  opacity:0; transition:opacity 300ms linear;
 }
-#fx.on{opacity:1}
+/* Instant ON, faded OFF. The layer used to fade IN over 240ms, which is exactly
+   the window where the wave is brightest, so the canvas was painting its
+   strongest frames underneath its own fade and the front was nearly invisible
+   on camera. The animation already handles its own falloff; the element must
+   not second-guess it. */
+#fx.on{opacity:1; transition:none}
 /* The drain. Everything except the gate loses its colour and steps back while
    a person is deciding. `filter` is the honest tool for this one: it is a
    single one-shot transition on a static one-screen layout, not a loop. */
@@ -327,10 +349,10 @@ footer .f-right{margin-left:auto}
   <div class="col">
     <section class="panel">
       <h2>The Crew</h2>
-      <div class="agent" id="ag-scout"><span class="dot"></span><div><div class="aname">SCOUT</div><div class="arole">Reconnaissance</div></div><span class="astate">idle</span></div>
-      <div class="agent" id="ag-audit"><span class="dot"></span><div><div class="aname">AUDIT</div><div class="arole">Inspection</div></div><span class="astate">idle</span></div>
-      <div class="agent" id="ag-medic"><span class="dot"></span><div><div class="aname">MEDIC</div><div class="arole">Fix drafting</div></div><span class="astate">idle</span></div>
-      <div class="agent" id="ag-ship"><span class="dot"></span><div><div class="aname">SHIP</div><div class="arole">Deployment</div></div><span class="astate">idle</span></div>
+      <div class="agent" id="ag-scout"><span class="dot"></span><div class="abody"><div class="aname">SCOUT</div><div class="arole">Reconnaissance</div><div class="ameta"></div></div><span class="astate">idle</span></div>
+      <div class="agent" id="ag-audit"><span class="dot"></span><div class="abody"><div class="aname">AUDIT</div><div class="arole">Inspection</div><div class="ameta"></div></div><span class="astate">idle</span></div>
+      <div class="agent" id="ag-medic"><span class="dot"></span><div class="abody"><div class="aname">MEDIC</div><div class="arole">Fix drafting</div><div class="ameta"></div></div><span class="astate">idle</span></div>
+      <div class="agent" id="ag-ship"><span class="dot"></span><div class="abody"><div class="aname">SHIP</div><div class="arole">Deployment</div><div class="ameta"></div></div><span class="astate">idle</span></div>
     </section>
     <section class="panel target">
       <h2>Mission Target</h2>
@@ -372,9 +394,17 @@ footer .f-right{margin-left:auto}
 </footer>
 
 <script>
-// ?pace=video stretches the mission to the demo video's voice-over timeline
-// (slower typing, a breath between agents). Content is identical either way.
-const PACE_VIDEO = new URLSearchParams(location.search).get('pace') === 'video';
+// ?pace controls RENDER SPEED ONLY. The mission itself is identical in every
+// mode: the same four agents make the same calls and return the same content.
+//   video  stretches typing to the demo voice-over timeline, with a breath
+//          between agents
+//   fast   renders near-instantly, used for the demo video's cold open where
+//          the mission has to reach the gate in seconds so the slam can be the
+//          first thing on screen
+// Nothing is skipped or faked in either one.
+const PACE = new URLSearchParams(location.search).get('pace');
+const PACE_VIDEO = PACE === 'video';
+const PACE_FAST = PACE === 'fast';
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const STEPS = ['scout','audit','medic','ship'];
 const ROLE_VERBS = {scout:'scouting the target', audit:'inspecting findings', medic:'drafting the fix', ship:'staging the deploy'};
@@ -456,9 +486,9 @@ function slam(){
     fxc.clearRect(0, 0, innerWidth, innerHeight);
 
     // The trailing glow, wide and soft, so the front carries weight.
-    const g = fxc.createRadialGradient(ox, oy, Math.max(0, rad - 190), ox, oy, rad + 30);
+    const g = fxc.createRadialGradient(ox, oy, Math.max(0, rad - 260), ox, oy, rad + 40);
     g.addColorStop(0, 'rgba(245,178,61,0)');
-    g.addColorStop(0.72, `rgba(245,178,61,${0.16 * (1 - t)})`);
+    g.addColorStop(0.72, `rgba(245,178,61,${0.30 * (1 - t)})`);
     g.addColorStop(1, 'rgba(245,178,61,0)');
     fxc.fillStyle = g;
     fxc.fillRect(0, 0, innerWidth, innerHeight);
@@ -466,8 +496,8 @@ function slam(){
     // The front itself.
     fxc.beginPath();
     fxc.arc(ox, oy, rad, 0, Math.PI * 2);
-    fxc.lineWidth = 2 + 10 * (1 - t);
-    fxc.strokeStyle = `rgba(245,178,61,${0.55 * (1 - t)})`;
+    fxc.lineWidth = 3 + 16 * (1 - t);
+    fxc.strokeStyle = `rgba(245,178,61,${0.9 * (1 - t)})`;
     fxc.stroke();
 
     if(t < 1) requestAnimationFrame(frame);
@@ -480,6 +510,12 @@ function setAgent(step, state, label){
   el.className = 'agent' + (state ? ' ' + state : '');
   el.querySelector('.astate').textContent = label;
 }
+// Every number this writes is measured, never estimated. If we cannot measure
+// something we do not print a placeholder for it.
+function setMeta(step, text){
+  document.getElementById('ag-' + step).querySelector('.ameta').textContent = text;
+}
+const ms = n => n < 1000 ? Math.round(n) + 'ms' : (n / 1000).toFixed(2) + 's';
 function addEntry(tagText, modeText, body, sys){
   const e = document.createElement('div'); e.className = 'entry';
   if(tagText){
@@ -502,7 +538,9 @@ function typeInto(el, text){
   // Wall-time based so a throttled background tab still finishes the mission.
   return new Promise(resolve => {
     const start = performance.now();
-    const total = PACE_VIDEO ? text.length * 25 : Math.max(400, Math.min(2800, text.length * 4));
+    const total = PACE_VIDEO ? text.length * 25
+      : PACE_FAST ? 160
+      : Math.max(400, Math.min(2800, text.length * 4));
     const t = setInterval(() => {
       const frac = Math.min(1, (performance.now() - start) / total);
       el.textContent = text.slice(0, Math.round(frac * text.length));
@@ -520,19 +558,22 @@ async function runMission(){
   unslam();
   gateHead.textContent = 'Your call.';
   gateBody.textContent = 'Mission running. SHIP will hold here.';
-  STEPS.forEach(s => setAgent(s, '', 'idle'));
+  STEPS.forEach(s => { setAgent(s, '', 'idle'); setMeta(s, ''); });
   let prior = '';
   for(const step of STEPS){
     setAgent(step, 'working', 'working');
     const sys = addEntry('', '', step.toUpperCase() + ' is ' + ROLE_VERBS[step] + '...', true);
     let data;
+    const tStart = performance.now();
+    setMeta(step, 'POST /run');
     try{
       const res = await fetch('/run', {method:'POST', headers:{'content-type':'application/json'}, body:JSON.stringify({step, prior})});
       data = await res.json();
     }catch(err){
       sys.textContent = 'The crew lost contact on ' + step.toUpperCase() + '. Run again.';
-      setAgent(step, '', 'error'); runBtn.disabled = false; return;
+      setAgent(step, '', 'error'); setMeta(step, 'no response'); runBtn.disabled = false; return;
     }
+    const rtt = performance.now() - tStart;
     sys.parentElement.remove();
     modeChip.textContent = data.mode;
     modeChip.className = 'chip ' + data.mode;
@@ -557,6 +598,14 @@ async function runMission(){
       const db = addEntry('DEPLOY TARGET / NAME.COM', data.domains, '', false);
       await typeInto(db, 'Registrar check: does this business own its own name?\n' + data.domainRows.join('\n'));
     }
+    // The readout: real round trip, real size, and for the two agents that call
+    // out, where that answer actually came from.
+    let meta = ms(rtt) + '  ' + (data.output || '').length + 'ch';
+    if(step === 'scout' && data.market)
+      meta += '  serpapi:' + (data.market === 'live' ? (data.marketCache === 'kv' ? 'live/cached' : 'live') : 'sample');
+    if(step === 'ship' && data.domains)
+      meta += '  name.com:' + data.domains;
+    setMeta(step, meta);
     prior += '\n\n' + data.agent + ':\n' + data.output;
     setAgent(step, step === 'ship' ? 'holding' : 'done', step === 'ship' ? 'holding' : 'done');
     if(PACE_VIDEO && step !== 'ship') await sleep(6000);

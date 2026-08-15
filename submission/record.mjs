@@ -21,7 +21,9 @@ import path from 'node:path';
 import url from 'node:url';
 
 const OUT = path.dirname(url.fileURLToPath(import.meta.url));
-const SITE = 'https://fleetcommand-2u0.pages.dev/?pace=video';
+const BASE = 'https://fleetcommand-2u0.pages.dev/';
+const SITE = BASE + '?pace=video';   // the narrative
+const COLD = BASE + '?pace=fast';    // the cold open, same mission rendered fast
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const t0 = Date.now();
 const at = () => ((Date.now() - t0) / 1000);
@@ -74,24 +76,43 @@ const showEntry = async needle => {
   }, needle);
 };
 
+// ---- COLD OPEN -----------------------------------------------------------
+// Every other entry opens on a logo or a talking head. This one opens on the
+// moment the software stops and hands control back to a person, because that is
+// the only thing in this demo nobody else has.
+//
+// The mission here is REAL and complete: all four agents run and return, just
+// rendered at ?pace=fast so the gate arrives in seconds. Nothing is skipped and
+// nothing is staged; the slam on screen is the same slam the narrative earns
+// later.
+await page.goto(COLD, { waitUntil: 'networkidle' });
+await page.mouse.move(960, 700);
+await sleep(900);
+await page.locator('#runBtn').click();
+mark('cold open: mission running fast');
+await page.waitForFunction(
+  () => document.getElementById('gate').classList.contains('armed'), null, { timeout: 120000 });
+mark('COLD OPEN SLAM');
+await sleep(5500);
+
+// Hard cut back to the beginning. A reload is the cleanest cut there is.
 await page.goto(SITE, { waitUntil: 'networkidle' });
 await page.mouse.move(960, 700);
-mark('idle cockpit');
+mark('cut to idle cockpit');
 
-// The problem, over the still cockpit. Trimmed from 18s: the mission itself got
-// longer when SCOUT gained the market lens and SHIP gained the registrar check,
-// and the gate beat is not what gives way.
-await sleep(8000);
+// Shorter than it used to be: the cold open already showed the cockpit, so this
+// beat does not have to introduce it again.
+await sleep(5000);
 
-// Slow pass down the crew column.
+// Pass down the crew column.
 mark('crew pass');
 for (const id of ['#ag-scout', '#ag-audit', '#ag-medic', '#ag-ship']) {
-  await glide(id, 900);
-  await sleep(1500);
+  await glide(id, 700);
+  await sleep(1000);
 }
 
-await glide('#runBtn', 800);
-await sleep(600);
+await glide('#runBtn', 700);
+await sleep(500);
 mark('click Run mission');
 await page.locator('#runBtn').click();
 await page.mouse.move(960, 720, { steps: 30 });
@@ -115,11 +136,11 @@ await sleep(13000);
 // so put it on camera before the decision.
 await showEntry('NAME.COM');
 mark('registrar check on screen');
-await sleep(5000);
+await sleep(4000);
 
-await glide('#rejectBtn', 900);
+await glide('#rejectBtn', 800);
 mark('hover Send back');
-await sleep(4500);
+await sleep(4000);
 await glide('#approveBtn', 800);
 await sleep(2500);
 mark('click Approve');
@@ -130,16 +151,16 @@ await sleep(5000);
 await page.mouse.move(770, 520, { steps: 30 });
 await showEntry('MARKET / SERPAPI');
 mark('market lens revisited');
-await sleep(5000);
+await sleep(4000);
 await showEntry('MEDIC');
 mark('MEDIC diff');
-await sleep(6000);
+await sleep(5000);
 
 // Close on the full cockpit.
 await page.evaluate(() => { const c = document.getElementById('console'); c.scrollTop = c.scrollHeight; });
 await page.mouse.move(960, 860, { steps: 40 });
 mark('close on cockpit');
-await sleep(6000);
+await sleep(5000);
 mark('cut');
 
 await context.close();
