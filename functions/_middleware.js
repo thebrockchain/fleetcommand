@@ -15,5 +15,13 @@ export async function onRequest(context) {
   const res = await context.next();
   const out = new Response(res.body, res);
   for (const [k, v] of Object.entries(HEADERS)) out.headers.set(k, v);
+  // Pages serves the document with max-age=0, which makes every visit a
+  // full round trip. A short TTL with a day of stale-while-revalidate keeps
+  // a judge's second click instant and still picks up a deploy within five
+  // minutes (the fleet cache posture, BUILD SAFE in CLAUDE.md).
+  const type = out.headers.get('Content-Type') || '';
+  if (type.includes('text/html')) {
+    out.headers.set('Cache-Control', 'public, max-age=300, stale-while-revalidate=86400');
+  }
   return out;
 }
