@@ -1,81 +1,42 @@
 # Fleet Command - what is still open
 
-## Brock's taps (the walls, each one move)
+Updated 2026-08-15. The build is DONE: three real integrations (Anthropic,
+SerpApi, name.com, each behind its own on-switch with labelled sample
+fallback), the design pass (amber reserved for the gate, the slam, the living
+field, frosted glass), crew telemetry, the 2x share card, and the 4K-shot,
+13-shot-edited demo film. The campaign war room is hackathons.thebrockchain.com.
 
-1. **Arm live mode.** `cd fleetcommand && npx wrangler pages secret put
-   ANTHROPIC_API_KEY` with a spend capped key. Until then the demo runs in
-   labeled replay mode, which is honest and demoable but live is stronger for
-   judges. A live secret key is human only (Article XI #32).
-2. **Register for the three events** (accepting ToS is human only):
-   DevNetwork API+Cloud+AI (devpost), Aiify Agentic World (devpost), IBM Bob
-   2.0. Links in README.
-3. **Submit** (publishing under Brock's name is a gated edge). The entry copy
-   and the VO script are STAGED in `submission/` as of 2026-08-10, and the
-   silent capture is recorded. What is left before submitting is Brock's voice
-   track and the YouTube upload. DevNetwork closes Sep 3.
+## Brock's taps, in order (nothing else blocks anything)
 
-## Tomorrow (2026-08-11), the resume point
+1. **Voice the film.** `~/Desktop/fleetcommand-demo.mp4` (2:42, silent), marks
+   table at the top of `submission/VIDEO-SCRIPT.md`. Say nothing over the first
+   two seconds of each slam (0:03 and 1:57). His voice is human only.
+2. **Upload public to YouTube**, link into `submission/ENTRY-DEVNETWORK.md`.
+3. **Arm the hub wall**: `export BROCKAUTH_OWNER_KEY=...` then
+   `bash ~/Documents/thebrockchain/hackathons/tools/arm-wall.sh` (owner key is
+   human only; the script does the rest and proves the wall holds).
+4. **Register for DevNetwork** when it opens Aug 17 (ToS is human only).
+5. **Google Cloud billing account by Aug 20** or the $180k port is killed and
+   the days go to the useBruno track instead (card entry is human only).
+6. Optional, worth $5,000 in tracks: SerpApi and name.com free accounts, then
+   arm SERPAPI_KEY, NAMECOM_USER, NAMECOM_TOKEN as Pages secrets. Optional:
+   ANTHROPIC_API_KEY (spend capped) for the LIVE chip.
+7. **Submit by Sep 3**: main entry plus the SerpApi and name.com tracks
+   separately, from `submission/ENTRY-DEVNETWORK.md`.
 
-The build, kit, and capture are DONE. The next three moves, in order:
+## Crew follow-ups (need no permission)
 
-1. Brock voices the capture: play `~/Desktop/fleetcommand-demo-capture.mp4`
-   (2:44, silent) and read the VO against the marks table at the top of
-   `submission/VIDEO-SCRIPT.md`. Optional stronger take: arm the key first
-   (tap 1 below) and have a session re-run `submission/record.mjs` so the
-   LIVE chip is on camera.
-2. Upload the voiced video public to YouTube, drop the link into both entry
-   files in `submission/`.
-3. DevNetwork registration window opens Aug 17: register (tap 2), then
-   submit with `submission/ENTRY-DEVNETWORK.md` (tap 3). Closes Sep 3.
+- useBruno collection over the /run API (cheapest track, $1,000), by Aug 26.
+- Architecture diagram (required by All Things Agentic), by Aug 28.
+- Google port build (3 days, plan in GOOGLE-PORT.md) IF the billing account
+  exists by Aug 20.
+- Re-verify every event deadline weekly; board rule, next check Aug 21.
+- If any key gets armed, re-run the rig + edit so LIVE chips are on camera.
 
-## Build follow-ups
+## Standing cautions
 
-- Demo video: CAPTURE RECORDED 2026-08-10 (`~/Desktop/
-  fleetcommand-demo-capture.mp4`, rig at `submission/record.mjs`, marks in
-  `submission/VIDEO-SCRIPT.md`). Open: Brock's voice track + YouTube upload.
-- Entry copy: STAGED and no-slop passed. `submission/ENTRY-DEVNETWORK.md`
-  (paste-ready), `submission/ENTRY-AIIFY-AGENTIC.md` (paste-ready),
-  `submission/ENTRY-IBM-BOB.md` (battle plan; that build happens inside its
-  Sep 25 to 27 window by rule).
-- Custom domain decision: fleetcommand.thebrockchain.com or keep pages.dev.
-- Add to brock/CLAUDE.md creations table + README: DONE 2026-08-10, plus the
-  portfolio card and the live URL in this repo's README (audit.sh discovers
-  the live check from there).
-- Add the live surface to the /avery registry once deployed.
-- **DONE 2026-08-10: the sites.mjs row is added** (`brock` commit `dfc9496`),
-  listed `public`/`product`, so every jack gate now grades this surface. The
-  og gate passes. But the row immediately surfaced TEN findings that were
-  invisible before, and they are open:
-
-  **ALL FOUR FAILS ARE FIXED 2026-08-10** (commit `b0ac01a`, verified live):
-  the lockup is now a real `<h1>`, plus `rel=canonical`, `sitemap.xml` with the
-  robots `Sitemap:` line, a `WebApplication` JSON-LD block, and an SVG favicon.
-  Score went 16 of 26 to **22 of 26, zero fails**. The h1 swap was measured,
-  not assumed: the rendered box is identical to the `div` it replaced on x, y,
-  width, height, font, weight and letter spacing, so the recorded demo capture
-  still matches the live page exactly.
-
-  **Two things a future session must not undo.** The JSON-LD and canonical live
-  OUTSIDE the `share:start`/`share:end` markers on purpose, because
-  `tools/build-og.mjs` strips everything between them on every rebuild. And the
-  `<h1>` carries `class="mark"`, which is what keeps it visually identical; a
-  restyle that drops that class changes the header's appearance.
-
-  **llms.txt and the answerable schema landed 2026-08-10** (commit `d366446`),
-  taking the score to **24 of 26**. `site/llms.txt` states what the site is,
-  including the honest notes (fictional target, the replay and live modes, and
-  that the private production room is not this site).
-
-  The markup is **HowTo, deliberately not FAQPage.** Google wants FAQ question
-  and answer text VISIBLE on the page carrying the markup, and this page is one
-  screen with zero scroll, so an honest FAQ block has nowhere to live here.
-  Every HowTo step is already on screen: the four agents in the crew column and
-  the human decision at the gate. If a future session adds a scrolling page,
-  FAQPage becomes available honestly at that point.
-
-  **Two WARN remain, both deliberate, do not "fix" them blindly.** The 13 char
-  title is the product name and is what judges see on the share card. The weak
-  `cache-control` is arguably correct here: the mode chip must never be served
-  stale, and a cached document could show REPLAY after the key is armed.
-- Consider a "send back" round trip that actually re-runs MEDIC with the
-  objection (currently simulated client side).
+- The og card build strips everything between share:start/share:end markers;
+  JSON-LD lives outside them on purpose.
+- The h1 carries class="mark"; dropping it changes the header.
+- record.mjs writes marks.json; edit.mjs reads it. Never hand type shot times.
+- Below 900px the page scrolls by design (see DESIGN.md); do not clamp.

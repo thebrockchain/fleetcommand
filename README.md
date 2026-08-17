@@ -53,20 +53,25 @@ pattern. Replay mode costs nothing and is the default.
 
 ## Hackathon targets
 
-One build, three submissions (registration and submission are Brock's taps):
-
-1. DevNetwork API + Cloud + AI Hackathon 2026, $40,500 cash pool, submissions
-   Aug 17 to Sep 3.
-2. Aiify Agentic AI World w/ Fetch.ai, $5,000 cash, submit by Sep 22.
-3. IBM Bob 2.0 Hackathon, $10,000, online 48 hour build Sep 25 to 27.
+The live board is **hackathons.thebrockchain.com** (repo `hackathons`), and
+`HACKATHON-BOARD.md` here is the dated snapshot. As of 2026-08-15 the targets
+are DevNetwork API + Cloud + AI ($45,500, submissions Aug 17 to Sep 3, entering
+the SerpApi and name.com sponsor tracks with real integrations), All Things
+Agentic ($180,000, Aug 31, gated on a Google Cloud billing account, plan in
+`GOOGLE-PORT.md`), and IBM Bob 2.0 ($10,000, 48 hour window Sep 25 to 27).
+Aiify was a dead event (concluded Sep 2024) and its entry file is removed.
 
 ## The submission kit
 
-Everything an entry needs lives in `submission/`: paste-ready copy per event,
-the 3 minute VO script, the Playwright capture rig (`record.mjs`), and the
-marks table for the demo capture recorded 2026-08-10 (the silent mp4 sits at
-`~/Desktop/fleetcommand-demo-capture.mp4` awaiting Brock's voice). The site
-takes `?pace=video`, which only slows the mission to the VO timeline for
-recording; content is identical.
+Everything an entry needs lives in `submission/`: paste-ready copy per event
+(`ENTRY-DEVNETWORK.md` carries addenda for the SerpApi and name.com track
+judges), the VO script with the marks table, and the capture pipeline:
+`record.mjs` shoots the live site at true 4K through the DevTools screencast
+and writes `marks.json` in video time; `edit.mjs` cuts the 4K master into a
+13 shot 1080p film placed against those marks, never against hand typed times.
+The finished film sits at `~/Desktop/fleetcommand-demo.mp4` (2:42, silent)
+with the uncut master beside it, awaiting Brock's voice. The site takes
+`?pace=video` (VO timeline) and `?pace=fast` (cold open); pace changes render
+speed only, never what runs.
 
 `NEXT.md` carries what is still open, with tomorrow's resume point on top.
