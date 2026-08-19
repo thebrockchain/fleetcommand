@@ -11,7 +11,7 @@ const HEADERS = {
   'Strict-Transport-Security': 'max-age=31536000; includeSubDomains',
 };
 
-export async function onRequest(context) {
+async function fleetHandle(context) {
   const res = await context.next();
   const out = new Response(res.body, res);
   for (const [k, v] of Object.entries(HEADERS)) out.headers.set(k, v);
@@ -24,4 +24,19 @@ export async function onRequest(context) {
     out.headers.set('Cache-Control', 'public, max-age=300, stale-while-revalidate=86400');
   }
   return out;
+}
+
+// fleet pulse: fleetbrain's traffic beacon. No PULSE binding = silent no-op
+// (the on-switch pattern), and a failed write never touches the request.
+export async function onRequest(context) {
+  const t0 = Date.now();
+  const res = await fleetHandle(context);
+  try {
+    context.env.PULSE?.writeDataPoint({
+      blobs: ["fleetcommand", new URL(context.request.url).pathname.slice(0, 96), String(res.status)],
+      doubles: [Date.now() - t0, res.status >= 500 ? 1 : 0],
+      indexes: ["fleetcommand"],
+    });
+  } catch {}
+  return res;
 }
