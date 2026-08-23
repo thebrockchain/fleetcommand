@@ -11,6 +11,18 @@ Bakery), zero fleet secrets, and no connection to the walled ainow deploy.
 The private crew room stays private; this is the showpiece that proves the
 same engine in the open.
 
+## The two key ignition (2026-08-22, build #12, docs/PREMISE.md)
+
+The approval gate is hardware now. At the hold, KEY 1 glows amber (the
+reserved colour, still spent at exactly one moment, worn by a keyring
+instead of a button fill); turning it arms the console and wakes KEY 2, and
+turning KEY 2 releases the staged deploy. Send back stays an ordinary
+button and stands both keys down. One key never fires: KEY 2 is disabled in
+the DOM until KEY 1 turns, so no single interaction can release. The keys
+are real buttons, keyboard operable, aria-pressed carries the turned state,
+and reduced motion turns them instantly. Approve and Send back keep their
+exact prior semantics and log lines; only how the decision feels changed.
+
 ## The on-switch (fleet pattern)
 
 - **Replay mode (default):** with no key set, `/run` serves a recorded run of
