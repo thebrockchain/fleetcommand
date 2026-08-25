@@ -25,19 +25,24 @@ gcloud services enable run.googleapis.com cloudbuild.googleapis.com \
   artifactregistry.googleapis.com generativelanguage.googleapis.com \
   --project "$PROJECT"
 
-# The model key is read from the environment on purpose: it is never stored in
-# this repo and never echoed. Arm it in the shell before running.
-: "${GOOGLE_API_KEY:?Set GOOGLE_API_KEY in the environment first (never commit it)}"
+# The model key is Brock's hands, per the standing rule that a live secret key
+# never passes through a session. This script deploys WITHOUT it; until the key
+# is armed the service boots but missions fail at the model call, honestly.
+# Arm it afterwards with tools/arm-key.sh (one command, run by Brock).
 
+# CORS: the cockpit stays on Cloudflare Pages and calls this API cross-origin.
+# Public on purpose: a judge must be able to click the URL with no login.
 .venv/bin/adk deploy cloud_run \
   --project "$PROJECT" \
   --region "$REGION" \
   --service_name "$SERVICE" \
   --with_ui \
-  ./fleet_command
+  --allow_origins "https://fleetcommand-2u0.pages.dev" \
+  ./fleet_command \
+  -- --allow-unauthenticated
 
 gcloud run services update "$SERVICE" --project "$PROJECT" --region "$REGION" \
-  --set-env-vars "GOOGLE_GENAI_USE_VERTEXAI=FALSE,GOOGLE_API_KEY=${GOOGLE_API_KEY}"
+  --update-env-vars "GOOGLE_GENAI_USE_VERTEXAI=FALSE"
 
 echo "Deployed. Service URL:"
 gcloud run services describe "$SERVICE" --project "$PROJECT" --region "$REGION" \
