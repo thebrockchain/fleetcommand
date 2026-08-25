@@ -25,10 +25,11 @@ gcloud services enable run.googleapis.com cloudbuild.googleapis.com \
   artifactregistry.googleapis.com generativelanguage.googleapis.com \
   --project "$PROJECT"
 
-# The model key is Brock's hands, per the standing rule that a live secret key
-# never passes through a session. This script deploys WITHOUT it; until the key
-# is armed the service boots but missions fail at the model call, honestly.
-# Arm it afterwards with tools/arm-key.sh (one command, run by Brock).
+# No model key anywhere, on purpose. The service reaches Gemini through Vertex
+# AI as its own service identity, so there is no secret to arm, store, or leak.
+# GOOGLE_CLOUD_LOCATION is "global" because gemini-3.7-flash is not published
+# to regional Vertex endpoints (us-central1 answered 404); the Cloud Run
+# service itself still lives in us-central1 where the free tier applies.
 
 # CORS: the cockpit stays on Cloudflare Pages and calls this API cross-origin.
 # Public on purpose: a judge must be able to click the URL with no login.
@@ -42,7 +43,7 @@ gcloud services enable run.googleapis.com cloudbuild.googleapis.com \
   -- --allow-unauthenticated
 
 gcloud run services update "$SERVICE" --project "$PROJECT" --region "$REGION" \
-  --update-env-vars "GOOGLE_GENAI_USE_VERTEXAI=FALSE"
+  --update-env-vars "GOOGLE_GENAI_USE_VERTEXAI=TRUE,GOOGLE_CLOUD_PROJECT=${PROJECT},GOOGLE_CLOUD_LOCATION=global"
 
 echo "Deployed. Service URL:"
 gcloud run services describe "$SERVICE" --project "$PROJECT" --region "$REGION" \

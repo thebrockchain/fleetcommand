@@ -24,7 +24,7 @@ first-class pause. A rejected gate never executes the tool at all.
 cd google
 python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
 export GOOGLE_GENAI_USE_VERTEXAI=FALSE
-export GOOGLE_API_KEY=...   # a Gemini API key; Brock's hands, never committed
+export GOOGLE_API_KEY=...   # local dev only; deployed, there is NO key (Vertex + service identity)
 .venv/bin/adk web            # browser dev UI, pick fleet_command
 ```
 
@@ -38,4 +38,8 @@ project below. It needs a gcloud login that is NOT the client account this Mac
 carries by default; the script guards for that.
 
 - Project: `fleet-command-506619` (Fleet Command), billing-linked 2026-08-25.
-- Region: `us-central1` (the always-free tier region).
+- Region: `us-central1` (the always-free tier region); Vertex location `global`,
+  because gemini-3.7-flash is not published regionally.
+- Live: https://fleet-command-r453w22nfq-uc.a.run.app - full mission verified
+  against production 2026-08-25, gate pause and resume included. No API key
+  exists in this deployment; the service reaches Vertex as its own identity.
