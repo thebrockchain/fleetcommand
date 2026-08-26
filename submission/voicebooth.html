@@ -4,12 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Voice Booth · Fleet Command</title>
-<!-- The piece-by-piece recording booth for the demo voice over. Local only,
-     never deployed. Fourteen speaking pieces, each recorded alone against its
-     own slice of the silent film, re-takeable forever. Times come from
-     submission/marks.json. Saved pieces are named fleetcommand-vo-NN.webm and
-     ffmpeg lays each one onto the film at its piece's mark afterwards, so a
-     piece recorded slightly long is a mixing note, not a retake. -->
+<!-- READ MODE. One take, zero pressure: Brock reads the fourteen lines top to
+     bottom at his own pace, repeats any sentence he trips on, and saves ONE
+     file. The mix (crew side) transcribes it, keeps the best read of each
+     line, cleans it, and lands every line on the film at the times in
+     submission/mixmap.json. The reader never worries about timing. -->
 <style>
 :root{
   --bg:#0b0e15; --surf:#141926; --line:#232b45; --ink:#eef1fb; --muted:#8b93af;
@@ -17,164 +16,107 @@
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--bg);color:var(--ink);font-family:-apple-system,'Segoe UI',sans-serif;
-  height:100vh;display:flex;flex-direction:column;overflow:hidden}
-header{display:flex;align-items:center;gap:1rem;padding:.6rem 1.2rem;border-bottom:1px solid var(--line)}
+  height:100vh;display:flex;flex-direction:column}
+header{display:flex;align-items:center;gap:1rem;padding:.7rem 1.4rem;border-bottom:1px solid var(--line);
+  position:sticky;top:0;background:var(--bg);z-index:5}
 header h1{font-size:1.05rem;letter-spacing:.06em}
 header h1 b{color:var(--indigo)}
-.meter{flex:1;max-width:300px;height:14px;border:1px solid var(--line);border-radius:99px;overflow:hidden;background:#0d1119}
+.meter{width:220px;height:14px;border:1px solid var(--line);border-radius:99px;overflow:hidden;background:#0d1119}
 .meter i{display:block;height:100%;width:0%;background:var(--teal)}
-.mstate{font-size:.8rem;color:var(--muted)}
-.done-count{margin-left:auto;font-weight:700;color:var(--teal)}
-.wrap{flex:1;display:grid;grid-template-columns:290px 1fr;min-height:0}
-nav{border-right:1px solid var(--line);overflow-y:auto;padding:.6rem}
-.piece{display:flex;gap:.6em;align-items:center;width:100%;text-align:left;background:none;
-  border:1px solid transparent;border-radius:.5em;padding:.5em .6em;color:var(--muted);
-  cursor:pointer;font:inherit;font-size:.82rem}
-.piece:hover{border-color:var(--line)}
-.piece.current{border-color:var(--indigo);color:var(--ink);background:rgba(124,108,255,.08)}
-.piece .n{font-variant-numeric:tabular-nums;color:var(--muted);width:1.6em}
-.piece .ok{margin-left:auto;color:var(--teal);visibility:hidden}
-.piece.has .ok{visibility:visible}
-.main{display:grid;grid-template-rows:minmax(0,46%) minmax(0,54%);min-height:0}
-.filmwrap{position:relative;background:#000;display:flex;justify-content:center}
-video{height:100%;max-width:100%}
-.count{position:absolute;inset:0;display:none;place-items:center;font-size:8rem;font-weight:800;
-  background:rgba(11,14,21,.75);z-index:5}
-.count.on{display:grid}
-.card{padding:1rem 4vw;display:flex;flex-direction:column;gap:.8rem;min-height:0;overflow-y:auto}
-.cuelabel{font-size:.75rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
-#lineText{font-size:clamp(1.25rem,2.4vw,2rem);line-height:1.5;font-weight:600}
-.hint{color:var(--muted);font-size:.9rem}
-.controls{display:flex;gap:.7rem;flex-wrap:wrap;margin-top:auto;padding-top:.6rem}
-button{font:inherit;font-weight:700;border:0;border-radius:.6em;padding:.75em 1.4em;cursor:pointer}
+.mstate{font-size:.82rem;color:var(--muted);flex:1}
+.clock{font-variant-numeric:tabular-nums;color:var(--muted)}
+main{flex:1;overflow-y:auto;padding:1.4rem 8vw 7rem}
+.rules{background:var(--surf);border:1px solid var(--line);border-radius:.8em;padding:1em 1.2em;
+  color:var(--muted);line-height:1.6;margin-bottom:1.6rem}
+.rules b{color:var(--ink)}
+.ln{margin-bottom:1.5rem;padding-left:1rem;border-left:3px solid var(--line)}
+.ln .tag{font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--indigo);margin-bottom:.3em}
+.ln .tag i{color:var(--muted);font-style:normal;letter-spacing:0;text-transform:none}
+.ln p{font-size:clamp(1.15rem,1.9vw,1.6rem);line-height:1.6;font-weight:600}
+footer{position:fixed;left:0;right:0;bottom:0;display:flex;gap:.8rem;align-items:center;
+  padding:.9rem 8vw;background:rgba(11,14,21,.92);border-top:1px solid var(--line);
+  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+button{font:inherit;font-weight:700;border:0;border-radius:.6em;padding:.85em 1.6em;cursor:pointer}
 button:disabled{opacity:.35;cursor:default}
 .ghost{background:var(--surf);color:var(--ink);border:1px solid var(--line)}
 #recBtn{background:var(--red);color:#fff}
-#hearBtn{background:var(--surf);color:var(--teal);border:1px solid var(--teal)}
-#saveAll{background:var(--teal);color:#04211d}
-.flash{animation:flash 1s infinite}
-@keyframes flash{50%{opacity:.4}}
+#recBtn.rec{animation:flash 1.2s infinite}
+#saveBtn{background:var(--teal);color:#04211d}
+@keyframes flash{50%{opacity:.55}}
 </style>
 </head>
 <body>
 <header>
-  <h1>VOICE <b>BOOTH</b> · piece by piece</h1>
+  <h1>VOICE <b>BOOTH</b> · just read</h1>
   <div class="meter"><i id="level"></i></div>
-  <span class="mstate" id="mstate">Step 1: press "Mic check".</span>
-  <span class="done-count" id="doneCount">0 / 14</span>
+  <span class="mstate" id="mstate">Step 1: press "Mic check" below.</span>
+  <span class="clock" id="clock">0:00</span>
 </header>
 
-<div class="wrap">
-  <nav id="nav"></nav>
-  <div class="main">
-    <div class="filmwrap">
-      <video id="film" src="fleetcommand-demo.mp4" muted playsinline preload="auto"></video>
-      <div class="count" id="count">3</div>
-    </div>
-    <div class="card">
-      <div class="cuelabel" id="lineLabel"></div>
-      <div id="lineText"></div>
-      <div class="hint" id="lineHint"></div>
-      <div class="controls">
-        <button id="micBtn" class="ghost">🎙 Mic check</button>
-        <button id="watchBtn" class="ghost" disabled>▶ Watch this part</button>
-        <button id="recBtn" disabled>● Record this line</button>
-        <button id="hearBtn" disabled>🔁 Hear my take with the picture</button>
-        <button id="saveAll" class="ghost" disabled>⬇ Save all pieces</button>
-      </div>
-    </div>
+<main id="scriptEl">
+  <div class="rules">
+    <b>The only rules:</b><br>
+    1. Quiet room, stay about a hand's length from the mic.<br>
+    2. Read line 1 to line 14, top to bottom, at YOUR pace. No clock, no rush.<br>
+    3. <b>Mess a sentence up? Just say that sentence again right away</b> and keep going. Do it as many times as you want. I keep your best one and nobody ever hears the rest.<br>
+    4. Take a small breath between lines.<br>
+    Timing, cutting, cleanup, and syncing to the movie: all my job, not yours.
   </div>
-</div>
+</main>
+
+<footer>
+  <button id="micBtn" class="ghost">🎙 Mic check</button>
+  <button id="recBtn" disabled>● Start reading</button>
+  <button id="hearBtn" class="ghost" disabled>🔁 Hear it back</button>
+  <button id="saveBtn" disabled>⬇ Save my voice</button>
+</footer>
 
 <script>
-// Speaking pieces only. t/until with two decimals come from submission/marks.json
-// (the rig measured them; never retype). `until` is the window the line should
-// land in; recording runs 1.5s past it as grace, because the mix lays pieces at
-// absolute marks and a slightly long tail is fine unless it reaches the next line.
-const PIECES = [
-  {t:3.51,  until:9.80,  label:'1 · The hook, over the slam', hint:'Small pause where the dots are. Let the drained screen breathe.', text:'That is an AI crew stopping itself. … It did the work. Then it refused to ship it without a person.'},
-  {t:9.80,  until:14.80, label:'2 · The reset', hint:'Just this one line, easy.', text:'Here is how it got there.'},
-  {t:14.80, until:22.89, label:'3 · The crew', hint:'Steady pace. You have 8 seconds.', text:'If you run a small business you cannot afford an operations crew. Nobody watches your site, and you find out it is broken from a customer. So we built one: SCOUT does reconnaissance, AUDIT ranks what it finds, MEDIC drafts the fix, SHIP stages the deploy.'},
-  {t:22.89, until:42.43, label:'4 · The target', hint:'The mission starts running on screen as you say this.', text:'Today’s target is a bakery site we broke on purpose: a dead order form, no security headers, a six second load.'},
-  {t:42.43, until:62.00, label:'5 · The market lens', hint:'The MARKET / SERPAPI entry is landing under SCOUT as you talk.', text:'SCOUT does not just read the site. It reads the market around it, live through SerpApi. And that changes the finding: the order form posting into a dead route is not just a bug, it is a bug in the exact place every competitor is winning. Every order this bakery takes is silently vanishing.'},
-  {t:62.00, until:82.00, label:'6 · AUDIT finishes', hint:'Calm, like reading a scoreboard.', text:'AUDIT ranks the defects. High, medium, low. The dead order route is on top because it is the one actively costing money.'},
-  {t:82.00, until:100.00, label:'7 · MEDIC finishes', hint:'"Drafted, not applied" is the point. Lean on it.', text:'MEDIC writes the actual fix. That is a real diff: repoint the form, add the handler. Drafted, not applied. MEDIC never touches production.'},
-  {t:100.00,until:115.50, label:'8 · The honesty line', hint:'This one wins judges. Say it like you mean it, because we do.', text:'Those chips say replay and sample. This run is a recording and the app labels it rather than faking a live call. Arm the keys and the identical code path goes live. We would rather show you a labelled sample than lie to you.'},
-  {t:119.50,until:130.35, label:'9 · The gate, earned', hint:'The slam happens 2s before you start. It already landed; now explain it.', text:'And there it is. SHIP staged the deploy, summarized the risk, and stopped. It is holding for a human, and the hold is structural. The agent has no code path forward until a person decides. Notice the screen: everything else just stepped back, and the only lit control left is the one that belongs to you.'},
-  {t:130.35,until:136.07, label:'10 · The second risk', hint:'A little surprised, like SHIP caught something real. It did.', text:'And SHIP raised something nobody asked it to. It checked with name.com, and this bakery does not own its own name. It is about to start taking money online on a domain anyone could register tomorrow. That is a person’s decision, not software’s.'},
-  {t:136.07,until:144.45, label:'11 · Send back', hint:'The cursor hovers Send back on screen.', text:'I can send it back, and MEDIC revises with my objection attached.'},
-  {t:144.45,until:150.36, label:'12 · Approve', hint:'The line of the whole video. Slow down on the last sentence.', text:'Or I approve, and only then does anything release. AI does the work. A person holds the trigger. The gate is not a limitation of the product. The gate is the product.'},
-  {t:150.36,until:157.99, label:'13 · Why it is real', hint:'Confident, matter-of-fact.', text:'This is not a demo concept. The same engine runs our private production ops room across dozens of live sites today. What you are looking at is the public version: Cloudflare Pages and Functions, SerpApi, name.com, zero dependencies, one screen, no scroll.'},
-  {t:157.99,until:161.99, label:'14 · The close', hint:'Land it and stop. Four seconds is plenty.', text:'Fleet Command. An AI ops crew that does the work, and a human gate that holds the trigger.'},
+// The lines, verbatim from submission/mixmap.json. The mix matches his words
+// back to these texts, so this array and that file must say the same things.
+const LINES = [
+  {hint:'the hook: big pause at the dots', text:'That is an AI crew stopping itself. … It did the work. Then it refused to ship it without a person.'},
+  {hint:'the reset: easy', text:'Here is how it got there.'},
+  {hint:'the crew: your own pace, there is plenty of room now', text:'If you run a small business you cannot afford an operations crew. Nobody watches your site, and you find out it is broken from a customer. So we built one: SCOUT does reconnaissance, AUDIT ranks what it finds, MEDIC drafts the fix, SHIP stages the deploy.'},
+  {hint:'the target', text:'Today’s target is a bakery site we broke on purpose: a dead order form, no security headers, a six second load.'},
+  {hint:'the market lens', text:'SCOUT does not just read the site. It reads the market around it, live through SerpApi. And that changes the finding: the order form posting into a dead route is not just a bug, it is a bug in the exact place every competitor is winning. Every order this bakery takes is silently vanishing.'},
+  {hint:'audit: calm, like a scoreboard', text:'AUDIT ranks the defects. High, medium, low. The dead order route is on top because it is the one actively costing money.'},
+  {hint:'medic: lean on "drafted, not applied"', text:'MEDIC writes the actual fix. That is a real diff: repoint the form, add the handler. Drafted, not applied. MEDIC never touches production.'},
+  {hint:'the honesty line: say it like you mean it, because we do', text:'Those chips say replay and sample. This run is a recording, and the app says so instead of faking a live call. Arm the keys and the same code goes live. We would rather label a sample than lie to you.'},
+  {hint:'the gate', text:'And there it is. SHIP staged the deploy, named the risks, and stopped. The hold is structural: no code path forward until a person decides. And the only lit control left on the screen is the one that belongs to you.'},
+  {hint:'the second risk: a little surprised', text:'And SHIP caught something nobody asked it to: this bakery does not own its own name. Anyone could register it tomorrow. That is a person’s call, not software’s.'},
+  {hint:'send back', text:'I can send it back, and MEDIC revises.'},
+  {hint:'approve: the line of the whole video, slow at the end', text:'Or I approve, and only then does anything release. AI does the work. A person holds the trigger. The gate is the product.'},
+  {hint:'why it is real', text:'And this same engine already runs our real ops room, across dozens of live sites.'},
+  {hint:'the close: land it and stop', text:'Fleet Command. The crew does the work. You hold the trigger.'},
 ];
-const GRACE = 1.5;
 
-const film = document.getElementById('film');
-const count = document.getElementById('count');
+const scriptEl = document.getElementById('scriptEl');
+LINES.forEach((l, i) => {
+  const d = document.createElement('div');
+  d.className = 'ln';
+  d.innerHTML = '<div class="tag">Line ' + (i+1) + ' <i>· ' + l.hint + '</i></div><p></p>';
+  d.querySelector('p').textContent = l.text;
+  scriptEl.appendChild(d);
+});
+
 const level = document.getElementById('level');
 const mstate = document.getElementById('mstate');
-const doneCount = document.getElementById('doneCount');
-const nav = document.getElementById('nav');
-const lineLabel = document.getElementById('lineLabel');
-const lineText = document.getElementById('lineText');
-const lineHint = document.getElementById('lineHint');
+const clock = document.getElementById('clock');
 const micBtn = document.getElementById('micBtn');
-const watchBtn = document.getElementById('watchBtn');
 const recBtn = document.getElementById('recBtn');
 const hearBtn = document.getElementById('hearBtn');
-const saveAll = document.getElementById('saveAll');
+const saveBtn = document.getElementById('saveBtn');
 
-let stream = null, recorder = null, chunks = [];
-let takes = new Array(PIECES.length).fill(null);
-let cur = 0, playTimer = 0, playback = null, busy = false;
-
-function renderNav(){
-  nav.innerHTML = '';
-  PIECES.forEach((p, i) => {
-    const b = document.createElement('button');
-    b.className = 'piece' + (i === cur ? ' current' : '') + (takes[i] ? ' has' : '');
-    b.innerHTML = '<span class="n">' + (i+1) + '</span><span>' + p.label.replace(/^\d+ · /,'') + '</span><span class="ok">✔</span>';
-    b.addEventListener('click', () => { if(!busy) select(i); });
-    nav.appendChild(b);
-  });
-  const n = takes.filter(Boolean).length;
-  doneCount.textContent = n + ' / ' + PIECES.length;
-  saveAll.disabled = n === 0;
-  if(n === PIECES.length) doneCount.textContent = '14 / 14 🎉';
-}
-
-function select(i){
-  cur = i;
-  const p = PIECES[i];
-  lineLabel.textContent = 'PIECE ' + p.label + '  ·  window ' + (p.until - p.t).toFixed(0) + 's';
-  lineText.textContent = p.text;
-  lineHint.textContent = p.hint + (takes[i] ? '  ·  You already have a take for this one; recording again replaces it.' : '');
-  hearBtn.disabled = !takes[i] || !stream;
-  stopSegment();
-  film.currentTime = p.t;
-  renderNav();
-}
-
-function stopSegment(){
-  film.pause();
-  clearInterval(playTimer);
-  if(playback){ playback.pause(); playback = null; }
-}
-
-function playSegment(from, to, then){
-  film.currentTime = from;
-  film.play();
-  playTimer = setInterval(() => {
-    if(film.currentTime >= to){ stopSegment(); if(then) then(); }
-  }, 60);
-}
+let stream = null, recorder = null, chunks = [], take = null, playback = null, t0 = 0, timer = 0;
+const fmt = s => Math.floor(s/60) + ':' + String(Math.floor(s%60)).padStart(2,'0');
 
 micBtn.addEventListener('click', async () => {
   try{
     stream = await navigator.mediaDevices.getUserMedia({audio:{
       echoCancellation:false, noiseSuppression:false, autoGainControl:false}});
   }catch(e){
-    mstate.textContent = 'Mic blocked. Click the 🎤 in the address bar, allow, then retry.';
+    mstate.textContent = 'Mic blocked. Click the 🎤 in the address bar, allow, retry.';
     return;
   }
   const ctx = new AudioContext();
@@ -188,71 +130,52 @@ micBtn.addEventListener('click', async () => {
     level.style.background = v > 4 ? 'var(--teal)' : '#565f7c';
     requestAnimationFrame(loop);
   })();
-  mstate.textContent = 'Talk. Green bounce = mic hears you.';
+  mstate.textContent = 'Talk. Green bounce = it hears you. Then press "Start reading".';
   micBtn.textContent = '🎙 Mic is on';
-  watchBtn.disabled = false; recBtn.disabled = false;
-  hearBtn.disabled = !takes[cur];
+  recBtn.disabled = false;
 });
 
-watchBtn.addEventListener('click', () => {
-  if(busy) return;
-  stopSegment();
-  playSegment(PIECES[cur].t, PIECES[cur].until);
-});
-
-recBtn.addEventListener('click', async () => {
-  if(busy) return;
-  busy = true; stopSegment();
-  const p = PIECES[cur];
-  film.currentTime = p.t;
-  for(const n of ['3','2','1']){
-    count.textContent = n; count.classList.add('on');
-    await new Promise(r => setTimeout(r, 800));
+recBtn.addEventListener('click', () => {
+  if(recorder && recorder.state === 'recording'){
+    recorder.stop();
+    return;
   }
-  count.classList.remove('on');
-  chunks = [];
+  if(playback){ playback.pause(); playback = null; }
+  chunks = []; take = null; saveBtn.disabled = true; hearBtn.disabled = true;
   recorder = new MediaRecorder(stream, {mimeType:'audio/webm;codecs=opus', audioBitsPerSecond:160000});
   recorder.ondataavailable = e => { if(e.data.size) chunks.push(e.data); };
   recorder.onstop = () => {
-    takes[cur] = new Blob(chunks, {type:'audio/webm'});
-    mstate.classList.remove('flash');
-    mstate.textContent = 'Got it (' + Math.round(takes[cur].size/1024) + ' KB). Hear it back, or move on.';
-    hearBtn.disabled = false;
-    busy = false;
-    renderNav(); select(cur);
+    clearInterval(timer);
+    take = new Blob(chunks, {type:'audio/webm'});
+    recBtn.textContent = '● Start reading again';
+    recBtn.classList.remove('rec');
+    mstate.textContent = 'Captured ' + fmt((performance.now()-t0)/1000) + ' (' + Math.round(take.size/1024) + ' KB). Hear it back, save it, or read again.';
+    hearBtn.disabled = false; saveBtn.disabled = false;
   };
-  recorder.start(150);
-  mstate.textContent = '● RECORDING piece ' + (cur+1) + '. Read the big line.';
-  mstate.classList.add('flash');
-  playSegment(p.t, Math.min(p.until + GRACE, film.duration - 0.05), () => {
-    if(recorder.state === 'recording') recorder.stop();
-  });
+  recorder.start(250);
+  t0 = performance.now();
+  timer = setInterval(() => { clock.textContent = fmt((performance.now()-t0)/1000); }, 500);
+  recBtn.textContent = '■ Stop, I read everything';
+  recBtn.classList.add('rec');
+  mstate.textContent = '● RECORDING. Read line 1 to 14. Flub it? Say the sentence again and roll on.';
+  scriptEl.scrollTo({top:0, behavior:'smooth'});
 });
 
 hearBtn.addEventListener('click', () => {
-  if(busy || !takes[cur]) return;
-  stopSegment();
-  const p = PIECES[cur];
-  playback = new Audio(URL.createObjectURL(takes[cur]));
+  if(!take) return;
+  if(playback){ playback.pause(); playback = null; return; }
+  playback = new Audio(URL.createObjectURL(take));
   playback.play();
-  playSegment(p.t, Math.min(p.until + GRACE, film.duration - 0.05));
-  mstate.textContent = 'Playing your take over the picture. Like it? Next piece. No? Record again.';
+  mstate.textContent = 'Playing your read. Press again to stop.';
 });
 
-saveAll.addEventListener('click', () => {
-  let n = 0;
-  takes.forEach((b, i) => {
-    if(!b) return;
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(b);
-    a.download = 'fleetcommand-vo-' + String(i+1).padStart(2,'0') + '.webm';
-    a.click(); n++;
-  });
-  mstate.textContent = n + ' pieces saved to Downloads. If Chrome asks about multiple downloads, click Allow. Then tell Claude: done.';
+saveBtn.addEventListener('click', () => {
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(take);
+  a.download = 'fleetcommand-vo-read.webm';
+  a.click();
+  mstate.textContent = 'Saved to Downloads as fleetcommand-vo-read.webm. Tell Claude: done.';
 });
-
-renderNav();
-select(0);
 </script>
 </body>
 </html>
