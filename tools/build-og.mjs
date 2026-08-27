@@ -40,6 +40,39 @@ import { createHash } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { tmpdir } from 'node:os';
+
+/* THE CARD IS SQUEEZED BEFORE IT IS HASHED, and the order is the whole point.
+   The filename is the sha256 of the bytes, so optimising the committed PNG by
+   hand made the name a lie and the next build minted a fresh heavy file under
+   a fresh name and deleted the light one. Squeezing here means the name always
+   describes what is actually served.
+   Chrome writes a 24 bit truecolour PNG for what is a flat vector card with a
+   few dozen colours in it, which is how a 1200x630 graphic reached half a
+   megabyte and FAILed the LEAN cap (brock/LEAN-STANDARD.md, image over 500KB).
+   pngquant picks a palette, oxipng repacks it losslessly, and the result is
+   the same picture at a fraction of the bytes. Both are optional: if neither
+   is installed the build still produces a correct, heavy card rather than
+   failing, and says so. */
+function squeezePng(bytes, label) {
+  const tmp = join(tmpdir(), `og-squeeze-${process.pid}-${label}.png`);
+  writeFileSync(tmp, bytes);
+  let out = bytes;
+  try {
+    execFileSync('pngquant', ['--force', '--quality', '70-95', '--speed', '1', '--output', tmp, tmp], { stdio: 'pipe' });
+  } catch { /* pngquant absent, or it refused the quality floor: keep going */ }
+  try {
+    execFileSync('oxipng', ['-o', 'max', '--strip', 'safe', '-q', tmp], { stdio: 'pipe' });
+  } catch { /* oxipng absent: the pngquant result still stands */ }
+  try {
+    const squeezed = readFileSync(tmp);
+    if (squeezed.length > 0 && squeezed.length < out.length) out = squeezed;
+  } catch { /* nothing readable: keep the original bytes */ }
+  try { unlinkSync(tmp); } catch {}
+  if (out === bytes) console.log(`  note: ${label} could not be squeezed (pngquant/oxipng missing?), shipping ${Math.round(bytes.length / 1024)} KB`);
+  return out;
+}
+
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const SITE = join(ROOT, 'site');
@@ -192,7 +225,7 @@ execFileSync(CHROME, [
 
 /* Flat colour and type, so PNG is genuinely the right container here and
    comes out small. The RISE card is a photograph and goes to JPEG instead. */
-const bytes = readFileSync(tmp);
+const bytes = squeezePng(readFileSync(tmp), 'card');
 unlinkSync(tmp);
 const hash = createHash('sha256').update(bytes).digest('hex').slice(0, 10);
 const file = `og-${hash}.png`;
