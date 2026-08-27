@@ -80,4 +80,4 @@ with disclosure, as the rules permit.
 - Hosted (ADK API on Cloud Run): https://fleet-command-r453w22nfq-uc.a.run.app
 - Repo: https://github.com/thebrockchain/fleetcommand (the `google/` folder)
 - Architecture diagram: google/architecture.svg (attach as image)
-- Demo video: (YouTube link after upload; film ready at ~/Desktop/fleetcommand-GOOGLE-demo.mp4, description at ~/Desktop/YT-google-description.txt, thumbnail at ~/Desktop/YT-google-thumbnail.png)
+- Demo video: https://youtu.be/jGqDP-tnLaM
