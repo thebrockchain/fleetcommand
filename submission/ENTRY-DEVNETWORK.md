@@ -102,7 +102,7 @@ claude, serpapi, name.com
 ## Links
 
 - Live demo: https://fleetcommand-2u0.pages.dev
-- Video: (YouTube link after recording, script in VIDEO-SCRIPT.md)
+- Video: https://youtu.be/6L4Ez-XEcKo
 - Repo: private; flip public or grant judge access only if the event
   requires source review, Brock's call at submission time.
 
