@@ -23,6 +23,16 @@ are real buttons, keyboard operable, aria-pressed carries the turned state,
 and reduced motion turns them instantly. Approve and Send back keep their
 exact prior semantics and log lines; only how the decision feels changed.
 
+## Two builds, two entries (2026-08-27)
+
+This Cloudflare + Anthropic cockpit is the DevNetwork entry. There is also a
+Google-native build in `google/`: the same crew on Google ADK, Gemini through
+Vertex AI, deployed to Cloud Run, with the approval gate enforced by the
+framework's own `require_confirmation` pause. That is the All Things Agentic
+entry, served at `/google`. Both demo films are live and public (links and the
+whole submission state live in `NEXT.md` RESUME HERE). The video pipeline that
+built them (narration, Lyria score, ffmpeg mix) is in `submission/video-pipeline/`.
+
 ## The on-switch (fleet pattern)
 
 - **Replay mode (default):** with no key set, `/run` serves a recorded run of
