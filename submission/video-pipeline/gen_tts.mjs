@@ -2,12 +2,48 @@
 // trailer voice. One wav per line so the mix can place each at its mark.
 // VOICE env picks the prebuilt voice (default Charon, the deep one);
 // ONLY env limits generation to a comma list of line numbers for samples.
-import { readFileSync, writeFileSync } from 'node:fs';
+import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs';
+import { resolve, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { execSync } from 'node:child_process';
 
-const S = '/private/tmp/claude-501/-Users-thebrockchain-Documents/8ae13aa7-9512-4d32-9606-b860d7a0e8a7/scratchpad/vo';
-const KEY = readFileSync('/Users/thebrockchain/Documents/thebrockchain/bambam/.dev.vars', 'utf8')
-  .split('\n').find(l => l.startsWith('GOOGLE_AI_API_KEY=')).slice(18).replace(/["']/g, '');
+/* BOTH PATHS BELOW NAMED ANOTHER MAC (fixed 2026-08-31). The output folder was
+ * one session's scratchpad on a machine whose user is `thebrockchain`, and the
+ * key was read from ~/Documents/thebrockchain, which stopped being the fleet
+ * root on 2026-07-22. On this Mac the script could not write and could not
+ * read, and the key line failed as `.find(...) is undefined` rather than as a
+ * missing file, which is the least helpful shape a missing credential has.
+ *
+ * Output now defaults beside the other takes in submission/vo (gitignored as
+ * generated media), and VO_OUT overrides it. The key is looked up through the
+ * fleet root and MISSING IS SAID OUT LOUD, because a silent throw here reads
+ * like a broken script rather than an absent secret. */
+const HERE = dirname(fileURLToPath(import.meta.url));
+function fleetRoot() {
+  for (const c of [
+    process.env.BROCK_FLEET,
+    resolve(HERE, '..', '..', '..'),
+    resolve(process.env.HOME || '', 'Developer', 'BROCK'),
+    resolve(process.env.HOME || '', 'Documents', 'thebrockchain'),
+  ].filter(Boolean)) {
+    if (existsSync(resolve(c, 'CLAUDE.md')) || existsSync(resolve(c, 'brock', 'CLAUDE.md'))) return c;
+  }
+  return resolve(HERE, '..', '..', '..');
+}
+const S = process.env.VO_OUT || resolve(HERE, '..', 'vo');
+mkdirSync(S, { recursive: true });
+
+const VARS = resolve(fleetRoot(), 'bambam', '.dev.vars');
+if (!existsSync(VARS)) {
+  console.error(`no .dev.vars at ${VARS}. The Google AI key lives there and is never in the repo.`);
+  process.exit(1);
+}
+const KEY_LINE = readFileSync(VARS, 'utf8').split('\n').find(l => l.startsWith('GOOGLE_AI_API_KEY='));
+if (!KEY_LINE) {
+  console.error(`no GOOGLE_AI_API_KEY line in ${VARS}`);
+  process.exit(1);
+}
+const KEY = KEY_LINE.slice(18).replace(/["']/g, '');
 const VOICE = process.env.VOICE || 'Charon';
 const ONLY = process.env.ONLY ? process.env.ONLY.split(',').map(Number) : null;
 
