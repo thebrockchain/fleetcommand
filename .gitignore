@@ -10,3 +10,9 @@ submission/youtube/videos/
 submission/youtube/thumbnails/
 submission/youtube/channel/*.png
 submission/youtube/channel/*.jpg
+
+# Voice over masters, archived 2026-08-31 to r2://brock-masters/fleetcommand/vo/
+# and verified by a byte for byte readback. Raw takes are COLD tier per
+# MEDIA-POLICY: the archive holds them, the repo never does. assets/MASTERS.md
+# names every object. Same handling as doctrine's host frames.
+assets/vo/
