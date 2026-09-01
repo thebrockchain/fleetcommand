@@ -31,3 +31,10 @@ assets/vo/
 # missing from disk.
 submission/vo/*.wav
 submission/vo/*.mp3
+
+# The two narrator renders mix8.mjs writes. Generated media beside the film
+# that is already ignored above, same rule: the pipeline is tracked, its
+# output never is. They used to be written to a Desktop on another Mac, which
+# is why they were never in anyone's way before.
+submission/fleetcommand-NARRATOR-clean.mp4
+submission/fleetcommand-NARRATOR-music.mp4

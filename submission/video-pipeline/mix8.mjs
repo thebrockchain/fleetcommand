@@ -5,12 +5,35 @@
 // then silence. Music runs hot (trailer balance) with a gentle wide duck so
 // the narrator always rides on top without the score ever vanishing.
 import { execSync } from 'node:child_process';
+import { existsSync } from 'node:fs';
+import { resolve, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-const S = '/private/tmp/claude-501/-Users-thebrockchain-Documents/8ae13aa7-9512-4d32-9606-b860d7a0e8a7/scratchpad/vo';
-const FILM = '/Users/thebrockchain/Desktop/fleetcommand-demo.mp4';
-const OUT = process.env.NOMUSIC
-  ? '/Users/thebrockchain/Desktop/fleetcommand-NARRATOR-clean.mp4'
-  : '/Users/thebrockchain/Desktop/fleetcommand-NARRATOR-music.mp4';
+/* ALL FOUR PATHS BELOW NAMED ANOTHER MAC (fixed 2026-08-31), the same family
+ * as gen_tts.mjs beside it: a scratchpad belonging to one session on a machine
+ * whose user is `thebrockchain`, and three ~/Desktop paths under that same
+ * absent home. On this Mac every one of them resolves to nothing.
+ *
+ * They now sit beside the repo, where the takes already live, and each is
+ * overridable by env. `submission/fleetcommand-demo.mp4` is already gitignored
+ * and the two renders are added to that ignore in the same change. */
+const HERE = dirname(fileURLToPath(import.meta.url));
+const S = process.env.VO_OUT || resolve(HERE, '..', 'vo');
+const FILM = process.env.FILM_IN || resolve(HERE, '..', 'fleetcommand-demo.mp4');
+const OUT = process.env.FILM_OUT || (process.env.NOMUSIC
+  ? resolve(HERE, '..', 'fleetcommand-NARRATOR-clean.mp4')
+  : resolve(HERE, '..', 'fleetcommand-NARRATOR-music.mp4'));
+
+/* SAY THE MISSING FILM OUT LOUD. submission/vo/NOTES.md records that the cut
+ * film does not exist anywhere on disk despite VIDEO-SCRIPT.md saying it was
+ * cut, so this script's most likely failure is a missing input, not a bug.
+ * Without this check ffprobe fails deep in a loop with an ffmpeg error. */
+if (!existsSync(FILM)) {
+  console.error(`no film at ${FILM}`);
+  console.error('It must be re-rendered with record.mjs and edit.mjs first, or point FILM_IN at it.');
+  console.error('See submission/vo/NOTES.md, "Also owed before the video ships".');
+  process.exit(1);
+}
 const FILM_LEN = 161.97;
 
 const ANCHORS = [3.90, 12.40, 14.80, 33.40, 42.43, 62.00, 82.00, 100.00, 119.50, 130.67, 140.83, 144.45, 154.85, 161.05];
