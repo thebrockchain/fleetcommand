@@ -1,6 +1,69 @@
 # Fleet Command - what is still open
 
-## RESUME HERE (2026-08-27, semisonic)
+## RESUME HERE (2026-09-02)
+
+**THE FLEET HAS ENTERED ITS FIRST CONTEST.** Fleet Command is SUBMITTED to the
+DevNetwork [API + Cloud + AI] Hackathon 2026 and the public project page is
+https://devpost.com/software/fleet-command . Everything below this block from
+2026-08-27 is superseded on that point: it says we had entered zero contests,
+which was true when it was written and is not true now.
+
+**In for three prizes off one entry:** the $12,500 overall, SerpApi Best AI Use
+Case ($3,000) and the name.com Domain API Challenge ($2,000). Devpost keeps
+editing open until the deadline, **Sep 3 2026 at 1:00pm EDT**, so the entry can
+still be improved.
+
+**What had to happen first, and none of it was in the old plan:**
+- **The repo is PUBLIC now** (thebrockchain/fleetcommand). Every track on that
+  page requires a public repo, so the entry would have been rejected on that
+  line no matter how good it was. Swept all 64 commits and the full object
+  history for keys, secret-named files and NUL-hidden text before flipping it,
+  with a positive control proving the scan could fail.
+- **The demo video backup field is REQUIRED to submit**, not just to save the
+  step. The step saves empty, which is misleading; the submit hard-blocks with
+  "Please complete required fields in Additional info".
+- **A public asset lane had to be built to answer it.** MEDIA-POLICY.md had HOT,
+  WARM and COLD and no tier for a file handed to an outsider. There is a PUBLIC
+  tier now: `brock-public` on **files.thebrockchain.com**.
+
+**THE ONE THING TO KNOW ABOUT THE FILE IN THAT FIELD.** It is
+`files.thebrockchain.com/fleetcommand/fleet-command-demo.mp4`, a **43.6 second
+1080p capture recorded 2026-09-02 off the live site**, and it is NOT the
+narrated two minute forty six film on YouTube. The narrated master
+(`fleetcommand-NARRATOR-music.mp4`) lives on the PRIMARY Mac and could not be
+reached from this one: it is not in the repo (media is gitignored), not in
+iCloud, yt-dlp is blocked by YouTube's bot challenges, and YouTube Studio
+refuses because the @BrockchainLabs channel sits on a DIFFERENT Google account
+than the one this Chrome is signed into. Swapping the master in is one
+`wrangler r2 object put ... --remote` to the same key, and the Devpost field
+needs no edit because the URL stays the same.
+
+**Also new and live:** a press kit at **fleetcommand-2u0.pages.dev/press** (the
+film, the screenshots, a one page brief, the share card), and a one page judges'
+PDF. The press page measures 1.000 screens desktop and 1.438 on a phone.
+
+**What was NOT entered, on purpose.** The Foxit track ("Your Agent Shouldn't
+Sign That", $1,000) is the closest thematic fit on the whole board, because it
+asks for exactly our shape: the agent does the reversible work and a human signs.
+We do not have a Foxit integration, and our own board rule forbids a bolt-on,
+because that track's judges are Foxit engineers. Building it honestly is a real
+build and it is the highest value thing left on this creation.
+
+**Scouted 2026-09-02, so the next run does not re-scout:** the open ML/AI board
+holds nothing else worth our time right now. **The WebMCP Challenge** ($35,000,
+run by OpenAI, closes Sep 3) needs a genuine WebMCP integration we do not have,
+against **6,015 participants**. **VoltHacks** ($35,785 headline, Sep 5) is
+**STUDENTS ONLY and excludes professionals**, and its actual cash is $4,760, the
+rest credits. Everything else open is non-cash or under $1,500.
+
+**ALL THINGS AGENTIC WAS MISSED.** It closed 2026-08-31 at 5:00pm PDT with our
+video public and the form untouched. The Google build, the Cloud Run deploy and
+the second film were all made for it. That work is not wasted, but it is not
+entered anywhere, and finding it a home is worth a look.
+
+---
+
+## RESUME HERE (2026-08-27, semisonic) - SUPERSEDED above, kept for the machine and pipeline notes
 
 **The spot.** Both demo films are shot, mixed, uploaded and LIVE public, and
 both entry docs carry their links. What is NOT done, and is the whole point

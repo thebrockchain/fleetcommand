@@ -13,7 +13,22 @@ connection to the walled ainow room.
 - URL: https://fleetcommand-2u0.pages.dev
 - Healthy answer: 200 on `/`, replay mode by default and labeled honestly
   in the chip and the footer. `/google` serves the Google-native build.
+- Press kit: https://fleetcommand-2u0.pages.dev/press
+  Healthy answer: 200, and its four download buttons resolve on
+  files.thebrockchain.com. A 404 on any of those means the asset lane broke,
+  not the page.
+- Public assets: https://files.thebrockchain.com/fleetcommand/
+  (`brock-public` R2, the PUBLIC tier in the fleet MEDIA-POLICY.md). Holds the
+  demo MP4, three screenshots, the share card and the one page brief.
+  **Anything put here is published**, so nothing uncleared goes in it.
+  **`wrangler r2 object put` needs `--remote`** or it writes to a local
+  simulated bucket, prints success, reads back correctly, and leaves the real
+  bucket empty while every public URL 404s.
 - Repo: https://github.com/thebrockchain/fleetcommand
+  **PUBLIC since 2026-09-02**, because every DevNetwork track requires a public
+  repo. Swept for keys and secret-named files across all commits before the
+  flip. Keep it that way, and keep secrets out of it accordingly.
+- Devpost entry: https://devpost.com/software/fleet-command (SUBMITTED)
 
 ## Deploy
 
