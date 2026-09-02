@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fleet Command: press kit</title>
+<meta name="description" content="Downloadable assets for Fleet Command: the demo film, product screenshots, a one page brief and the share card.">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<meta property="og:title" content="Fleet Command: press kit">
+<meta property="og:description" content="The demo film, product screenshots, a one page brief and the share card.">
+<meta property="og:image" content="https://fleetcommand-2u0.pages.dev/og-d8f521af3c.png">
+<meta property="og:url" content="https://fleetcommand-2u0.pages.dev/press">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://fleetcommand-2u0.pages.dev/og-d8f521af3c.png">
+<style>
+  /* iPhone Safari inflates text a fitter has already sized, so opt out. */
+  html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+  :root{
+    --bg:#0d1018; --surf:#151a29; --line:#283150; --ink:#eef1fb; --muted:#8b93af;
+    --indigo:#7c6cff; --teal:#2dd4bf; --amber:#e8a33d;
+  }
+  *{box-sizing:border-box;margin:0}
+  body{
+    background:var(--bg);color:var(--ink);font-family:'Montserrat',sans-serif;
+    min-height:100svh;display:flex;flex-direction:column;padding:28px 32px 20px;
+    text-wrap:pretty;
+  }
+  a{color:inherit}
+  header{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap}
+  .mark{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:26px;
+    letter-spacing:.02em;white-space:nowrap}
+  .mark b{color:var(--indigo)}
+  .mark a{text-decoration:none}
+  .kicker{font-family:'Space Grotesk',sans-serif;font-size:11px;letter-spacing:.18em;
+    text-transform:uppercase;color:var(--teal);white-space:nowrap}
+  .sub{color:var(--muted);font-size:14px;margin-top:5px;max-width:62ch}
+  main{flex:1;display:flex;flex-direction:column;justify-content:center;padding:22px 0}
+  .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+  .card{
+    background:var(--surf);border:1px solid var(--line);border-radius:12px;
+    padding:16px 16px 14px;display:flex;flex-direction:column;
+  }
+  .card h2{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;
+    margin-bottom:6px;white-space:nowrap}
+  .card p{color:var(--muted);font-size:12.5px;line-height:1.55;flex:1}
+  .meta{font-size:11px;color:#6d7590;margin-top:10px;letter-spacing:.03em}
+  .dl{
+    display:inline-block;margin-top:10px;background:var(--teal);color:#06251f;
+    font-weight:600;font-size:12.5px;padding:8px 14px;border-radius:8px;
+    text-decoration:none;white-space:nowrap;align-self:flex-start;
+  }
+  .dl.ghost{background:transparent;color:var(--teal);border:1px solid var(--teal)}
+  footer{
+    display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;
+    border-top:1px solid var(--line);padding-top:14px;font-size:12px;color:var(--muted);
+  }
+  footer a{color:var(--teal);text-decoration:none;white-space:nowrap}
+  .terms{color:#6d7590}
+  @media (max-width:1100px){ .grid{grid-template-columns:repeat(2,1fr)} }
+  @media (max-width:640px){ .grid{grid-template-columns:1fr} body{padding:22px 20px} }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <div class="kicker">Press kit</div>
+    <h1 class="mark"><a href="/">FLEET <b>COMMAND</b></a></h1>
+    <p class="sub">Everything here is cleared for publication. The product is live and needs no login, so a claim in the copy can be checked against the running thing in under a minute.</p>
+  </div>
+</header>
+
+<main>
+  <div class="grid">
+
+    <div class="card">
+      <h2>Demo film</h2>
+      <p>The full mission end to end: four agents work the target, then SHIP holds at the human gate. Narrated, scored, two minutes forty six.</p>
+      <div class="meta">MP4 &middot; 1080p</div>
+      <a class="dl" href="https://youtu.be/6L4Ez-XEcKo">Watch</a>
+    </div>
+
+    <div class="card">
+      <h2>Screenshots</h2>
+      <p>The cockpit at rest, the crew mid mission with SHIP holding, and the approval gate on its own. Shot at 2x, three by two, ready to place.</p>
+      <div class="meta">PNG &middot; 2880 x 1920</div>
+      <a class="dl" href="https://files.thebrockchain.com/fleetcommand/gate-holding.png">The gate holding</a>
+    </div>
+
+    <div class="card">
+      <h2>One page brief</h2>
+      <p>What it is, how to verify it live in thirty seconds, where the SerpApi and name.com code actually lives, and what each honesty switch does.</p>
+      <div class="meta">PDF &middot; one page &middot; Letter</div>
+      <a class="dl" href="https://files.thebrockchain.com/fleetcommand/fleet-command-onepager.pdf">Download</a>
+    </div>
+
+    <div class="card">
+      <h2>Share card</h2>
+      <p>The link preview card and the closest thing this project has to a logo lockup. Use it whole; please do not recolour the amber.</p>
+      <div class="meta">PNG &middot; 2400 x 1260</div>
+      <a class="dl ghost" href="https://files.thebrockchain.com/fleetcommand/share-card.png">Download</a>
+    </div>
+
+  </div>
+</main>
+
+<footer>
+  <div>
+    <a href="https://fleetcommand-2u0.pages.dev">Live demo</a>
+    &nbsp;&middot;&nbsp;
+    <a href="https://github.com/thebrockchain/fleetcommand">Source on GitHub</a>
+  </div>
+  <div class="terms">The demo target is a fictional bakery, broken on purpose. No real site is ever touched.</div>
+</footer>
+
+</body>
+</html>
