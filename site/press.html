@@ -66,7 +66,15 @@
   footer a{color:var(--teal);text-decoration:none;white-space:nowrap}
   .terms{color:#6d7590}
   @media (max-width:1100px){ .grid{grid-template-columns:repeat(2,1fr)} }
-  @media (max-width:640px){ .grid{grid-template-columns:1fr} body{padding:22px 20px} }
+  @media (max-width:640px){
+    .grid{grid-template-columns:1fr}
+    body{padding:22px 20px}
+    /* Four 3:2 previews stacked in one column ran the page to 2.3 screens,
+       measured. They are decoration here, and the download is the job, so the
+       phone keeps one to set the tone and drops the rest. */
+    .thumb{display:none}
+    .card:first-child .thumb{display:block;aspect-ratio:16/7}
+  }
 </style>
 </head>
 <body>
