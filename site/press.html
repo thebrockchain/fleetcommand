@@ -59,6 +59,8 @@
     text-decoration:none;white-space:nowrap;align-self:flex-start;
   }
   .dl.ghost{background:transparent;color:var(--teal);border:1px solid var(--teal)}
+  .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  .row .dl{align-self:auto}
   footer{
     display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;
     border-top:1px solid var(--line);padding-top:14px;font-size:12px;color:var(--muted);
@@ -93,9 +95,12 @@
     <div class="card">
       <img class="thumb" src="https://files.thebrockchain.com/fleetcommand/gate-holding.png" alt="The Fleet Command cockpit mid mission, with SHIP holding at the approval gate." loading="lazy">
       <h2>Demo film</h2>
-      <p>The full mission end to end: four agents work the target, then SHIP holds at the human gate. Narrated, scored, two minutes forty six.</p>
-      <div class="meta">MP4 &middot; 1080p</div>
-      <a class="dl" href="https://youtu.be/6L4Ez-XEcKo">Watch</a>
+      <p>The full mission end to end: four agents work the target, then SHIP holds at the human gate. Watch the narrated cut, or take the raw screen capture to edit from.</p>
+      <div class="meta">Narrated 2:46 &middot; capture 0:44, MP4 1080p</div>
+      <div class="row">
+        <a class="dl" href="https://youtu.be/6L4Ez-XEcKo">Watch</a>
+        <a class="dl ghost" href="https://files.thebrockchain.com/fleetcommand/fleet-command-demo.mp4">MP4</a>
+      </div>
     </div>
 
     <div class="card">
