@@ -46,6 +46,11 @@
   }
   .card h2{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;
     margin-bottom:6px;white-space:nowrap}
+  .thumb{
+    display:block;width:100%;aspect-ratio:3/2;object-fit:cover;object-position:top left;
+    border:1px solid var(--line);border-radius:8px;background:#0b0e15;margin-bottom:12px;
+  }
+  .thumb.fit{object-fit:contain;object-position:center}
   .card p{color:var(--muted);font-size:12.5px;line-height:1.55;flex:1}
   .meta{font-size:11px;color:#6d7590;margin-top:10px;letter-spacing:.03em}
   .dl{
@@ -78,6 +83,7 @@
   <div class="grid">
 
     <div class="card">
+      <img class="thumb" src="https://files.thebrockchain.com/fleetcommand/gate-holding.png" alt="The Fleet Command cockpit mid mission, with SHIP holding at the approval gate." loading="lazy">
       <h2>Demo film</h2>
       <p>The full mission end to end: four agents work the target, then SHIP holds at the human gate. Narrated, scored, two minutes forty six.</p>
       <div class="meta">MP4 &middot; 1080p</div>
@@ -85,6 +91,7 @@
     </div>
 
     <div class="card">
+      <img class="thumb" src="https://files.thebrockchain.com/fleetcommand/cockpit-standby.png" alt="The cockpit at rest before a mission is run." loading="lazy">
       <h2>Screenshots</h2>
       <p>The cockpit at rest, the crew mid mission with SHIP holding, and the approval gate on its own. Shot at 2x, three by two, ready to place.</p>
       <div class="meta">PNG &middot; 2880 x 1920</div>
@@ -92,6 +99,7 @@
     </div>
 
     <div class="card">
+      <img class="thumb fit" src="https://files.thebrockchain.com/fleetcommand/onepager-thumb.png" alt="The one page brief." loading="lazy">
       <h2>One page brief</h2>
       <p>What it is, how to verify it live in thirty seconds, where the SerpApi and name.com code actually lives, and what each honesty switch does.</p>
       <div class="meta">PDF &middot; one page &middot; Letter</div>
@@ -99,6 +107,7 @@
     </div>
 
     <div class="card">
+      <img class="thumb" src="https://files.thebrockchain.com/fleetcommand/share-card.png" alt="The Fleet Command share card." loading="lazy">
       <h2>Share card</h2>
       <p>The link preview card and the closest thing this project has to a logo lockup. Use it whole; please do not recolour the amber.</p>
       <div class="meta">PNG &middot; 2400 x 1260</div>
