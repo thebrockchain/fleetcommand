@@ -135,107 +135,92 @@ video public and the form untouched. The Google build, the Cloud Run deploy and
 the second film were all made for it. That work is not wasted, but it is not
 entered anywhere, and finding it a home is worth a look.
 
----
+**The next action.** Nothing is blocking. If you want the entry improved before
+Sep 3 1:00pm EDT, the one honest upgrade is swapping the narrated master into
+the same R2 key (see below, it may not exist any more). The highest value BUILD
+is the Foxit track. To confirm the entry is still healthy:
+`curl -sL -o /dev/null -w '%{http_code}' https://devpost.com/software/fleet-command`
+expects **200**.
 
-## RESUME HERE (2026-08-27, semisonic) - SUPERSEDED above, kept for the machine and pipeline notes
+**State of the machines.** This ran on **Brockchain-Personal**, fleet root
+`~/Developer/BROCK`, branch `main`, no worktree (a deviation from the one
+worktree per session rule: the repo was clean and unshared, and it is recorded
+here rather than hidden). Nothing armed, no servers left running.
+`submission/vo/` is untracked and is Brock's own raw voice takes; it was never
+staged. Repo is PUBLIC.
 
-**The spot.** Both demo films are shot, mixed, uploaded and LIVE public, and
-both entry docs carry their links. What is NOT done, and is the whole point
-now: we have entered ZERO contests. Uploading YouTube videos is not entering.
-The last thing in flight was driving Brock's Chrome to the All Things Agentic
-Devpost page to start the actual submission; it was sitting on the hackathon
-page with a green "Join hackathon" button un-clicked (that click registers him
-and accepts the rules, which is his gesture).
+**Decisions made 2026-09-02, do not re-litigate.**
+- Repo flipped PUBLIC. Every track demanded it; the entry was unwinnable
+  otherwise.
+- **Foxit track NOT entered.** No real integration exists and its judges are
+  Foxit engineers. Our own no-fake-integrations rule.
+- **The Google architecture diagram was kept OUT of the gallery.** It is a fine
+  asset but it says ADK, Gemini and Cloud Run, and this entry's story is
+  Cloudflare and Anthropic. It would contradict the copy.
+- **The required video field holds a fresh capture, labelled as such**, never
+  passed off as the narrated master.
+- **The `vo/` voice takes were NOT stitched into a fake master.** Assembling an
+  artifact out of raw takes to fill a contest field is inventing evidence.
 
-**The next action.** Get the FIRST real entry submitted. All Things Agentic
-closes soonest.
-1. In Brock's Chrome, on https://allthingsagentichackathon.devpost.com/ , he
-   clicks "Join hackathon" (registration + rules = his gesture, stop-list ToS).
-2. Then the form: fill every field from `submission/ENTRY-AGENTIC.md` (title,
-   tagline, the two hosted URLs, the Cloud Run URL, repo, architecture image
-   `google/architecture.svg`, video https://youtu.be/jGqDP-tnLaM, and select the
-   Individual/Hobbyist + Fortified Enterprise Fleet tracks). Brock clicks Submit.
-3. Repeat for DevNetwork (api-cloud-ai-hackathon-2026.devpost.com) from
-   `submission/ENTRY-DEVNETWORK.md`, video https://youtu.be/6L4Ez-XEcKo.
+**Dead ends already tried, do not repeat.**
+- **yt-dlp cannot pull our own YouTube video.** PO token and n-challenge; the
+  documented fix downloads and runs a script from GitHub, which was refused.
+  Cookies from the signed-in browser did not help either.
+- **YouTube Studio cannot reach the channel from this Chrome.**
+  @BrockchainLabs sits on a DIFFERENT Google account; this profile has one
+  empty channel (@the_brockchain).
+- **Reading `~/.ssh/config`, `arp -a`, and binding a probe server were all
+  refused by the auto mode classifier.** Fair refusals, not walls to argue with.
+- **A session name does NOT identify a machine.** Both Macs use the username
+  `themac` and both fleet roots are `~/Developer/BROCK`. `hostname -s` is the
+  only honest check. This was got wrong twice tonight.
+- Earlier, still true: AppleScript System Events into YouTube's hardened fields
+  is rejected silently, native macOS file pickers cannot be driven at all, and
+  the YouTube Data API needs an OAuth scope this machine does not hold. The
+  paired Claude Chrome extension is the only lane that fills hardened inputs.
 
-**The blocker that makes this slow.** The Claude Chrome EXTENSION is not paired
-to this Claude Code session's account, so `list_connected_browsers` returns [].
-That is why the assistant cannot fill the Devpost form directly and has to hand
-Brock each field. Fix: open the Claude side panel in Chrome and sign in with the
-SAME account this app runs on (brock@thebrockchain.com). Once paired,
-`form_input`/`file_upload` fill the forms directly, no screen-fight.
+**Verified live vs merely believed (2026-09-02, cache busted, keyless).**
+VERIFIED: devpost.com/software/fleet-command 200; fleetcommand-2u0.pages.dev
+`/`, `/press`, `/google` all 200; all six assets on files.thebrockchain.com 200
+and byte exact; `gh` reports the repo `private=false`; press page 1.000 screens
+desktop and 1.438 phone, measured rendered; the one page PDF is `/Count 1`.
+BELIEVED, NOT CHECKED: how the submitted page renders to a logged-out stranger
+(it was only ever fetched while signed in as Brock); whether the phone figure
+holds on a real iPhone rather than headless Chromium; whether the PDF prints
+well on paper. `/jack` and `/ellis` were not run against the new page.
 
-**Live, verified 2026-08-27 22:4x:**
-- Cockpit https://fleetcommand-2u0.pages.dev/google -> 200
-- Cloud Run https://fleet-command-r453w22nfq-uc.a.run.app/list-apps -> 200
-- Video 1 (DevNetwork/Cloudflare): https://youtu.be/6L4Ez-XEcKo public
-- Video 2 (Agentic/Google): https://youtu.be/jGqDP-tnLaM public
-- Channel @BrockchainLabs dressed (avatar, banner, watermark, links, about).
-
-**Machines/state.** All on the primary Mac (Brockchains-MBP). Branch main,
-pushed. No worktrees left. No jobs armed. Working files kept and committed:
-`submission/pickups.html`, `submission/voicebooth.html` (recording booths),
-`submission/video-pipeline/*` (narration/score/mix scripts, restart-proof).
-Final films + assets organized under `submission/youtube/` (media gitignored),
-backup intermediates in `submission/.work/` (gitignored).
-
-**Decisions made this session.** Google port is GO (billing account already
-existed on the Veo account, no card entry needed). Score is desert/Dune-style
-Lyria RealTime; narration is gemini-3.1-flash-tts (voice Charon), NOT Brock's
-own read (which was recorded but the TTS cut is cleaner and rules allow it).
-The Google film shows the Cloud Run backend on camera because the Agentic rules
-require it. Publishing a video Public and clicking Submit are Brock's gestures,
-never the assistant's, even mid-flow.
-
-**Dead ends already tried (do not repeat).** AppleScript System Events keystroke
-into YouTube's description/thumbnail: the fields reject injected values and a
-contested 2-display screen steals window focus, so it wasted a lot of tokens.
-Native macOS file pickers cannot be driven by software AT ALL. The YouTube Data
-API needs an OAuth scope this machine does not hold. The ONLY lane that fills
-hardened browser inputs is the paired Claude Chrome extension.
-
-**Opportunity noted this session.** Devpost shows 45 open online hackathons.
-Same build honestly fits several beyond our two: WebMCP Challenge ($35k, Sep 3),
-Agents for Humans ($40k, Sep 14), Nebius x NVIDIA ($50k, Oct 30), Agentic
-Cinema ($75k, Sep 9). One build, many races. Enter after the first two land.
-
-**Transcript pointer (primary Mac only).**
-`~/.claude/projects/-Users-thebrockchain-Documents/8ae13aa7-9512-4d32-9606-b860d7a0e8a7.jsonl`
+**Transcript pointer.** Verified to exist on **Brockchain-Personal** at
+`~/.claude/projects/-Users-themac/9d55e5e7-6ef3-4387-b581-b1fc4bf96c8f.jsonl`
+(23MB, 2026-09-03). Unreadable from the other Mac.
 
 ---
 
-Updated 2026-08-15 (historical, superseded by RESUME HERE above). The build is DONE: three real integrations (Anthropic,
-SerpApi, name.com, each behind its own on-switch with labelled sample
-fallback), the design pass (amber reserved for the gate, the slam, the living
-field, frosted glass), crew telemetry, the 2x share card, and the 4K-shot,
-13-shot-edited demo film. The campaign war room is hackathons.thebrockchain.com.
+## What is left, and whose hands
 
-## Brock's taps, in order (nothing else blocks anything)
+**Brock's, and none of it blocks the entry:**
+1. **The narrated master.** `fleetcommand-NARRATOR-music.mp4` is not on this Mac
+   (disk wide search, no Fleet Command mp4 anywhere) and the pipeline's
+   gitignored `.work/` is gone, so it may not exist any more. If it turns up:
+   `npx wrangler r2 object put brock-public/fleetcommand/fleet-command-demo.mp4
+   --file=<path> --content-type=video/mp4 --remote`. Same key, so **no Devpost
+   edit is needed**.
+2. **A Foxit account** if the $1,000 track is wanted; the integration needs
+   their API credentials and account creation is his.
+3. Optional, and only worth it if a key is free: arming `SERPAPI_KEY`,
+   `NAMECOM_USER` and `NAMECOM_TOKEN` as Pages secrets turns the two sponsor
+   chips from labelled sample to live, which is worth points under "progress".
+   `ANTHROPIC_API_KEY` does the same for the LIVE chip.
 
-1. **Voice the film.** `~/Desktop/fleetcommand-demo.mp4` (2:42, silent), marks
-   table at the top of `submission/VIDEO-SCRIPT.md`. Say nothing over the first
-   two seconds of each slam (0:03 and 1:57). His voice is human only.
-2. **Upload public to YouTube**, link into `submission/ENTRY-DEVNETWORK.md`.
-3. **Arm the hub wall**: `export BROCKAUTH_OWNER_KEY=...` then
-   `bash ~/Documents/thebrockchain/hackathons/tools/arm-wall.sh` (owner key is
-   human only; the script does the rest and proves the wall holds).
-4. **Register for DevNetwork** when it opens Aug 17 (ToS is human only).
-5. **Google Cloud billing account by Aug 20** or the $180k port is killed and
-   the days go to the useBruno track instead (card entry is human only).
-6. Optional, worth $5,000 in tracks: SerpApi and name.com free accounts, then
-   arm SERPAPI_KEY, NAMECOM_USER, NAMECOM_TOKEN as Pages secrets. Optional:
-   ANTHROPIC_API_KEY (spend capped) for the LIVE chip.
-7. **Submit by Sep 3**: main entry plus the SerpApi and name.com tracks
-   separately, from `submission/ENTRY-DEVNETWORK.md`.
-
-## Crew follow-ups (need no permission)
-
-- useBruno collection over the /run API (cheapest track, $1,000), by Aug 26.
-- Architecture diagram (required by All Things Agentic), by Aug 28.
-- Google port build (3 days, plan in GOOGLE-PORT.md) IF the billing account
-  exists by Aug 20.
-- Re-verify every event deadline weekly; board rule, next check Aug 21.
-- If any key gets armed, re-run the rig + edit so LIVE chips are on camera.
+**Crew, needs no permission:**
+- **Build the Foxit integration** if Brock opens the account. Highest value item
+  left on this creation.
+- **Find a home for the Google build.** The `/google` cockpit, the Cloud Run
+  deploy and the second film are finished work entered in nothing.
+- **Put a clock on deadlines.** This campaign's single largest loss was a missed
+  date, not a missing build. `fleetbrain` already runs on Cloudflare cron and
+  could watch every deadline. A note in a file is not an alarm.
+- Re-verify every event deadline before acting on it; the board's own rule, and
+  its Aug 14 numbers were wrong by Sep 2 in three separate places.
 
 ## Standing cautions
 

@@ -23,6 +23,24 @@ are real buttons, keyboard operable, aria-pressed carries the turned state,
 and reduced motion turns them instantly. Approve and Send back keep their
 exact prior semantics and log lines; only how the decision feels changed.
 
+## SUBMITTED (2026-09-02)
+
+The DevNetwork entry is **in**, and it is the first contest the fleet has ever
+submitted to: https://devpost.com/software/fleet-command . One entry against the
+$12,500 overall plus SerpApi ($3,000) and name.com ($2,000). Devpost keeps
+editing open until Sep 3 2026 at 1:00pm EDT.
+
+**All Things Agentic was MISSED** (closed 2026-08-31, 5:00pm PDT), so the Google
+build below is finished work entered nowhere.
+
+**This repo is PUBLIC** as of 2026-09-02, because every DevNetwork track
+requires it. It was swept for keys and secret-named files across all commits
+first. Keep secrets out of it.
+
+`NEXT.md` RESUME HERE carries the full state, including the one thing worth
+knowing: the MP4 behind the entry's required backup field is a 43.6 second
+capture recorded that day, NOT the narrated 2:46 film.
+
 ## Two builds, two entries (2026-08-27)
 
 This Cloudflare + Anthropic cockpit is the DevNetwork entry. There is also a
@@ -47,6 +65,19 @@ built them (narration, Lyria score, ffmpeg mix) is in `submission/video-pipeline
 
 LIVE at https://fleetcommand-2u0.pages.dev (Cloudflare Pages project
 `fleetcommand`; custom domain still an open decision in NEXT.md).
+
+Two more live surfaces, both added 2026-09-02:
+
+- **Press kit: https://fleetcommand-2u0.pages.dev/press** . Healthy is 200 with
+  its four download buttons resolving on files.thebrockchain.com. A 404 on one
+  of those means the asset lane broke, not the page.
+- **Public assets: https://files.thebrockchain.com/fleetcommand/** , the
+  `brock-public` R2 bucket, which is the PUBLIC tier in the fleet
+  `MEDIA-POLICY.md`. It holds the demo MP4, three screenshots, the share card
+  and the one page brief. **Anything put there is published**, so nothing
+  uncleared goes in it. **`wrangler r2 object put` needs `--remote`** or it
+  writes to a local simulated bucket, prints success, reads back correctly, and
+  leaves the real bucket empty while every public URL 404s.
 
 `npx wrangler pages deploy --branch main` from this folder. Deploying needs no
 build step and the site has zero runtime dependencies. Security headers ride
