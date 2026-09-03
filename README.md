@@ -37,9 +37,11 @@ build below is finished work entered nowhere.
 requires it. It was swept for keys and secret-named files across all commits
 first. Keep secrets out of it.
 
-`NEXT.md` RESUME HERE carries the full state, including the one thing worth
-knowing: the MP4 behind the entry's required backup field is a 43.6 second
-capture recorded that day, NOT the narrated 2:46 film.
+`NEXT.md` RESUME HERE carries the full state. The two press kit downloads are
+now honest: `fleet-command-narrated.mp4` is the 1080p narrated 2:46 master and
+`fleet-command-demo.mp4` is the 43.6 second raw capture, on purpose, to edit
+from. The only cosmetic leftover is Devpost's organiser backup field, which
+still points at the capture (the judged video is the YouTube embed).
 
 ## Two builds, two entries (2026-08-27)
 
@@ -148,8 +150,11 @@ judges), the VO script with the marks table, and the capture pipeline:
 `record.mjs` shoots the live site at true 4K through the DevTools screencast
 and writes `marks.json` in video time; `edit.mjs` cuts the 4K master into a
 13 shot 1080p film placed against those marks, never against hand typed times.
-The finished narrated film is public at https://youtu.be/6L4Ez-XEcKo (2:46)
-and the master lives under `submission/youtube/videos/` (gitignored media).
+The finished narrated film is public at https://youtu.be/6L4Ez-XEcKo (2:46),
+published as a 1080p download at
+https://files.thebrockchain.com/fleetcommand/fleet-command-narrated.mp4, and
+the master lives under `submission/youtube/videos/` (gitignored media) on both
+Macs.
 The site takes
 `?pace=video` (VO timeline) and `?pace=fast` (cold open); pace changes render
 speed only, never what runs.

@@ -1,196 +1,108 @@
 # Fleet Command - what is still open
 
-## RESUME HERE (2026-09-03, 02:40 EDT, judging day)
+## RESUME HERE (2026-09-03, 06:25 EDT, semisonic, judging day)
 
-**Submissions close TODAY at 10:00am PDT (1:00pm EDT).** Judging runs 10:00am
-to 1:00pm PDT, winners at 4:00pm PDT, all read off the event's own schedule
-page this morning. The entry is live at https://devpost.com/software/fleet-command
-and `node tools/check-entry.mjs` meets every public surface it points at from
-outside: cockpit, press kit, Google build, five security headers, five public
-assets, the repo, the Devpost page's links, and the film on YouTube. 12 of 13
-green this morning. The one red is the licence, below, and the check is proven
-able to fail (`--prove`).
+Ran on **Brockchain-Personal** (user `themac`, fleet `/Users/themac/Developer/BROCK`).
 
-**Brock's taps, each one move, in the order they pay off:**
+**The spot.** The entry is finished and green. `node tools/check-entry.mjs` reads
+**14 of 14** at 06:12 EDT, asking the origin rather than the edge cache. The
+1080p narrated master (38,095,709 bytes, md5 df10f22bf02e21282814267b9334e55d)
+is published at `files.thebrockchain.com/fleetcommand/fleet-command-narrated.mp4`
+and the press kit offers it beside the raw capture. Production is deployment
+7d8c3979 from main `11f4c25`. Nothing was mid-flight when this session ended.
+Submissions closed 2026-09-03 at 1:00pm EDT; judging 1:00pm to 4:00pm EDT,
+winners 7:00pm EDT, per the event's schedule page.
 
-1. **THIS ITEM WAS WRONG AND IS NOT URGENT. Verified on the live Devpost page
-   2026-09-03 04:30 EDT: the submission's video IS the narrated YouTube film**
-   ("Fleet Command: an AI ops crew with a human approval gate", by Brock Falfas,
-   a YouTube embed as the first gallery slide). `tools/check-entry.mjs` agrees at
-   14 of 14 green as of 2026-09-03 05:50 EDT, including "devpost entry page links site, repo and film" and
-   "film is public on YouTube".
+**The next action.** Nothing owed by a session. If a session wants proof the
+world still matches this file:
 
-   The sentence below claimed the required video field points at the R2 mp4. It
-   does not. That single false claim sent a session into a deadline panic hours
-   before judging, so it is corrected here rather than quietly deleted.
+    node tools/check-entry.mjs        # expect 14 of 14 green
+    curl -sI "https://files.thebrockchain.com/fleetcommand/fleet-command-narrated.mp4?cb=$(date +%s)" | grep content-length
+                                       # expect 38095709
 
-   **RESOLVED 2026-09-03 05:50 EDT, and the instruction below was wrong.**
+**Brock's taps, each one move, none urgent:**
 
-   The press kit now offers BOTH films, and nothing here is outstanding.
+1. **Devpost organiser BACKUP video field** still points at the demo key
+   (`fleet-command-demo.mp4`, the 0:44 silent capture). The judged video is
+   the YouTube embed, so this is cosmetic. If it is worth a click, point it at
+   `https://files.thebrockchain.com/fleetcommand/fleet-command-narrated.mp4`.
+2. **Trash two files on the Brockchain-Personal Desktop**: `get-the-master.sh`
+   (a script that asked for the MacBook Pro password; the key lane made it
+   pointless) and `fleetcommand-NARRATOR-music.mp4` (a copy; the same file
+   now sits in `submission/youtube/videos/` here and on the MacBook Pro, and
+   in R2).
+3. **Optional, scores under "progress":** arm `ANTHROPIC_API_KEY` (spend
+   capped) so the public demo shows LIVE, and `SERPAPI_KEY` / `NAMECOM_USER`
+   + `NAMECOM_TOKEN` if the accounts exist.
 
-   The old instruction said to overwrite fleet-command-demo.mp4 with the
-   narrated master. Doing that would have broken the press page, which labels
-   that button "capture 0:44" and offers it "to edit from" on purpose. One key
-   was being asked to do two jobs.
+**State of the machines.**
+- Both Macs talk over ssh with a key, no password, both ways:
+  `ssh -i ~/.ssh/id_ed25519_fleet thebrockchain@192.168.2.11` from Personal,
+  `ssh themac@192.168.2.10` from the MacBook Pro. The MacBook Pro's fleet root
+  is `/Users/thebrockchain/Documents/thebrockchain`, NOT `Developer/BROCK`.
+  Memory: `the-macbook-pro-lane-is-open-both-ways`.
+- The master now exists in three places: both Macs under
+  `submission/youtube/videos/` (gitignored) and R2 `brock-public`.
+- No worktree left alive for this repo. `wt/press-narrated` (merged) and
+  `wt/entry-license` (superseded by the cherry pick) were retired 2026-09-03.
+- `submission/vo/` on Personal: NOTES.md tracked, the nine takes ignored.
+- The edge cache served the OLD 720p object on the bare narrated URL until
+  about 10:00 EDT 2026-09-03 (`max-age=14400`). The press link carries
+  `?v=1080` so a click gets the master regardless.
 
-   What was done instead: the narrated film was pulled from YouTube Studio and
-   uploaded to its OWN key, and the press card now carries two honest buttons.
+**Decisions this session, one line each.**
+- The raw capture stays at `fleet-command-demo.mp4`; the narrated film has its
+  OWN key. One key, one job; the press page labels both honestly.
+- The checker cache busts every asset HEAD, because a bare HEAD read the
+  previous upload for four hours and called the wrong film bound.
+- The 720p YouTube transcode was replaced by the 1080p master rather than
+  kept; same key, same page, better file.
 
-   * `fleet-command-narrated.mp4`, first the 15,434,083 byte YouTube 720p
-     transcode (05:41 EDT), then REPLACED at 06:03 EDT by the 38,095,709 byte
-     1080p master pulled from the MacBook Pro over ssh. See the CLOSED block
-     below.
-   * `fleet-command-demo.mp4`, 4,257,671 bytes, 0:44, the raw capture,
-     deliberately unchanged.
+**Dead ends, do not repeat.**
+- "The MacBook Pro is unreachable" was FALSE for the whole night. Five
+  sessions said it; none ran `ssh -o BatchMode=yes`. Test before declaring.
+- A path copied from Personal fails on the MacBook Pro ("No such file")
+  because the fleet roots differ. Not a missing file.
+- Bare `yt-dlp` is dead here (403, PO token). The lane that worked for the
+  720p copy was YouTube Studio's own Download button through the Claude in
+  Chrome extension on the brock@thebrockchain.com account (channel
+  UC6vhM2wKrCS5-gfcMAFAd9Q). falfasbrock@gmail.com has zero videos.
+- Overwriting the demo key with the narrated film would have made the press
+  page lie about its own "capture 0:44" button. Do not.
+- Reading `~/.ssh/config`, `arp -a`, cookie stores and binding a probe server
+  were refused by the auto mode classifier on 2026-09-02. Fair refusals, and
+  none were needed once the key lane was tested.
+- Foxit ($1,000) not entered, no real integration. The Google architecture
+  diagram stays out of the gallery. The `submission/vo/` takes were not
+  stitched into a stand-in master; that would be inventing evidence.
 
-   **THE LANE, because bare yt-dlp is dead here** (403 on every player client,
-   PO token demanded on ios and tv even with node as the JS runtime): the
-   Claude in Chrome extension plus YouTube Studio own Download button.
-   studio.youtube.com, switch account to brock@thebrockchain.com (channel
-   UC6vhM2wKrCS5-gfcMAFAd9Q; falfasbrock@gmail.com has ZERO videos and is the
-   wrong one), open the video, three dot menu, Download. Lands in ~/Downloads.
+**Verified live vs believed.**
+- VERIFIED 06:12 EDT: narrated key 38,095,709 bytes at origin (cache busted),
+  bucket read back md5 matches; press page says "MP4 1080p" and links
+  `?v=1080`; checker 14 of 14; repo public with MIT licence.
+- VERIFIED 04:30 EDT by a peer on the live Devpost page: the entry's video is
+  the YouTube embed of the narrated film.
+- BELIEVED, not re-checked this session: the Google build at `/google` and
+  its Cloud Run service; the SerpApi and name.com addenda in
+  `submission/ENTRY-DEVNETWORK.md`.
 
-   **The checker was the thing keeping this alive.** It demanded the narrated
-   master at the capture key and went red on a correct file, which is what sent
-   session after session hunting a master that was never missing. Fixed in
-   tools/check-entry.mjs: two keys, two assertions, still by exact byte count,
-   and the narrated slot accepts the 1080p master or the 720p transcode. The
-   instrument was proven to still fail before it shipped. Now 14 of 14 green.
+**What the 2026-09-03 runs changed on main.** MIT licence (9f80b85). README:
+the entry as it stands and a "Run it yourself" section. `tools/check-entry.mjs`
+(new, then two keys two assertions, then cache busting). `site/press.html`:
+two download buttons with honest labels. `submission/vo/NOTES.md` tracked.
+`HACKATHON-BOARD.md`: the Sep 3 re-verify and six contests ruled out (Agentic
+Cinema, Agents for Humans, AI Builders, GIBC V2, ML Empowerment, Amazon
+Developer Hackathon; IBM Bob 2.0 unreadable behind a JS challenge). `.gitignore`:
+the narrator renders and the VO takes.
 
-   **CLOSED 2026-09-03 06:03 EDT: the 1080p master is published.**
-   `fleet-command-narrated.mp4` is now the real master, 38,095,709 bytes,
-   1920x1080 h264 + AAC, 2:46, md5 df10f22bf02e21282814267b9334e55d. Verified
-   at origin with a cache buster AND read back out of the bucket with the same
-   md5. A copy now also lives on this Mac at
-   `submission/youtube/videos/fleetcommand-NARRATOR-music.mp4` (gitignored), so
-   "exists only on the MacBook Pro" is no longer true.
+**Crew follow-ups (fleet, not this repo).** jack's `public_ok()` needs the one
+line for fleetcommand carrying the reason already in CLAUDE.md. The weekly
+deadline re-verify. A dated decision on the Google build's future.
 
-   It came across over ssh, which WORKS with a key and no password in both
-   directions: `ssh -i ~/.ssh/id_ed25519_fleet thebrockchain@192.168.2.11`
-   from Personal, `ssh themac@192.168.2.10` from the MBP. The MBP's fleet root is
-   `~/Documents/thebrockchain`. Five sessions called that Mac unreachable
-   without one BatchMode test; the memory
-   `the-macbook-pro-lane-is-open-both-ways` records the lane.
-
-   **The edge cache serves the OLD 720p object on the bare URL until about
-   10:00 EDT** (`cache-control: max-age=14400`, `cf-cache-status: HIT`, age
-   1356 s at 06:05). A cache-busted URL serves the 1080p master now. That is
-   why the checker still printed 15,434,083 bytes right after the upload.
-
-   **Still Brock's, blocks nothing:** the Devpost organiser BACKUP video field
-   points at the demo key. Point it at
-   `https://files.thebrockchain.com/fleetcommand/fleet-command-narrated.mp4`
-   if it is worth the click.
-
-2. **Licence: DONE, nothing left to tap.** Landed 2026-09-03 04:25 EDT from
-   Brockchain Personal. MIT, "Copyright (c) 2026 Brock Falfas", matching the
-   other public fleet repo. `tools/check-entry.mjs` now reads **13 of 13
-   green**, with "repo carries a LICENSE (MIT)" standing where the single red
-   was.
-
-   The instruction parked here was already stale when it was read:
-   `git merge --ff-only origin/wt/entry-license` cannot work, because that
-   branch is 1 ahead and 3 BEHIND main, and ff-only refuses a non descendant.
-   Measure both directions before writing a merge command into a runbook, not
-   just "is it unmerged". It was cherry picked instead: 35b33dc onto
-   origin/main, landing as 9f80b85, verified by reading origin rather than
-   trusting the push echo. Branch `wt/entry-license` is now redundant and can
-   be retired. A different licence is one commit to replace.
-
-3. **Deploy: DONE.** Production is `11f4c25` (deployment 7d8c3979, 2026-09-03
-   06:10 EDT), which carries the two-button press card, the 1080p label and
-   the cache-busted narrated link. The paragraph below is history. Production
-   WAS at `2020ecd`, main was ahead by
-   the Linkborn tie-in (a `data-crew` attribute and an HTML comment) plus this
-   run's docs and check script, none of which change what a judge sees. So it
-   is not needed before judging. `git pull && npx wrangler pages deploy --branch main`.
-
-4. **Optional, scores under "progress":** arm `ANTHROPIC_API_KEY` (spend
-   capped) so the public demo shows LIVE during the judging window, and
-   `SERPAPI_KEY` / `NAMECOM_USER` + `NAMECOM_TOKEN` if the accounts exist.
-
-**What this run changed on main.** README: the entry as it stands, a "Run it
-yourself" section (proven: `npx wrangler pages dev` served `/` 200 with the
-cockpit in this checkout), and the check script. `submission/ENTRY-DEVNETWORK.md`
-records the submission and corrects the pool ($39,500, not $45,500) and the
-repo line (public, with the required video URL). `HACKATHON-BOARD.md` carries
-the Sep 3 re-verify (1,358 participants, judging window, six contests ruled
-out). `site/sitemap.xml` now lists `/press`. `tools/check-entry.mjs` is new.
-
-**What was scouted so nobody re-scouts it.** Every open ML/AI contest on
-Devpost with real cash was read from its own page 2026-09-03: Agentic Cinema
-($75,000, Sep 9, needs Google Agent Builder plus a media partner integration),
-Agents for Humans ($40,000, Sep 14, must be a new Strands SDK agent), AI
-Builders, GIBC V2 and ML Empowerment (all students only), the Amazon Developer
-Hackathon ($138,000, Oct 23, Fire TV / Alexa+ / Ring / Bee device builds). None
-is an honest fit for this build or the Google build. IBM Bob 2.0 (lablab.ai)
-could not be re-read: Cloudflare JS challenge to curl and to headless Chrome.
-Its Sep 25 to 27 dates are from Aug 25 and are marked unverified on the board.
-
-**Crew follow-ups.** jack's `public_ok()` needs the one line for fleetcommand
-carrying the reason already in CLAUDE.md (a brock worktree, merge when the
-shared brock checkout is clean). The weekly deadline re-verify. A dated
-decision on the Google build's future.
-
----
-
-### THE HOSTNAME TRAP, and it has now bitten in BOTH directions
-
-**CORRECTED 2026-09-03 by a peer session: the two Macs have DIFFERENT
-usernames, and an earlier version of this block said they were the same.**
-
-- **Brockchain-Personal**, user `themac`, fleet `/Users/themac/Developer/BROCK`
-- **Brockchains-MBP** (the MacBook Pro), user `thebrockchain`, fleet
-  `/Users/thebrockchain/Developer/BROCK`
-
-The wrong version was inferred from a screenshot of one terminal rather than
-measured, and it matters more than a typo: **sshd returns the IDENTICAL
-"Permission denied (publickey,password,keyboard-interactive)" for a wrong
-username as for an unauthorized key**, so a name typo looks exactly like a
-locked door and sends a session to the wrong conclusion. Shared brain:
-`the-two-macs-have-different-usernames`.
-
-`hostname -s` remains the only honest check, and it belongs at the top of any
-note that says "this Mac".
-
-Proof, from the two halves of this same file. The Sep 2 block below says the
-master is unreachable and possibly gone; it ran on **Brockchain-Personal**,
-where `submission/youtube/videos/` does not exist at all. The Sep 3 block above
-says the master is "ON THIS MAC" with a real ffprobe reading; it ran on the
-OTHER machine, where it plainly does. **Both are true, and each was written as
-if its machine were the only one.** Re-checked on Brockchain-Personal at the end
-of the Sep 2 run: still no `videos/` directory. So the file EXISTS, it is on the
-other Mac, and only a session there can do the swap in tap 1.
-
-### Decisions from the 2026-09-02 run, so they are not re-litigated
-
-- **Repo flipped PUBLIC.** Every track demanded it.
-- **Foxit ($1,000) NOT entered.** No real integration and its judges are Foxit
-  engineers. Our own no-fake-integrations rule.
-- **The Google architecture diagram was kept OUT of the gallery.** It says ADK,
-  Gemini and Cloud Run, and this entry's story is Cloudflare and Anthropic.
-- **The `submission/vo/` voice takes were NOT stitched into a stand-in master.**
-  Assembling an artifact from raw takes to fill a contest field is inventing
-  evidence. They are still untracked on Brockchain-Personal.
-
-### Dead ends from 2026-09-02, do not repeat
-
-- **yt-dlp cannot pull our own YouTube video.** PO token and n-challenge; the
-  documented fix runs a script fetched from GitHub, which was refused. Cookies
-  from the signed-in browser did not help.
-- **YouTube Studio cannot reach the channel from that Chrome.** @BrockchainLabs
-  sits on a DIFFERENT Google account; the profile has one empty channel.
-- **Reading `~/.ssh/config`, `arp -a`, and binding a probe server** were all
-  refused by the auto mode classifier. Fair refusals.
-- **A session name does not identify a machine**, per the trap above.
-- Still true from earlier: AppleScript into YouTube's hardened fields is
-  silently rejected, native macOS file pickers cannot be driven at all, and the
-  YouTube Data API needs an OAuth scope that machine does not hold.
-
-### Transcript pointer for the 2026-09-02 run
-
-On **Brockchain-Personal** only, verified to exist:
-`~/.claude/projects/-Users-themac/9d55e5e7-6ef3-4387-b581-b1fc4bf96c8f.jsonl`
+**Transcript pointers**, Brockchain-Personal only, both verified to exist:
+- 2026-09-03 semisonic run (this block):
+  `~/.claude/projects/-Users-themac/718eb575-3784-4420-aafc-8b20944817d6.jsonl`
+- 2026-09-02 run: `~/.claude/projects/-Users-themac/9d55e5e7-6ef3-4387-b581-b1fc4bf96c8f.jsonl`
 
 ---
 
