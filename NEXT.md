@@ -76,9 +76,21 @@ decision on the Google build's future.
 
 ### THE HOSTNAME TRAP, and it has now bitten in BOTH directions
 
-**Both Macs use the username `themac` AND both fleet roots are
-`~/Developer/BROCK`.** Nothing in a path, a prompt, or a session name tells them
-apart. `hostname -s` is the only honest check, and it belongs at the top of any
+**CORRECTED 2026-09-03 by a peer session: the two Macs have DIFFERENT
+usernames, and an earlier version of this block said they were the same.**
+
+- **Brockchain-Personal**, user `themac`, fleet `/Users/themac/Developer/BROCK`
+- **Brockchains-MBP** (the MacBook Pro), user `thebrockchain`, fleet
+  `/Users/thebrockchain/Developer/BROCK`
+
+The wrong version was inferred from a screenshot of one terminal rather than
+measured, and it matters more than a typo: **sshd returns the IDENTICAL
+"Permission denied (publickey,password,keyboard-interactive)" for a wrong
+username as for an unauthorized key**, so a name typo looks exactly like a
+locked door and sends a session to the wrong conclusion. Shared brain:
+`the-two-macs-have-different-usernames`.
+
+`hostname -s` remains the only honest check, and it belongs at the top of any
 note that says "this Mac".
 
 Proof, from the two halves of this same file. The Sep 2 block below says the
@@ -225,9 +237,16 @@ staged. Repo is PUBLIC.
   empty channel (@the_brockchain).
 - **Reading `~/.ssh/config`, `arp -a`, and binding a probe server were all
   refused by the auto mode classifier.** Fair refusals, not walls to argue with.
-- **A session name does NOT identify a machine.** Both Macs use the username
-  `themac` and both fleet roots are `~/Developer/BROCK`. `hostname -s` is the
-  only honest check. This was got wrong twice tonight.
+- **A session name does NOT identify a machine, and neither does a username.**
+  `hostname -s` is the only honest check. Got wrong three times in one night:
+  twice calling a peer "the other Mac", then once claiming both Macs share the
+  username `themac` (they do not, see the correction above).
+- **CROSS SESSION MESSAGING IS SAME HOST ONLY.** Every peer `ListAgents`
+  returns is on THIS machine and therefore this disk, so asking around for a
+  file that is not here can never succeed. Measured 2026-09-03 after four work
+  orders were sent to peers who all had the same empty directory. There is also
+  no ssh route between the Macs: a key was generated that night, never worked,
+  and was deleted.
 - Earlier, still true: AppleScript System Events into YouTube's hardened fields
   is rejected silently, native macOS file pickers cannot be driven at all, and
   the YouTube Data API needs an OAuth scope this machine does not hold. The
