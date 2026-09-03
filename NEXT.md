@@ -13,7 +13,25 @@ able to fail (`--prove`).
 
 **Brock's taps, each one move, in the order they pay off:**
 
-1. **Swap the narrated film into the required video field.** The field points at
+1. **THIS ITEM WAS WRONG AND IS NOT URGENT. Verified on the live Devpost page
+   2026-09-03 04:30 EDT: the submission's video IS the narrated YouTube film**
+   ("Fleet Command: an AI ops crew with a human approval gate", by Brock Falfas,
+   a YouTube embed as the first gallery slide). `tools/check-entry.mjs` agrees at
+   13 of 13 green, including "devpost entry page links site, repo and film" and
+   "film is public on YouTube".
+
+   The sentence below claimed the required video field points at the R2 mp4. It
+   does not. That single false claim sent a session into a deadline panic hours
+   before judging, so it is corrected here rather than quietly deleted.
+
+   **What is actually true, and it is a nice-to-have:** the PRESS KIT asset at
+   `files.thebrockchain.com/fleetcommand/fleet-command-demo.mp4` is the 43.6
+   second silent capture. Swapping it for the narrated master would make the
+   downloadable press asset better. It is not the submission video and it blocks
+   nothing.
+
+   ~~Swap the narrated film into the required video field.~~ The press kit asset
+   points at
    `files.thebrockchain.com/fleetcommand/fleet-command-demo.mp4`, which is the
    43.6 second silent capture (4,257,671 bytes live). The narrated 2:46 master is
    **ON BROCKCHAINS-MBP, NOT on Brockchain Personal**, and the command below can only be run there:
