@@ -73,15 +73,39 @@ Live-mode spend has no code cap on purpose: the guard is the KEY, armed only
 as a spend-capped key per NEXT.md, which is the fleet's prepaid-ceiling
 pattern. Replay mode costs nothing and is the default.
 
-## Hackathon targets
+## The entry, as it stands (2026-09-03)
 
-The live board is **hackathons.thebrockchain.com** (repo `hackathons`), and
-`HACKATHON-BOARD.md` here is the dated snapshot. As of 2026-08-15 the targets
-are DevNetwork API + Cloud + AI ($45,500, submissions Aug 17 to Sep 3, entering
-the SerpApi and name.com sponsor tracks with real integrations), All Things
-Agentic ($180,000, Aug 31, gated on a Google Cloud billing account, plan in
-`GOOGLE-PORT.md`), and IBM Bob 2.0 ($10,000, 48 hour window Sep 25 to 27).
-Aiify was a dead event (concluded Sep 2024) and its entry file is removed.
+Fleet Command is SUBMITTED to the DevNetwork [API + Cloud + AI] Hackathon
+2026: https://devpost.com/software/fleet-command , in for the overall prize
+and the SerpApi and name.com sponsor tracks, both of which the crew uses for
+real (the code is in `functions/_lib/market.js` and `functions/_lib/domains.js`,
+each with its own test under `tools/`). Submissions close Sep 3, 2026 at
+10:00am PDT, judging runs until 1:00pm PDT, winners at 4:00pm PDT.
+
+The live board is **hackathons.thebrockchain.com** (repo `hackathons`, crew
+only), and `HACKATHON-BOARD.md` here is the dated public snapshot. All Things
+Agentic (the Google build under `google/`) was missed on Aug 31; that build is
+real and entered nowhere.
+
+## Run it yourself
+
+No build step, no dependencies beyond `wrangler`:
+
+    git clone https://github.com/thebrockchain/fleetcommand
+    cd fleetcommand
+    npx wrangler pages dev
+
+Open the printed local URL. With no keys set the cockpit runs in replay mode
+and says so on screen, which is exactly how the public deploy runs. To see
+the parsers work against real payload shapes:
+
+    node tools/test-market.mjs
+    node tools/test-domains.mjs
+
+To check the entry's public surfaces (the cockpit, the press kit, the public
+assets, the repo, the Devpost page) from outside, the way a judge meets them:
+
+    node tools/check-entry.mjs
 
 ## The submission kit
 
@@ -91,8 +115,9 @@ judges), the VO script with the marks table, and the capture pipeline:
 `record.mjs` shoots the live site at true 4K through the DevTools screencast
 and writes `marks.json` in video time; `edit.mjs` cuts the 4K master into a
 13 shot 1080p film placed against those marks, never against hand typed times.
-The finished film sits at `~/Desktop/fleetcommand-demo.mp4` (2:42, silent)
-with the uncut master beside it, awaiting Brock's voice. The site takes
+The finished narrated film is public at https://youtu.be/6L4Ez-XEcKo (2:46)
+and the master lives under `submission/youtube/videos/` (gitignored media).
+The site takes
 `?pace=video` (VO timeline) and `?pace=fast` (cold open); pace changes render
 speed only, never what runs.
 

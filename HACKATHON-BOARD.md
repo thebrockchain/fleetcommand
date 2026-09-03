@@ -1,5 +1,18 @@
 # The Hackathon Board
 
+**RE-VERIFIED 2026-09-03 02:05 EDT against each event's own live page.** The
+DevNetwork field is **1,358 participants** this morning (1,342 yesterday), the
+deadline holds at **Sep 3, 10:00am PDT (1:00pm EDT)**, judging runs 10:00am to
+1:00pm PDT and winners are announced 4:00pm PDT the same day, all read off the
+event's schedule page. Six more open contests with real cash were checked from
+their own pages and ruled out (Agentic Cinema, Agents for Humans, AI Builders,
+GIBC V2, ML Empowerment, the Amazon Developer Hackathon: each is students only,
+a different required stack, or device builds); the reasoning per event is on
+the live board. IBM Bob 2.0 could not be re-read (lablab.ai sits behind a
+Cloudflare JS challenge) and is marked unverified since Aug 25. The narrated
+2:46 film master turned out to be ON THIS MAC, so swapping it into the entry's
+video field is one command (see NEXT.md).
+
 **RE-VERIFIED 2026-09-02 against each event's own live page.** The 2026-08-14
 pass below it is kept for its reasoning, but three of its headline numbers were
 already wrong by today and are corrected here first.

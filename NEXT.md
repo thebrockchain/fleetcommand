@@ -1,5 +1,79 @@
 # Fleet Command - what is still open
 
+## RESUME HERE (2026-09-03, 02:40 EDT, judging day)
+
+**Submissions close TODAY at 10:00am PDT (1:00pm EDT).** Judging runs 10:00am
+to 1:00pm PDT, winners at 4:00pm PDT, all read off the event's own schedule
+page this morning. The entry is live at https://devpost.com/software/fleet-command
+and `node tools/check-entry.mjs` meets every public surface it points at from
+outside: cockpit, press kit, Google build, five security headers, five public
+assets, the repo, the Devpost page's links, and the film on YouTube. 12 of 13
+green this morning. The one red is the licence, below, and the check is proven
+able to fail (`--prove`).
+
+**Brock's taps, each one move, in the order they pay off:**
+
+1. **Swap the narrated film into the required video field.** The field points at
+   `files.thebrockchain.com/fleetcommand/fleet-command-demo.mp4`, which is the
+   43.6 second silent capture (4,257,671 bytes live). The narrated 2:46 master is
+   ON THIS MAC: `submission/youtube/videos/fleetcommand-NARRATOR-music.mp4`
+   (1920x1080, 166.3 s, 38,095,709 bytes, probed with ffprobe). The Sep 2 note
+   saying it was unreachable was written on the other Mac. From this folder:
+
+       npx wrangler r2 object put brock-public/fleetcommand/fleet-command-demo.mp4 --file submission/youtube/videos/fleetcommand-NARRATOR-music.mp4 --content-type video/mp4 --remote
+
+   `--remote` is the whole trick (without it wrangler writes a local bucket and
+   prints success). The Devpost field needs no edit; the URL stays the same.
+   Then `curl -sI https://files.thebrockchain.com/fleetcommand/fleet-command-demo.mp4`
+   should show content-length 38095709. Not done from the session: the file
+   lands on a public URL bound to the entry, which is a publish in your name.
+
+2. **Pick the licence.** The repo is public and the GitHub licence endpoint is
+   404: all rights reserved, so judges may read it and run none of it. Nothing
+   in the DevNetwork rules requires a licence (read the rules page this
+   morning: no mention), so this is hygiene, not a blocker. No licence choice is
+   recorded anywhere in the fleet, so it is drafted and parked on branch
+   `wt/entry-license`: MIT, "Copyright (c) 2026 Brock Falfas", matching the
+   other public fleet repo (grimm-conjecture-verification, also MIT). One move:
+
+       git merge --ff-only origin/wt/entry-license && git push
+
+   Want a different licence? Say which and the branch gets rewritten.
+
+3. **Deploy main when you like.** Production is at `2020ecd`, main is ahead by
+   the Linkborn tie-in (a `data-crew` attribute and an HTML comment) plus this
+   run's docs and check script, none of which change what a judge sees. So it
+   is not needed before judging. `git pull && npx wrangler pages deploy --branch main`.
+
+4. **Optional, scores under "progress":** arm `ANTHROPIC_API_KEY` (spend
+   capped) so the public demo shows LIVE during the judging window, and
+   `SERPAPI_KEY` / `NAMECOM_USER` + `NAMECOM_TOKEN` if the accounts exist.
+
+**What this run changed on main.** README: the entry as it stands, a "Run it
+yourself" section (proven: `npx wrangler pages dev` served `/` 200 with the
+cockpit in this checkout), and the check script. `submission/ENTRY-DEVNETWORK.md`
+records the submission and corrects the pool ($39,500, not $45,500) and the
+repo line (public, with the required video URL). `HACKATHON-BOARD.md` carries
+the Sep 3 re-verify (1,358 participants, judging window, six contests ruled
+out). `site/sitemap.xml` now lists `/press`. `tools/check-entry.mjs` is new.
+
+**What was scouted so nobody re-scouts it.** Every open ML/AI contest on
+Devpost with real cash was read from its own page 2026-09-03: Agentic Cinema
+($75,000, Sep 9, needs Google Agent Builder plus a media partner integration),
+Agents for Humans ($40,000, Sep 14, must be a new Strands SDK agent), AI
+Builders, GIBC V2 and ML Empowerment (all students only), the Amazon Developer
+Hackathon ($138,000, Oct 23, Fire TV / Alexa+ / Ring / Bee device builds). None
+is an honest fit for this build or the Google build. IBM Bob 2.0 (lablab.ai)
+could not be re-read: Cloudflare JS challenge to curl and to headless Chrome.
+Its Sep 25 to 27 dates are from Aug 25 and are marked unverified on the board.
+
+**Crew follow-ups.** jack's `public_ok()` needs the one line for fleetcommand
+carrying the reason already in CLAUDE.md (a brock worktree, merge when the
+shared brock checkout is clean). The weekly deadline re-verify. A dated
+decision on the Google build's future.
+
+---
+
 ## RESUME HERE (2026-09-02)
 
 **THE FLEET HAS ENTERED ITS FIRST CONTEST.** Fleet Command is SUBMITTED to the
