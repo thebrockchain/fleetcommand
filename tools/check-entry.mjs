@@ -50,12 +50,19 @@ async function page(name, url, mustContain = []) {
   return r;
 }
 
-// The two films that have ever been bound to the entry's required video
-// field, by exact byte count. Identity is the point: the field asks for a
-// backup of the DEMO VIDEO, and only one of these is that.
+// Every film bound to a public key, by exact byte count. Identity is the
+// point: a size check that only asks "> 0" stays GREEN with the wrong film
+// bound, because any file is a file.
+//
+// TWO KEYS, TWO JOBS, and conflating them is what kept this checker red on a
+// correct file. fleet-command-demo.mp4 is the RAW CAPTURE the press kit offers
+// "to edit from", labelled 0:44 on the page. fleet-command-narrated.mp4 is the
+// finished film. Demanding the narrated master at the capture key made the
+// page lie about itself if you obeyed, and made the checker lie if you did not.
 const FILMS = {
-  38095709: { name: 'narrated master, 2:46 1080p', wanted: true },
-  4257671: { name: 'silent screen capture, 0:44 1080p', wanted: false },
+  38095709: { name: "narrated master, 2:46 1080p", kind: "narrated" },
+  15434083: { name: "narrated film, 2:46 720p YouTube transcode", kind: "narrated" },
+  4257671: { name: "raw screen capture, 0:44 1080p", kind: "capture" },
 };
 
 async function asset(name, url, expect) {
@@ -65,13 +72,13 @@ async function asset(name, url, expect) {
   // A size check that only asks "> 0" answers the wrong question: it stays
   // GREEN through a whole judging window with the wrong film bound, because
   // any file is a file. Where identity matters, assert WHICH one.
-  if (expect === 'film') {
+  if (expect) {
     const known = FILMS[len];
-    check(name, r.status === 200 && !!known && known.wanted,
+    check(name, r.status === 200 && !!known && known.kind === expect,
       r.status !== 200 ? `status ${r.status}`
-        : !known ? `${len} bytes, UNKNOWN film, expected the narrated master at 38095709`
-        : known.wanted ? `${len} bytes, ${known.name}`
-        : `${len} bytes, ${known.name}, NOT the narrated master a backup field asks for`);
+        : !known ? `${len} bytes, UNKNOWN film, not one this entry has ever bound`
+        : known.kind === expect ? `${len} bytes, ${known.name}`
+        : `${len} bytes, ${known.name}, expected the ${expect}`);
     return;
   }
 
@@ -99,7 +106,8 @@ async function main() {
   check('security headers on /', missing.length === 0, missing.length ? 'missing ' + missing.join(', ') : 'all five present');
 
   // 3. The public assets the press kit and the Devpost video field point at.
-  await asset('asset fleet-command-demo.mp4', `${FILES}/fleet-command-demo.mp4`, 'film');
+  await asset('asset fleet-command-narrated.mp4', `${FILES}/fleet-command-narrated.mp4`, 'narrated');
+  await asset('asset fleet-command-demo.mp4', `${FILES}/fleet-command-demo.mp4`, 'capture');
   for (const f of ['fleet-command-onepager.pdf', 'share-card.png', 'cockpit-standby.png', 'gate-holding.png']) {
     await asset('asset ' + f, `${FILES}/${f}`);
   }
