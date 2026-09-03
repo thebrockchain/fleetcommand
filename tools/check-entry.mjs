@@ -50,9 +50,31 @@ async function page(name, url, mustContain = []) {
   return r;
 }
 
-async function asset(name, url) {
+// The two films that have ever been bound to the entry's required video
+// field, by exact byte count. Identity is the point: the field asks for a
+// backup of the DEMO VIDEO, and only one of these is that.
+const FILMS = {
+  38095709: { name: 'narrated master, 2:46 1080p', wanted: true },
+  4257671: { name: 'silent screen capture, 0:44 1080p', wanted: false },
+};
+
+async function asset(name, url, expect) {
   const r = await get(url, { method: 'HEAD', body: false });
   const len = Number(r.headers && r.headers.get('content-length')) || 0;
+
+  // A size check that only asks "> 0" answers the wrong question: it stays
+  // GREEN through a whole judging window with the wrong film bound, because
+  // any file is a file. Where identity matters, assert WHICH one.
+  if (expect === 'film') {
+    const known = FILMS[len];
+    check(name, r.status === 200 && !!known && known.wanted,
+      r.status !== 200 ? `status ${r.status}`
+        : !known ? `${len} bytes, UNKNOWN film, expected the narrated master at 38095709`
+        : known.wanted ? `${len} bytes, ${known.name}`
+        : `${len} bytes, ${known.name}, NOT the narrated master a backup field asks for`);
+    return;
+  }
+
   check(name, r.status === 200 && len > 0, r.status === 200 ? `${len} bytes` : `status ${r.status}`);
 }
 
@@ -77,7 +99,8 @@ async function main() {
   check('security headers on /', missing.length === 0, missing.length ? 'missing ' + missing.join(', ') : 'all five present');
 
   // 3. The public assets the press kit and the Devpost video field point at.
-  for (const f of ['fleet-command-demo.mp4', 'fleet-command-onepager.pdf', 'share-card.png', 'cockpit-standby.png', 'gate-holding.png']) {
+  await asset('asset fleet-command-demo.mp4', `${FILES}/fleet-command-demo.mp4`, 'film');
+  for (const f of ['fleet-command-onepager.pdf', 'share-card.png', 'cockpit-standby.png', 'gate-holding.png']) {
     await asset('asset ' + f, `${FILES}/${f}`);
   }
 
