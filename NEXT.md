@@ -40,17 +40,28 @@ able to fail (`--prove`).
    bytes, MISS on two different cache busters, so it is the real object and not
    a cached answer. The wrong video is still the one bound to the entry.
 
-2. **Pick the licence.** The repo is public and the GitHub licence endpoint is
-   404: all rights reserved, so judges may read it and run none of it. Nothing
-   in the DevNetwork rules requires a licence (read the rules page this
-   morning: no mention), so this is hygiene, not a blocker. No licence choice is
-   recorded anywhere in the fleet, so it is drafted and parked on branch
-   `wt/entry-license`: MIT, "Copyright (c) 2026 Brock Falfas", matching the
-   other public fleet repo (grimm-conjecture-verification, also MIT). One move:
+   **AND THE ENTRY CHECKER CANNOT SEE THIS.** `tools/check-entry.mjs` prints
+   "ok asset fleet-command-demo.mp4 (4257671 bytes)" and stays green on the
+   WRONG film, because it only asks whether the object exists and is
+   fetchable, never which video it is. It would read 13 of 13 through the
+   whole judging window with the silent capture bound to the entry, which is
+   the most confident possible way to be wrong. Pin the expected 38095709 into
+   that assertion, or treat this one green as meaningless.
 
-       git merge --ff-only origin/wt/entry-license && git push
+2. **Licence: DONE, nothing left to tap.** Landed 2026-09-03 04:25 EDT from
+   Brockchain Personal. MIT, "Copyright (c) 2026 Brock Falfas", matching the
+   other public fleet repo. `tools/check-entry.mjs` now reads **13 of 13
+   green**, with "repo carries a LICENSE (MIT)" standing where the single red
+   was.
 
-   Want a different licence? Say which and the branch gets rewritten.
+   The instruction parked here was already stale when it was read:
+   `git merge --ff-only origin/wt/entry-license` cannot work, because that
+   branch is 1 ahead and 3 BEHIND main, and ff-only refuses a non descendant.
+   Measure both directions before writing a merge command into a runbook, not
+   just "is it unmerged". It was cherry picked instead: 35b33dc onto
+   origin/main, landing as 9f80b85, verified by reading origin rather than
+   trusting the push echo. Branch `wt/entry-license` is now redundant and can
+   be retired. A different licence is one commit to replace.
 
 3. **Deploy main when you like.** Production is at `2020ecd`, main is ahead by
    the Linkborn tie-in (a `data-crew` attribute and an HTML comment) plus this
