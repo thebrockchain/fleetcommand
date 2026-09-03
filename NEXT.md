@@ -97,7 +97,10 @@ able to fail (`--prove`).
    trusting the push echo. Branch `wt/entry-license` is now redundant and can
    be retired. A different licence is one commit to replace.
 
-3. **Deploy main when you like.** Production is at `2020ecd`, main is ahead by
+3. **Deploy: DONE.** Production is `11f4c25` (deployment 7d8c3979, 2026-09-03
+   06:10 EDT), which carries the two-button press card, the 1080p label and
+   the cache-busted narrated link. The paragraph below is history. Production
+   WAS at `2020ecd`, main was ahead by
    the Linkborn tie-in (a `data-crew` attribute and an HTML comment) plus this
    run's docs and check script, none of which change what a judge sees. So it
    is not needed before judging. `git pull && npx wrangler pages deploy --branch main`.
