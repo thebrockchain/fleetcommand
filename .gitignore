@@ -38,3 +38,7 @@ submission/vo/*.mp3
 # is why they were never in anyone's way before.
 submission/fleetcommand-NARRATOR-clean.mp4
 submission/fleetcommand-NARRATOR-music.mp4
+
+# VO session media: reference takes, too big for git. NOTES.md IS tracked.
+submission/vo/*.wav
+submission/vo/*.mp3
