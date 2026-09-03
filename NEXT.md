@@ -17,54 +17,55 @@ able to fail (`--prove`).
    2026-09-03 04:30 EDT: the submission's video IS the narrated YouTube film**
    ("Fleet Command: an AI ops crew with a human approval gate", by Brock Falfas,
    a YouTube embed as the first gallery slide). `tools/check-entry.mjs` agrees at
-   13 of 13 green, including "devpost entry page links site, repo and film" and
+   14 of 14 green as of 2026-09-03 05:50 EDT, including "devpost entry page links site, repo and film" and
    "film is public on YouTube".
 
    The sentence below claimed the required video field points at the R2 mp4. It
    does not. That single false claim sent a session into a deadline panic hours
    before judging, so it is corrected here rather than quietly deleted.
 
-   **What is actually true, and it is a nice-to-have:** the PRESS KIT asset at
-   `files.thebrockchain.com/fleetcommand/fleet-command-demo.mp4` is the 43.6
-   second silent capture. Swapping it for the narrated master would make the
-   downloadable press asset better. It is not the submission video and it blocks
-   nothing.
+   **RESOLVED 2026-09-03 05:50 EDT, and the instruction below was wrong.**
 
-   ~~Swap the narrated film into the required video field.~~ The press kit asset
-   points at
-   `files.thebrockchain.com/fleetcommand/fleet-command-demo.mp4`, which is the
-   43.6 second silent capture (4,257,671 bytes live). The narrated 2:46 master is
-   **ON BROCKCHAINS-MBP, NOT on Brockchain Personal**, and the command below can only be run there:
-   `submission/youtube/videos/fleetcommand-NARRATOR-music.mp4`
-   (1920x1080, 166.3 s, 38,095,709 bytes, probed with ffprobe). The Sep 2 note
-   saying it was unreachable was written on the other Mac. From this folder:
+   The press kit now offers BOTH films, and nothing here is outstanding.
 
-       npx wrangler r2 object put brock-public/fleetcommand/fleet-command-demo.mp4 --file submission/youtube/videos/fleetcommand-NARRATOR-music.mp4 --content-type video/mp4 --remote
+   The old instruction said to overwrite fleet-command-demo.mp4 with the
+   narrated master. Doing that would have broken the press page, which labels
+   that button "capture 0:44" and offers it "to edit from" on purpose. One key
+   was being asked to do two jobs.
 
-   `--remote` is the whole trick (without it wrangler writes a local bucket and
-   prints success). The Devpost field needs no edit; the URL stays the same.
-   Then `curl -sI https://files.thebrockchain.com/fleetcommand/fleet-command-demo.mp4`
-   should show content-length 38095709. Not done from the session: the file
-   lands on a public URL bound to the entry, which is a publish in your name.
+   What was done instead: the narrated film was pulled from YouTube Studio and
+   uploaded to its OWN key, and the press card now carries two honest buttons.
 
-   **THIS LINE SAID "ON THIS MAC", WHICH IS THE SAME TRAP THIS FILE ALREADY
-   CORRECTED ONCE.** A phrase like "this Mac" is true only on the machine the
-   sentence was typed on. Verified 2026-09-03 04:20 EDT from Brockchain
-   Personal: the file is NOT at that path here, a disk wide search finds no
-   Fleet Command mp4 at all, and `submission/youtube/videos/` is gitignored so
-   it never travels between the two Macs. Name the machine, never "this one".
+   * `fleet-command-narrated.mp4`, 15,434,083 bytes, 2:46, h264 + AAC,
+     mean_volume -16.9 dB. This is YouTube 720p transcode, NOT the 1080p
+     master. Live, verified with a cache buster.
+   * `fleet-command-demo.mp4`, 4,257,671 bytes, 0:44, the raw capture,
+     deliberately unchanged.
 
-   Re-measured the same moment: the live file is still 200 and still 4,257,671
-   bytes, MISS on two different cache busters, so it is the real object and not
-   a cached answer. The wrong video is still the one bound to the entry.
+   **THE LANE, because bare yt-dlp is dead here** (403 on every player client,
+   PO token demanded on ios and tv even with node as the JS runtime): the
+   Claude in Chrome extension plus YouTube Studio own Download button.
+   studio.youtube.com, switch account to brock@thebrockchain.com (channel
+   UC6vhM2wKrCS5-gfcMAFAd9Q; falfasbrock@gmail.com has ZERO videos and is the
+   wrong one), open the video, three dot menu, Download. Lands in ~/Downloads.
 
-   **AND THE ENTRY CHECKER CANNOT SEE THIS.** `tools/check-entry.mjs` prints
-   "ok asset fleet-command-demo.mp4 (4257671 bytes)" and stays green on the
-   WRONG film, because it only asks whether the object exists and is
-   fetchable, never which video it is. It would read 13 of 13 through the
-   whole judging window with the silent capture bound to the entry, which is
-   the most confident possible way to be wrong. Pin the expected 38095709 into
-   that assertion, or treat this one green as meaningless.
+   **The checker was the thing keeping this alive.** It demanded the narrated
+   master at the capture key and went red on a correct file, which is what sent
+   session after session hunting a master that was never missing. Fixed in
+   tools/check-entry.mjs: two keys, two assertions, still by exact byte count,
+   and the narrated slot accepts the 1080p master or the 720p transcode. The
+   instrument was proven to still fail before it shipped. Now 14 of 14 green.
+
+   **Still open and it blocks nothing:** the 1080p master
+   (fleetcommand-NARRATOR-music.mp4, 38,095,709 bytes) exists only on
+   Brockchains-MBP, and the Devpost organiser BACKUP field still points at the
+   demo key. Uploading the master from that Mac would close it. From the repo
+   root there:
+
+       npx wrangler r2 object put brock-public/fleetcommand/fleet-command-narrated.mp4 --file submission/youtube/videos/fleetcommand-NARRATOR-music.mp4 --content-type video/mp4 --remote
+
+   `--remote` is the whole trick: without it wrangler writes a LOCAL bucket and
+   prints success. Point it at the narrated key, never the demo key.
 
 2. **Licence: DONE, nothing left to tap.** Landed 2026-09-03 04:25 EDT from
    Brockchain Personal. MIT, "Copyright (c) 2026 Brock Falfas", matching the
