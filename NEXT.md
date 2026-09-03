@@ -74,7 +74,55 @@ decision on the Google build's future.
 
 ---
 
-## RESUME HERE (2026-09-02)
+### THE HOSTNAME TRAP, and it has now bitten in BOTH directions
+
+**Both Macs use the username `themac` AND both fleet roots are
+`~/Developer/BROCK`.** Nothing in a path, a prompt, or a session name tells them
+apart. `hostname -s` is the only honest check, and it belongs at the top of any
+note that says "this Mac".
+
+Proof, from the two halves of this same file. The Sep 2 block below says the
+master is unreachable and possibly gone; it ran on **Brockchain-Personal**,
+where `submission/youtube/videos/` does not exist at all. The Sep 3 block above
+says the master is "ON THIS MAC" with a real ffprobe reading; it ran on the
+OTHER machine, where it plainly does. **Both are true, and each was written as
+if its machine were the only one.** Re-checked on Brockchain-Personal at the end
+of the Sep 2 run: still no `videos/` directory. So the file EXISTS, it is on the
+other Mac, and only a session there can do the swap in tap 1.
+
+### Decisions from the 2026-09-02 run, so they are not re-litigated
+
+- **Repo flipped PUBLIC.** Every track demanded it.
+- **Foxit ($1,000) NOT entered.** No real integration and its judges are Foxit
+  engineers. Our own no-fake-integrations rule.
+- **The Google architecture diagram was kept OUT of the gallery.** It says ADK,
+  Gemini and Cloud Run, and this entry's story is Cloudflare and Anthropic.
+- **The `submission/vo/` voice takes were NOT stitched into a stand-in master.**
+  Assembling an artifact from raw takes to fill a contest field is inventing
+  evidence. They are still untracked on Brockchain-Personal.
+
+### Dead ends from 2026-09-02, do not repeat
+
+- **yt-dlp cannot pull our own YouTube video.** PO token and n-challenge; the
+  documented fix runs a script fetched from GitHub, which was refused. Cookies
+  from the signed-in browser did not help.
+- **YouTube Studio cannot reach the channel from that Chrome.** @BrockchainLabs
+  sits on a DIFFERENT Google account; the profile has one empty channel.
+- **Reading `~/.ssh/config`, `arp -a`, and binding a probe server** were all
+  refused by the auto mode classifier. Fair refusals.
+- **A session name does not identify a machine**, per the trap above.
+- Still true from earlier: AppleScript into YouTube's hardened fields is
+  silently rejected, native macOS file pickers cannot be driven at all, and the
+  YouTube Data API needs an OAuth scope that machine does not hold.
+
+### Transcript pointer for the 2026-09-02 run
+
+On **Brockchain-Personal** only, verified to exist:
+`~/.claude/projects/-Users-themac/9d55e5e7-6ef3-4387-b581-b1fc4bf96c8f.jsonl`
+
+---
+
+## Superseded: the 2026-09-02 block (kept only for the record it corrects)
 
 **THE FLEET HAS ENTERED ITS FIRST CONTEST.** Fleet Command is SUBMITTED to the
 DevNetwork [API + Cloud + AI] Hackathon 2026 and the public project page is
@@ -103,9 +151,15 @@ still be improved.
 **THE ONE THING TO KNOW ABOUT THE FILE IN THAT FIELD.** It is
 `files.thebrockchain.com/fleetcommand/fleet-command-demo.mp4`, a **43.6 second
 1080p capture recorded 2026-09-02 off the live site**, and it is NOT the
-narrated two minute forty six film on YouTube. The narrated master
-(`fleetcommand-NARRATOR-music.mp4`) lives on the PRIMARY Mac and could not be
-reached from this one: it is not in the repo (media is gitignored), not in
+narrated two minute forty six film on YouTube.
+
+**CORRECTED 2026-09-03: this block went on to call the master possibly GONE, and
+that was wrong.** It exists, on the OTHER Mac, measured there by ffprobe at
+38,095,709 bytes and 166.3 seconds. The Sep 2 run searched Brockchain-Personal
+disk wide, found no Fleet Command mp4, and reasoned from one machine as though
+it were the only one. See the hostname trap above. The original text follows
+unedited, because the shape of the mistake is the lesson: the narrated master
+(`fleetcommand-NARRATOR-music.mp4`) could not be reached from Brockchain-Personal: it is not in the repo (media is gitignored), not in
 iCloud, yt-dlp is blocked by YouTube's bot challenges, and YouTube Studio
 refuses because the @BrockchainLabs channel sits on a DIFFERENT Google account
 than the one this Chrome is signed into. Swapping the master in is one
