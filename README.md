@@ -57,8 +57,10 @@ built them (narration, Lyria score, ffmpeg mix) is in `submission/video-pipeline
   the mission and the UI labels it "replay" honestly, in the chip and the
   footer. Nothing pretends to be live.
 - **Live mode:** arm `ANTHROPIC_API_KEY` as a Pages secret and every step
-  becomes a real Claude call (`claude-sonnet-5`). BROCK'S HANDS, a live
-  secret key is one of the five human only acts:
+  becomes a real Claude call (`claude-sonnet-5`). **Setting it is Claude's**
+  (Constitution XI #32a as narrowed 2026-09-03: a prepaid, spend capped key
+  reaches no bank and changes no credential). Issuing a NEW key is Brock's,
+  because the console sits behind his login:
   `cd fleetcommand && npx wrangler pages secret put ANTHROPIC_API_KEY`
 
 ## Deploy

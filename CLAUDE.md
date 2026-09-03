@@ -39,8 +39,12 @@ No build step, no runtime deps. From this folder:
 Security headers ride every response via `functions/_middleware.js`.
 
 **On-switch**: replay mode is the default. Live agent runs arm only when
-`ANTHROPIC_API_KEY` is set as a Pages secret. That is Brock's hands, a
-live secret key is one of the five human-only acts:
+`ANTHROPIC_API_KEY` is set as a Pages secret. **Setting it is CLAUDE'S**
+under Constitution XI #32a as Brock narrowed it on 2026-09-03: a key is
+judged by what it can reach, and a prepaid, spend capped model key reaches
+no bank and changes no credential. Only ISSUING a new key is his, because
+the console sits behind his login (#32c). This line read "Brock's hands,
+one of the five human-only acts" until then, and that gate was never real:
 
     npx wrangler pages secret put ANTHROPIC_API_KEY
 
