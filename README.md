@@ -153,3 +153,8 @@ The site takes
 speed only, never what runs.
 
 `NEXT.md` carries what is still open, with tomorrow's resume point on top.
+
+## Licence
+
+MIT. See `LICENSE`. The demo data is synthetic (the fictional Harbor Lane
+Bakery) and the fleet's private crew room is not part of this repo.
