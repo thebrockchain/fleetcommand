@@ -66,7 +66,11 @@ const FILMS = {
 };
 
 async function asset(name, url, expect) {
-  const r = await get(url, { method: 'HEAD', body: false });
+  // Cache bust, always. These objects carry max-age=14400 at the edge, so a bare
+  // HEAD reports the PREVIOUS upload for up to four hours and this check reads
+  // the wrong film as bound. Measured 2026-09-03 06:05: bare URL 15,434,083
+  // (HIT, age 1356), busted URL 38,095,709 (MISS). Ask the origin.
+  const r = await get(`${url}?cb=${Date.now()}`, { method: 'HEAD', body: false });
   const len = Number(r.headers && r.headers.get('content-length')) || 0;
 
   // A size check that only asks "> 0" answers the wrong question: it stays

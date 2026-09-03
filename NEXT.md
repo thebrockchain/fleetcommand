@@ -36,9 +36,10 @@ able to fail (`--prove`).
    What was done instead: the narrated film was pulled from YouTube Studio and
    uploaded to its OWN key, and the press card now carries two honest buttons.
 
-   * `fleet-command-narrated.mp4`, 15,434,083 bytes, 2:46, h264 + AAC,
-     mean_volume -16.9 dB. This is YouTube 720p transcode, NOT the 1080p
-     master. Live, verified with a cache buster.
+   * `fleet-command-narrated.mp4`, first the 15,434,083 byte YouTube 720p
+     transcode (05:41 EDT), then REPLACED at 06:03 EDT by the 38,095,709 byte
+     1080p master pulled from the MacBook Pro over ssh. See the CLOSED block
+     below.
    * `fleet-command-demo.mp4`, 4,257,671 bytes, 0:44, the raw capture,
      deliberately unchanged.
 
@@ -56,16 +57,30 @@ able to fail (`--prove`).
    and the narrated slot accepts the 1080p master or the 720p transcode. The
    instrument was proven to still fail before it shipped. Now 14 of 14 green.
 
-   **Still open and it blocks nothing:** the 1080p master
-   (fleetcommand-NARRATOR-music.mp4, 38,095,709 bytes) exists only on
-   Brockchains-MBP, and the Devpost organiser BACKUP field still points at the
-   demo key. Uploading the master from that Mac would close it. From the repo
-   root there:
+   **CLOSED 2026-09-03 06:03 EDT: the 1080p master is published.**
+   `fleet-command-narrated.mp4` is now the real master, 38,095,709 bytes,
+   1920x1080 h264 + AAC, 2:46, md5 df10f22bf02e21282814267b9334e55d. Verified
+   at origin with a cache buster AND read back out of the bucket with the same
+   md5. A copy now also lives on this Mac at
+   `submission/youtube/videos/fleetcommand-NARRATOR-music.mp4` (gitignored), so
+   "exists only on the MacBook Pro" is no longer true.
 
-       npx wrangler r2 object put brock-public/fleetcommand/fleet-command-narrated.mp4 --file submission/youtube/videos/fleetcommand-NARRATOR-music.mp4 --content-type video/mp4 --remote
+   It came across over ssh, which WORKS with a key and no password in both
+   directions: `ssh -i ~/.ssh/id_ed25519_fleet thebrockchain@192.168.2.11`
+   from Personal, `ssh themac@192.168.2.10` from the MBP. The MBP's fleet root is
+   `~/Documents/thebrockchain`. Five sessions called that Mac unreachable
+   without one BatchMode test; the memory
+   `the-macbook-pro-lane-is-open-both-ways` records the lane.
 
-   `--remote` is the whole trick: without it wrangler writes a LOCAL bucket and
-   prints success. Point it at the narrated key, never the demo key.
+   **The edge cache serves the OLD 720p object on the bare URL until about
+   10:00 EDT** (`cache-control: max-age=14400`, `cf-cache-status: HIT`, age
+   1356 s at 06:05). A cache-busted URL serves the 1080p master now. That is
+   why the checker still printed 15,434,083 bytes right after the upload.
+
+   **Still Brock's, blocks nothing:** the Devpost organiser BACKUP video field
+   points at the demo key. Point it at
+   `https://files.thebrockchain.com/fleetcommand/fleet-command-narrated.mp4`
+   if it is worth the click.
 
 2. **Licence: DONE, nothing left to tap.** Landed 2026-09-03 04:25 EDT from
    Brockchain Personal. MIT, "Copyright (c) 2026 Brock Falfas", matching the
