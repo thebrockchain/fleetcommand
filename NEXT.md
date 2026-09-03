@@ -16,7 +16,8 @@ able to fail (`--prove`).
 1. **Swap the narrated film into the required video field.** The field points at
    `files.thebrockchain.com/fleetcommand/fleet-command-demo.mp4`, which is the
    43.6 second silent capture (4,257,671 bytes live). The narrated 2:46 master is
-   ON THIS MAC: `submission/youtube/videos/fleetcommand-NARRATOR-music.mp4`
+   **ON BROCKCHAINS-MBP, NOT on Brockchain Personal**, and the command below can only be run there:
+   `submission/youtube/videos/fleetcommand-NARRATOR-music.mp4`
    (1920x1080, 166.3 s, 38,095,709 bytes, probed with ffprobe). The Sep 2 note
    saying it was unreachable was written on the other Mac. From this folder:
 
@@ -27,6 +28,17 @@ able to fail (`--prove`).
    Then `curl -sI https://files.thebrockchain.com/fleetcommand/fleet-command-demo.mp4`
    should show content-length 38095709. Not done from the session: the file
    lands on a public URL bound to the entry, which is a publish in your name.
+
+   **THIS LINE SAID "ON THIS MAC", WHICH IS THE SAME TRAP THIS FILE ALREADY
+   CORRECTED ONCE.** A phrase like "this Mac" is true only on the machine the
+   sentence was typed on. Verified 2026-09-03 04:20 EDT from Brockchain
+   Personal: the file is NOT at that path here, a disk wide search finds no
+   Fleet Command mp4 at all, and `submission/youtube/videos/` is gitignored so
+   it never travels between the two Macs. Name the machine, never "this one".
+
+   Re-measured the same moment: the live file is still 200 and still 4,257,671
+   bytes, MISS on two different cache busters, so it is the real object and not
+   a cached answer. The wrong video is still the one bound to the entry.
 
 2. **Pick the licence.** The repo is public and the GitHub licence endpoint is
    404: all rights reserved, so judges may read it and run none of it. Nothing
