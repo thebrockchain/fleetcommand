@@ -75,8 +75,10 @@ LIVE at https://fleetcommand-2u0.pages.dev (Cloudflare Pages project
 Two more live surfaces, both added 2026-09-02:
 
 - **Press kit: https://fleetcommand-2u0.pages.dev/press** . Healthy is 200 with
-  its four download buttons resolving on files.thebrockchain.com. A 404 on one
-  of those means the asset lane broke, not the page.
+  its five buttons resolving: one YouTube watch link and four downloads off
+  files.thebrockchain.com. A 404 on one of those means the asset lane broke,
+  not the page. It read "four download buttons" until 2026-09-03, which was the
+  count before the Raw capture button was retired and the narrated one added.
 - **Public assets: https://files.thebrockchain.com/fleetcommand/** , the
   `brock-public` R2 bucket, which is the PUBLIC tier in the fleet
   `MEDIA-POLICY.md`. It holds the demo MP4, three screenshots, the share card
@@ -90,11 +92,20 @@ build step and the site has zero runtime dependencies. Security headers ride
 every response via `functions/_middleware.js`.
 
 **The link preview card is generated, so do not hand edit it.** The block
-between the `share:start` and `share:end` markers in `site/index.html` and
-`site/404.html` is written by `node tools/build-og.mjs`, which renders
-`brand/og-card.html` into a hashed `site/og-*.png` and rewrites the tags to
-match. Change the card or the copy in those two sources, then re-run the tool
-and deploy. A hand edit inside the markers is overwritten on the next run.
+between the `share:start` and `share:end` markers in **all four pages under
+`site/`** (`index.html`, `google.html`, `press.html`, `404.html`) is written by
+`node tools/build-og.mjs`, which renders `brand/og-card.html` into a hashed
+`site/og-*.png` and rewrites the tags to match. Change the card or the copy in
+those sources, then re-run the tool and deploy. A hand edit inside the markers
+is overwritten on the next run.
+
+**Each page's own title, description and `og:url` live in the `PAGES` map at the
+top of that script**, added 2026-09-03. This paragraph named only index and 404
+before then, and the script really did stamp ONE hardcoded block into every
+file, so `/google` and `/press` both shipped `og:url` pointing at `/` while
+their own `rel=canonical` disagreed. Adding a page means adding a row to that
+map; a page with no row falls back to the site identity and a root `og:url`,
+which is correct for `404.html` and wrong for anything else.
 
 **The rest of the head sits OUTSIDE those markers on purpose.** `rel=canonical`,
 both JSON-LD blocks (`WebApplication` and `HowTo`), and the two icon links are

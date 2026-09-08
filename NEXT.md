@@ -28,6 +28,19 @@ world still matches this file:
     curl -sI "https://files.thebrockchain.com/fleetcommand/fleet-command-narrated.mp4?cb=$(date +%s)" | grep content-length
                                        # expect 38095709
 
+**THAT 14 OF 14 DEPENDS ON AN UNCOMMITTED FILE, so read this before trusting
+it** (added 2026-09-03 10:05 EDT by the session that found it). `tools/check-entry.mjs`
+is DIRTY in the shared checkout on Brockchain-Personal. The committed version
+still expects the `capture` film at `fleet-command-demo.mp4`, and that key now
+holds the 38,095,709 byte narrated master, so **the committed checker would
+report a FALSE RED on a correct entry.** The working copy fixes it by expecting
+`narrated` on both keys, which is what produces the green above. The edit is
+four lines and correct, it belongs to another session that was still live, and
+this session deliberately did not sweep it into its own commit. If that session
+ended without committing, the fix is in the working tree only and one
+`git checkout` away from being lost. Commit it, or redo it, before believing a
+red from this checker.
+
 **Brock's taps, each one move, none urgent:**
 
 1. **Devpost organiser BACKUP video field** still points at the demo key
@@ -69,6 +82,17 @@ world still matches this file:
   previous upload for four hours and called the wrong film bound.
 - The 720p YouTube transcode was replaced by the 1080p master rather than
   kept; same key, same page, better file.
+- `tools/build-og.mjs` is the ONE WRITER of the share tags on all four pages,
+  and it is per page now rather than one hardcoded block (19474fa). It used to
+  stamp the same block into every file in `site/`, so `google.html` shipped
+  `og:url` pointing at `/` while its own `rel=canonical` said `/google`: paste
+  the Google build's link anywhere and the card claimed to be the homepage.
+- `site/press.html` no longer hand writes its own share tags. They hardcoded
+  the card filename `og-d8f521af3c.png`, and the stale sweep at the bottom of
+  `build-og.mjs` DELETES the old card whenever its hash changes, so the next
+  rebuild would have pointed the press kit's card at a 404 while the source
+  still read correct. It looked safe only because it was written after the last
+  run and had never been touched by the script.
 
 **Dead ends, do not repeat.**
 - "The MacBook Pro is unreachable" was FALSE for the whole night. Five
@@ -105,7 +129,22 @@ two download buttons with honest labels. `submission/vo/NOTES.md` tracked.
 `HACKATHON-BOARD.md`: the Sep 3 re-verify and six contests ruled out (Agentic
 Cinema, Agents for Humans, AI Builders, GIBC V2, ML Empowerment, Amazon
 Developer Hackathon; IBM Bob 2.0 unreadable behind a JS challenge). `.gitignore`:
-the narrator renders and the VO takes.
+the narrator renders and the VO takes. `tools/build-og.mjs` and all four pages
+in `site/`: per page share tags, one writer (19474fa). `site/press.html`: the
+two buttons folded back to one (906a7cb). README: live mode is now Claude's to
+arm, not Brock's, because the Constitution changed under it (below).
+
+**The Constitution changed under this repo on 2026-09-03, and the README moved
+with it.** Brock narrowed Article XI #32a to six acts: the EIN and bank account,
+spending not already approved, changing a password, adding or changing 2FA,
+changing personal information, and a live secret key that can do one of those.
+**A key is now judged by what it can reach, never by the fact that it is
+secret**, so arming `ANTHROPIC_API_KEY` here is a session's job: it is prepaid
+and spend capped, so it reaches no bank and changes no credential. Issuing a NEW
+key is still Brock's, because the console is behind his login, which is the new
+#32c and an outside limit rather than a house rule. Both `README.md` and
+`CLAUDE.md` in this repo said "BROCK'S HANDS, one of the five human-only acts"
+until then, and that gate is why live mode sat unarmed.
 
 **Crew follow-ups (fleet, not this repo).** jack's `public_ok()` needs the one
 line for fleetcommand carrying the reason already in CLAUDE.md. The weekly
