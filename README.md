@@ -37,11 +37,13 @@ build below is finished work entered nowhere.
 requires it. It was swept for keys and secret-named files across all commits
 first. Keep secrets out of it.
 
-`NEXT.md` RESUME HERE carries the full state. The two press kit downloads are
-now honest: `fleet-command-narrated.mp4` is the 1080p narrated 2:46 master and
-`fleet-command-demo.mp4` is the 43.6 second raw capture, on purpose, to edit
-from. The only cosmetic leftover is Devpost's organiser backup field, which
-still points at the capture (the judged video is the YouTube embed).
+`NEXT.md` RESUME HERE carries the full state. The press kit offers ONE film
+download, `fleet-command-narrated.mp4`, the 1080p narrated 2:46 master. The
+43.6 second raw capture that `fleet-command-demo.mp4` used to serve was
+overwritten with the master on 2026-09-03 and is gone from both Macs, so that
+button was retired rather than left mislabelled. The demo key is kept because
+Devpost's organiser backup field points at it, and it now holds the right film.
+The judged video is the YouTube embed either way.
 
 ## Two builds, two entries (2026-08-27)
 

@@ -1,6 +1,6 @@
 # Fleet Command - what is still open
 
-## RESUME HERE (2026-09-03, 06:25 EDT, semisonic, judging day)
+## RESUME HERE (2026-09-03, 06:55 EDT, semisonic, judging day)
 
 Ran on **Brockchain-Personal** (user `themac`, fleet `/Users/themac/Developer/BROCK`).
 
@@ -8,8 +8,16 @@ Ran on **Brockchain-Personal** (user `themac`, fleet `/Users/themac/Developer/BR
 **14 of 14** at 06:12 EDT, asking the origin rather than the edge cache. The
 1080p narrated master (38,095,709 bytes, md5 df10f22bf02e21282814267b9334e55d)
 is published at `files.thebrockchain.com/fleetcommand/fleet-command-narrated.mp4`
-and the press kit offers it beside the raw capture. Production is deployment
-7d8c3979 from main `11f4c25`. Nothing was mid-flight when this session ended.
+and the press kit offers it as its one download.
+
+**CORRECTED 06:55 EDT, and the 06:25 block above was wrong about this.** Both
+R2 keys were found holding the SAME 38,095,709 byte master, so the press page
+was offering two buttons for one file while still labelling one of them
+"capture 0:44". The page lied about itself for about 30 minutes. The 0:44 raw
+capture (4,257,671 bytes) was overwritten at `fleet-command-demo.mp4` and is
+GONE: it is on neither Mac (checked both, by exact byte size, over the ssh
+lane) and R2 has no versioning. It only ever existed in that one bucket key.
+The Raw capture button and its label are retired rather than left lying.
 Submissions closed 2026-09-03 at 1:00pm EDT; judging 1:00pm to 4:00pm EDT,
 winners 7:00pm EDT, per the event's schedule page.
 
@@ -51,8 +59,12 @@ world still matches this file:
   `?v=1080` so a click gets the master regardless.
 
 **Decisions this session, one line each.**
-- The raw capture stays at `fleet-command-demo.mp4`; the narrated film has its
-  OWN key. One key, one job; the press page labels both honestly.
+- ~~The raw capture stays at `fleet-command-demo.mp4`.~~ It did not: that key
+  was overwritten with the master. The press kit now offers ONE download, the
+  1080p narrated master, and the demo key is kept only as the Devpost
+  organiser backup field target, which wants exactly that film anyway.
+- A press asset that exists in one R2 key and nowhere else is not backed up.
+  The capture was lost to a single overwrite with no copy on either Mac.
 - The checker cache busts every asset HEAD, because a bare HEAD read the
   previous upload for four hours and called the wrong film bound.
 - The 720p YouTube transcode was replaced by the 1080p master rather than

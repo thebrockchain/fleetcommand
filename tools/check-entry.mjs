@@ -111,7 +111,11 @@ async function main() {
 
   // 3. The public assets the press kit and the Devpost video field point at.
   await asset('asset fleet-command-narrated.mp4', `${FILES}/fleet-command-narrated.mp4`, 'narrated');
-  await asset('asset fleet-command-demo.mp4', `${FILES}/fleet-command-demo.mp4`, 'capture');
+  // The demo key is the Devpost ORGANISER BACKUP field, which asks for the
+  // demo video itself, so the narrated master is the right file there. The
+  // press kit no longer links this key: the raw capture it used to serve was
+  // overwritten 2026-09-03 and is not offered anywhere now.
+  await asset('asset fleet-command-demo.mp4', `${FILES}/fleet-command-demo.mp4`, 'narrated');
   for (const f of ['fleet-command-onepager.pdf', 'share-card.png', 'cockpit-standby.png', 'gate-holding.png']) {
     await asset('asset ' + f, `${FILES}/${f}`);
   }
