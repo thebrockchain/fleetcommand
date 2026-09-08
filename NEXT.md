@@ -28,18 +28,17 @@ world still matches this file:
     curl -sI "https://files.thebrockchain.com/fleetcommand/fleet-command-narrated.mp4?cb=$(date +%s)" | grep content-length
                                        # expect 38095709
 
-**THAT 14 OF 14 DEPENDS ON AN UNCOMMITTED FILE, so read this before trusting
-it** (added 2026-09-03 10:05 EDT by the session that found it). `tools/check-entry.mjs`
-is DIRTY in the shared checkout on Brockchain-Personal. The committed version
-still expects the `capture` film at `fleet-command-demo.mp4`, and that key now
-holds the 38,095,709 byte narrated master, so **the committed checker would
-report a FALSE RED on a correct entry.** The working copy fixes it by expecting
-`narrated` on both keys, which is what produces the green above. The edit is
-four lines and correct, it belongs to another session that was still live, and
-this session deliberately did not sweep it into its own commit. If that session
-ended without committing, the fix is in the working tree only and one
-`git checkout` away from being lost. Commit it, or redo it, before believing a
-red from this checker.
+**A note that was true for about twenty minutes and is now RESOLVED, kept
+because the shape of it repeats.** At 10:05 EDT `tools/check-entry.mjs` was
+DIRTY in the shared checkout, and the committed version still expected the
+`capture` film at `fleet-command-demo.mp4` while that key already held the
+narrated master, so the committed checker would have reported a false red on a
+correct entry. This session did not sweep another session's file into its own
+commit and wrote the warning instead. That session then committed it. **Checked
+2026-09-03 10:20 EDT: the tree is clean, `HEAD` expects `narrated` on both
+keys, and the 14 of 14 above comes from committed code.** Nothing is owed. The
+lesson that survives: a green from a checker whose file is dirty is a green
+that belongs to nobody, so read `git status` before quoting a pass.
 
 **Brock's taps, each one move, none urgent:**
 

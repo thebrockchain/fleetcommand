@@ -54,11 +54,15 @@ async function page(name, url, mustContain = []) {
 // point: a size check that only asks "> 0" stays GREEN with the wrong film
 // bound, because any file is a file.
 //
-// TWO KEYS, TWO JOBS, and conflating them is what kept this checker red on a
-// correct file. fleet-command-demo.mp4 is the RAW CAPTURE the press kit offers
-// "to edit from", labelled 0:44 on the page. fleet-command-narrated.mp4 is the
-// finished film. Demanding the narrated master at the capture key made the
-// page lie about itself if you obeyed, and made the checker lie if you did not.
+// TWO KEYS, ONE FILM NOW, and this header said otherwise until 2026-09-03.
+// It read "fleet-command-demo.mp4 is the RAW CAPTURE the press kit offers to
+// edit from, labelled 0:44 on the page", which was true when the two keys held
+// two different films. The capture was overwritten with the master that day and
+// existed in no other copy, so it is gone: the press kit retired that button
+// and both keys now hold the 38,095,709 byte narrated master. The demo key is
+// kept only because the Devpost organiser BACKUP field points at it, and that
+// field wants the demo film anyway. The assertion below already said this; the
+// header did not, which is one file disagreeing with itself.
 const FILMS = {
   38095709: { name: "narrated master, 2:46 1080p", kind: "narrated" },
   15434083: { name: "narrated film, 2:46 720p YouTube transcode", kind: "narrated" },
