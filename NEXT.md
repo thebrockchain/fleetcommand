@@ -42,18 +42,36 @@ that belongs to nobody, so read `git status` before quoting a pass.
 
 **Brock's taps, each one move, none urgent:**
 
-1. **Devpost organiser BACKUP video field** still points at the demo key
-   (`fleet-command-demo.mp4`, the 0:44 silent capture). The judged video is
-   the YouTube embed, so this is cosmetic. If it is worth a click, point it at
-   `https://files.thebrockchain.com/fleetcommand/fleet-command-narrated.mp4`.
-2. **Trash two files on the Brockchain-Personal Desktop**: `get-the-master.sh`
-   (a script that asked for the MacBook Pro password; the key lane made it
-   pointless) and `fleetcommand-NARRATOR-music.mp4` (a copy; the same file
-   now sits in `submission/youtube/videos/` here and on the MacBook Pro, and
-   in R2).
-3. **Optional, scores under "progress":** arm `ANTHROPIC_API_KEY` (spend
-   capped) so the public demo shows LIVE, and `SERPAPI_KEY` / `NAMECOM_USER`
-   + `NAMECOM_TOKEN` if the accounts exist.
+1. **Devpost organiser BACKUP video field** points at the demo key
+   (`fleet-command-demo.mp4`). **This is now a no-op and needs no click**: that
+   key was overwritten on 2026-09-03 and holds the 38,095,709 byte narrated
+   master, so the field already resolves to the right film. The line above
+   described it as "the 0:44 silent capture", which stopped being true the
+   moment the key was overwritten. The judged video is the YouTube embed
+   regardless.
+2. **Desktop copies on Brockchain-Personal.** `get-the-master.sh` was DELETED
+   by this session on 2026-09-03: it was mine, it asked for the MacBook Pro
+   password, and the key lane retired it. Two film copies remain and both are
+   deliberate: `fleetcommand-NARRATOR-music.mp4` (the 1080p master) and
+   `fleet-command-narrated.mp4` (YouTube's 720p transcode, fetched earlier the
+   same day). **Brock asked for a film on his Desktop, so a session does not
+   delete them without him saying so.** The master is also in
+   `submission/youtube/videos/` on both Macs and in R2, so nothing is lost if
+   he does clear them.
+
+**NOT Brock's any more, moved here 2026-09-03 when Article XI #32a narrowed.**
+
+3. **Arm `ANTHROPIC_API_KEY` so the public demo shows LIVE** (optional, scores
+   under "progress"), plus `SERPAPI_KEY` and `NAMECOM_USER` + `NAMECOM_TOKEN`
+   if those accounts exist. This sat in Brock's list because a live secret key
+   used to be a human-principal act. It is not one now: a key is judged by what
+   it can reach, and a prepaid spend capped model key reaches no bank and
+   changes no credential, so **SETTING these is a session's job** with
+   `npx wrangler pages secret put <NAME>`. The only part still his is ISSUING a
+   key that does not exist yet, because each vendor console sits behind his
+   login (#32c). So the real question a session must answer first is whether a
+   key already exists to set; do not assume one does, and do not report this
+   blocked without checking.
 
 **State of the machines.**
 - Both Macs talk over ssh with a key, no password, both ways:
