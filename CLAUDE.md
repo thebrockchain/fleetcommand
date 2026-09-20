@@ -66,6 +66,10 @@ and All Things Agentic (the Google ADK / Gemini build under `google/`).
 
 ## Fleet-wide rules
 
-Auto-loaded from [brock/CLAUDE.md](../brock/CLAUDE.md) - dashes ban,
+The fleet rules live in the brock root's CLAUDE.md - dashes ban,
 one-screen homepage, spacing ceiling, LEAN, security headers, no-AI-look
-copy. Do not duplicate here.
+copy. Do not duplicate here. **Auto-loaded only on a MERGED checkout**
+([../CLAUDE.md](../CLAUDE.md), Brockchain-Personal), where the brock
+root is this folder's parent; on a SPLIT one it is a sibling
+([../brock/CLAUDE.md](../brock/CLAUDE.md), Brockchains-MBP) and nothing
+loads it for you, so open it yourself.
