@@ -58,8 +58,10 @@ one of the five human-only acts" until then, and that gate was never real:
     npx wrangler pages secret put ANTHROPIC_API_KEY
 
 The link preview card is generated: `node tools/build-og.mjs` rewrites the
-block between `share:start` and `share:end`. Hand edits inside those
-markers are overwritten on the next run.
+block between `share:start` and `share:end`, and writes `brand/og-card.html`
+too. Hand edits to either are overwritten on the next run, so change the card
+in the script. (The 2026-09-10 font cleanup edited `brand/og-card.html` by
+hand, and the 2026-09-23 rename build put Google Fonts straight back.)
 
 Two entries live in `submission/`: DevNetwork (this Cloudflare cockpit)
 and All Things Agentic (the Google ADK / Gemini build under `google/`).

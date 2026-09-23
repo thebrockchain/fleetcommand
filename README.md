@@ -105,10 +105,11 @@ every response via `functions/_middleware.js`.
 **The link preview card is generated, so do not hand edit it.** The block
 between the `share:start` and `share:end` markers in **all four pages under
 `site/`** (`index.html`, `google.html`, `press.html`, `404.html`) is written by
-`node tools/build-og.mjs`, which renders `brand/og-card.html` into a hashed
-`site/og-*.png` and rewrites the tags to match. Change the card or the copy in
-those sources, then re-run the tool and deploy. A hand edit inside the markers
-is overwritten on the next run.
+`node tools/build-og.mjs`, which writes `brand/og-card.html`, renders it into a
+hashed `site/og-*.png` and rewrites the tags to match. The card and its copy
+live in `tools/build-og.mjs` itself, so change them there, then re-run the tool
+and deploy. A hand edit inside the markers, or anywhere in
+`brand/og-card.html`, is overwritten on the next run.
 
 **Each page's own title, description and `og:url` live in the `PAGES` map at the
 top of that script**, added 2026-09-03. This paragraph named only index and 404

@@ -37,7 +37,9 @@
  */
 import { readFileSync, writeFileSync, readdirSync, unlinkSync, mkdirSync } from 'node:fs';
 import { createHash } from 'node:crypto';
-import { execFileSync } from 'node:child_process';
+import { execFile, execFileSync } from 'node:child_process';
+import { createServer } from 'node:http';
+import { promisify } from 'node:util';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { tmpdir } from 'node:os';
@@ -134,9 +136,7 @@ const FIELD = Array.from({ length: 52 }, () => {
    amber means a human is needed, and it is spent exactly once. */
 const html = `<!doctype html>
 <html lang="en"><head><meta charset="utf-8">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/fonts/fonts.css">
 <style>
   *{margin:0;padding:0;box-sizing:border-box}
   html,body{width:${W}px;height:${H}px}
@@ -215,13 +215,57 @@ mkdirSync(join(ROOT, 'brand'), { recursive: true });
 const src = join(ROOT, 'brand', 'og-card.html');
 writeFileSync(src, html);
 
+/* THE CARD USES THE SITE'S OWN SELF HOSTED FONTS, SERVED OVER A THROWAWAY
+   LOCAL SERVER, and both halves of that are load bearing.
+   The font cleanup on 2026-09-10 (cd57150) swapped the Google Fonts link for
+   /fonts/fonts.css by HAND EDITING brand/og-card.html, but this script writes
+   that file, so the next build (the On Your Go rename, e608283) quietly put
+   Google back. The link now lives here, where it cannot be undone.
+   The server is the half the hand edit missed. This used to screenshot the
+   template over file://, and under file:// a root relative /fonts/fonts.css
+   means the root of the DISK: no stylesheet, no faces, and the headline falls
+   back to Times. Checked 2026-09-23 by rendering the hand edited template, not
+   assumed. Serving the template and site/fonts from one origin makes /fonts/
+   mean exactly what it means on the live site. It binds 127.0.0.1 only, lives
+   for one screenshot, and answers only the template and files named
+   *.css or *.woff2 directly inside site/fonts (no slash, so no ../ escape).
+   A missing font does not error, it just renders a fallback that still looks
+   like a card, so the build FAILS unless both families were really fetched. */
+const FONTS = join(SITE, 'fonts');
+const fetched = [];
+const server = createServer((req, res) => {
+  const path = new URL(req.url, 'http://127.0.0.1').pathname;
+  const font = path.match(/^\/fonts\/([\w.-]+\.(css|woff2))$/);
+  const file = path === '/og-card.html' ? src : font ? join(FONTS, font[1]) : null;
+  let body = null;
+  try { if (file) body = readFileSync(file); } catch { /* a named file that is missing is a 404 */ }
+  if (!body) { res.writeHead(404).end(); return; }
+  if (font) fetched.push(font[1]);
+  const type = !font ? 'text/html; charset=utf-8' : font[2] === 'css' ? 'text/css' : 'font/woff2';
+  res.writeHead(200, { 'content-type': type }).end(body);
+});
+await new Promise((ok) => server.listen(0, '127.0.0.1', ok));
+
 const tmp = join(ROOT, '.og-tmp.png');
-execFileSync(CHROME, [
-  '--headless=new', '--disable-gpu', '--hide-scrollbars',
-  `--force-device-scale-factor=${SCALE}`, `--window-size=${W},${H}`,
-  '--virtual-time-budget=6000',
-  `--screenshot=${tmp}`, `file://${src}`,
-], { stdio: 'pipe' });
+try {
+  // Async on purpose: execFileSync would block the event loop the server
+  // needs to answer Chrome, and the screenshot would hang or go fontless.
+  await promisify(execFile)(CHROME, [
+    '--headless=new', '--disable-gpu', '--hide-scrollbars',
+    `--force-device-scale-factor=${SCALE}`, `--window-size=${W},${H}`,
+    '--virtual-time-budget=6000',
+    `--screenshot=${tmp}`, `http://127.0.0.1:${server.address().port}/og-card.html`,
+  ]);
+} finally {
+  server.closeAllConnections();
+  server.close();
+}
+for (const family of ['montserrat', 'space-grotesk']) {
+  if (!fetched.some((f) => f.startsWith(family) && f.endsWith('.woff2'))) {
+    try { unlinkSync(tmp); } catch {}
+    throw new Error(`the card never fetched a ${family} face from site/fonts (got: ${fetched.join(', ') || 'nothing'}), so it would ship in a fallback font`);
+  }
+}
 
 /* Flat colour and type, so PNG is genuinely the right container here and
    comes out small. The RISE card is a photograph and goes to JPEG instead. */
