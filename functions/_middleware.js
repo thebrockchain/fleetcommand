@@ -1,4 +1,4 @@
-// Fleet Command middleware: security headers on every response, public site.
+// On Your Go middleware: security headers on every response, public site.
 // This surface is deliberately public and indexable (it is the hackathon
 // showpiece), so there is no gate here. The five headers ride every response,
 // including ones the Functions build by hand downstream.

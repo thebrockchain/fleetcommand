@@ -1,4 +1,13 @@
-# Fleet Command - what is still open
+# On Your Go: what is still open
+
+## 2026-09-23: renamed from Fleet Command
+
+The site was renamed to On Your Go on Brock's call and redeployed. The judged
+entry keeps its name: Devpost, the film, the press downloads and `submission/`
+still say Fleet Command, and /press and `llms.txt` say so in one line. The
+decision, the evidence and what is left (the domain tap, presence.mjs, which
+name the IBM Bob entry wears) live in `docs/NAMING.md`. The RESUME HERE block
+below is the judging day record from 2026-09-03 and is history.
 
 ## RESUME HERE (2026-09-03, 06:55 EDT, semisonic, judging day)
 

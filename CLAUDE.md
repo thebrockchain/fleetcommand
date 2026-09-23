@@ -1,4 +1,12 @@
-# Fleet Command
+# On Your Go
+
+Renamed from Fleet Command on 2026-09-23, on Brock's call (`docs/NAMING.md`).
+The DevNetwork hackathon entry was entered and judged as Fleet Command, so the
+Devpost page, the film, the press kit downloads and `submission/` keep that
+name, and the site says so in one line where it points at them (/press and
+`llms.txt`). Never rewrite that record. The repo, the Pages project
+`fleetcommand`, the pages.dev host and the R2 paths keep the old name until a
+rename of those is built on purpose.
 
 The public agentic ops cockpit and the fleet's hackathon entry. A judge
 lands with no login, watches four AI agents work a synthetic mission
@@ -28,7 +36,8 @@ connection to the walled ainow room.
   **PUBLIC since 2026-09-02**, because every DevNetwork track requires a public
   repo. Swept for keys and secret-named files across all commits before the
   flip. Keep it that way, and keep secrets out of it accordingly.
-- Devpost entry: https://devpost.com/software/fleet-command (SUBMITTED)
+- Devpost entry: https://devpost.com/software/fleet-command (SUBMITTED and
+  judged as Fleet Command; it did not place, per `docs/NAMING.md`)
 
 ## Deploy
 

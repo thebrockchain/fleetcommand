@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Build the Fleet Command link preview card, and the share tags it never had.
+ * Build the On Your Go link preview card, and the share tags it never had.
  * ---------------------------------------------------------------------------
  * WHAT WAS WRONG. This site carried charset, viewport and a description, and
  * nothing else. No og:title, no og:description, no og:image, no twitter tags.
@@ -197,7 +197,7 @@ const html = `<!doctype html>
   <svg class="field" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">
     ${FIELD.map(f => `<line x1="${f.x1}" y1="${f.y1}" x2="${f.x2}" y2="${f.y2}" stroke="${f.teal ? T.teal : T.indigo}" stroke-opacity="${f.o}" stroke-width="1.3" stroke-linecap="round"/>`).join('')}
   </svg>
-  <div class="eyebrow"><span class="dot"></span><b>Fleet Command</b><s>Agentic ops</s></div>
+  <div class="eyebrow"><span class="dot"></span><b>On Your Go</b><s>Agentic ops</s></div>
   <h1>The gate is the <b>product</b>.</h1>
   <p class="lede">Four AI agents do the work. Every consequential action stops at a named human.</p>
   <div class="crew">
@@ -252,7 +252,7 @@ writeFileSync(join(SITE, file), bytes);
  * A page not listed here falls back to the site identity with a root og:url,
  * which is what 404.html should say.
  */
-const SITE_TITLE = 'Fleet Command';
+const SITE_TITLE = 'On Your Go';
 const SITE_DESC = 'An agentic operations command center. A crew of AI agents does the work; a human approval gate holds the trigger.';
 const SITE_TWEET = 'Four AI agents do the work. Every consequential action stops at a named human.';
 
@@ -260,13 +260,13 @@ const PAGES = {
   'index.html': { path: '/' },
   'google.html': {
     path: '/google',
-    title: 'Fleet Command on Google ADK',
+    title: 'On Your Go on Google ADK',
     desc: 'The same four agent mission and the same human approval gate, built on the Google Agent Development Kit and Gemini.',
     tweet: 'The same crew and the same gate, rebuilt on Google ADK and Gemini.',
   },
   'press.html': {
     path: '/press',
-    title: 'Fleet Command: press kit',
+    title: 'On Your Go: press kit',
     desc: 'The demo film, product screenshots, a one page brief and the share card.',
     tweet: 'The demo film, product screenshots, a one page brief and the share card.',
   },
@@ -276,7 +276,7 @@ const PAGES = {
 /* The whole share block, not just the image: this site had NONE of it. */
 const TAGS = (url, meta) => [
   `<meta property="og:type" content="website">`,
-  `<meta property="og:site_name" content="Fleet Command">`,
+  `<meta property="og:site_name" content="${SITE_TITLE}">`,
   `<meta property="og:title" content="${meta.title || SITE_TITLE}">`,
   `<meta property="og:description" content="${meta.desc || SITE_DESC}">`,
   `<meta property="og:url" content="${ORIGIN}${meta.path}">`,
@@ -286,7 +286,7 @@ const TAGS = (url, meta) => [
   // should be told the truth about what it is fetching.
   `<meta property="og:image:width" content="${W * SCALE}">`,
   `<meta property="og:image:height" content="${H * SCALE}">`,
-  `<meta property="og:image:alt" content="Fleet Command: SCOUT, AUDIT and MEDIC feed into SHIP, which holds at the human approval gate.">`,
+  `<meta property="og:image:alt" content="${SITE_TITLE}: SCOUT, AUDIT and MEDIC feed into SHIP, which holds at the human approval gate.">`,
   `<meta name="twitter:card" content="summary_large_image">`,
   `<meta name="twitter:title" content="${meta.title || SITE_TITLE}">`,
   `<meta name="twitter:description" content="${meta.tweet || SITE_TWEET}">`,

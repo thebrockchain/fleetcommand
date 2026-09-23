@@ -104,9 +104,9 @@ async function main() {
   }
 
   // 1. The cockpit and its two public pages.
-  const home = await page('cockpit /', SITE + '/', ['Fleet Command', 'replay']);
-  await page('press kit /press', SITE + '/press', ['files.thebrockchain.com/fleetcommand']);
-  await page('google build /google', SITE + '/google', ['Fleet Command']);
+  const home = await page('cockpit /', SITE + '/', ['On Your Go', 'replay']);
+  await page('press kit /press', SITE + '/press', ['On Your Go', 'as Fleet Command.', 'files.thebrockchain.com/fleetcommand']);
+  await page('google build /google', SITE + '/google', ['On Your Go']);
 
   // 2. Security headers ride every response (the entry copy says so).
   const want = ['strict-transport-security', 'x-content-type-options', 'x-frame-options', 'referrer-policy', 'permissions-policy'];

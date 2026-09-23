@@ -1,4 +1,14 @@
-# Fleet Command
+# On Your Go
+
+**Renamed from Fleet Command on 2026-09-23, on Brock's call.** The DevNetwork
+API + Cloud + AI Hackathon 2026 entry was entered and judged as Fleet Command
+(https://devpost.com/software/fleet-command), and the narrated film, the press
+kit downloads and everything in `submission/` keep that name, because that is
+what was submitted. The repo, the Pages project `fleetcommand`, the pages.dev
+address and the public asset paths keep it too, until a rename of those is
+built on purpose. Why the name changed, and the clearance behind it:
+`docs/NAMING.md`. The sections below that describe the entry are its history
+and still use the name it was judged under.
 
 The public agentic ops command center, and the fleet's hackathon entry. A
 judge lands with no login on a one screen cockpit and watches a crew of four
@@ -70,7 +80,8 @@ built them (narration, Lyria score, ffmpeg mix) is in `submission/video-pipeline
 ## Deploy
 
 LIVE at https://fleetcommand-2u0.pages.dev (Cloudflare Pages project
-`fleetcommand`; custom domain still an open decision in NEXT.md).
+`fleetcommand`). No custom domain yet: `onyourgo.com` is on the buy list in
+`docs/NAMING.md` and is not bought.
 
 Two more live surfaces, both added 2026-09-02:
 

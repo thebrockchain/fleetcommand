@@ -66,16 +66,17 @@ over On Your Say-So. His call, recorded as his.
 ## What is left
 
 - Brock's tap: buy onyourgo.com.
-- The live cockpit's visible name, og card (`node tools/build-og.mjs`) and README
-  still say Fleet Command. Changing the live site is a separate build; not done
-  in this naming pass.
+- DONE 2026-09-23: the live site says On Your Go (titles, header, share card,
+  JSON-LD, `llms.txt`), and /press and `llms.txt` carry one line saying it was
+  entered as Fleet Command. `submission/`, the film, the R2 downloads and the
+  Devpost entry were left as judged.
 - presence.mjs:388 excludes this creation as "a hackathon entry, not an ongoing
   brand". A rename says it is now meant to be one, so the social and email
   session moves it into BRANDS; this repo does not edit that registry.
 - `submission/ENTRY-IBM-BOB.md` plans a build "on Fleet Command" for 2026-09-25
   to 27; decide which name that entry wears.
-- The README points at "an open decision in NEXT.md" about the custom domain,
-  and NEXT.md has no such entry. This file is now that decision.
+- DONE 2026-09-23: the README's custom domain line points at this file now,
+  not at NEXT.md.
 
 ---
 
