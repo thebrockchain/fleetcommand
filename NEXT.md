@@ -24,20 +24,33 @@ the world still matches this file:
                                    # expect "card built: site/og-4d4f7d8333.png" and an empty status
     node tools/check-entry.mjs     # expect 14 of 14 green
 
-The open work on this repo is elsewhere: the peer branch below, the rename
-leftovers in `docs/NAMING.md`, and arming live mode (item 3 in the 2026-09-03
-block further down).
+The open work on this repo is elsewhere: the rename leftovers in
+`docs/NAMING.md`, and arming live mode (item 3 in the 2026-09-03 block
+further down).
+
+**LANDED AND DEPLOYED 2026-09-23 18:10 PDT, on Brock's word: the crawler 403
+headers.** Another session's commit `6af3290` (branch `wt/wall-headers`) was
+cherry picked onto main as `e7169da` and deployed with
+`npx wrangler pages deploy --branch main`. The middleware's 403 to a crawler
+Cloudflare does not stop at the edge now carries the site's five security
+headers (no CSP, because this site sets none anywhere, on purpose). Before the
+deploy, a DotBot request to `/` got a 403 with ZERO of them; after, `/` and
+`/run` both return 403 with all five, and a browser request still gets its
+five. `node --test test/` (1 of 1) fails on the old middleware and passes on
+the new one. Probe with DotBot, not GPTBot: GPTBot is blocked at the edge on
+some zones and never reaches the middleware. To re-check:
+
+    curl -sI -A "Mozilla/5.0 (compatible; DotBot/1.2)" https://fleetcommand-2u0.pages.dev/
+                                   # expect 403 with the five headers
 
 **State of the machines.**
-- `wt/wall-headers` (worktree
-  `~/Documents/thebrockchain/.worktrees/fleetcommand/wall-headers`) holds ONE
-  commit that is not on main: `6af3290` "The crawler 403 wears the site's
-  security headers" (`functions/_middleware.js` plus
-  `test/crawler403.test.mjs`), pushed to origin, dated 2026-09-23 17:35 PDT.
-  It is ANOTHER session's work. This session did not merge, review or deploy
-  it. If nobody claims it, read it, run its test, and decide.
-- This session left no worktree alive: `wt/og-fonts` and `wt/semisonic-og`
-  were retired with `wt done`.
+- `wt/wall-headers` and its worktree
+  `~/Documents/thebrockchain/.worktrees/fleetcommand/wall-headers` belong to
+  the session that wrote it, which was told the main commit. Its
+  `wt done fleetcommand wall-headers` should find the change already on main
+  by patch, under the new id `e7169da`.
+- This session left no worktree alive: `wt/og-fonts`, `wt/semisonic-og` and
+  `wt/land-wall-headers` were retired with `wt done`.
 - The Pages project `fleetcommand` has ZERO production secrets (checked
   2026-09-23 about 18:01 PDT with
   `npx wrangler pages secret list --project-name fleetcommand`). So `/run`
