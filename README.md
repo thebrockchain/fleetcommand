@@ -89,6 +89,10 @@ is in `submission/video-pipeline/`.
   The cap is approximate under a burst, so the HARD ceiling is a spend limit
   on the Anthropic workspace the key lives in. `node --test test/` proves the
   guard with a fake KV and a fake endpoint, spending nothing.
+- **Live copy follows the house rules (2026-09-23):** every agent is asked for
+  plain text with no dashes, and `houseCopy()` in `functions/run.js` removes
+  any em or en dash and markdown backtick the model writes anyway. The first
+  live mission put eight dashes on the page before it existed.
 
 ## Deploy
 

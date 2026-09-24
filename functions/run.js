@@ -70,6 +70,25 @@ const REPLAY = {
 
 const STEP_ORDER = ['scout', 'audit', 'medic', 'ship'];
 
+// LIVE OUTPUT FOLLOWS THE HOUSE COPY RULES. The replay above was written to
+// them; a live model is not. The first live mission on 2026-09-23 put eight
+// em and en dashes and raw markdown backticks on the page. STYLE asks for
+// plain text, and houseCopy() enforces the part that matters, because an
+// instruction is a request and this page is public copy. Dashes become a plain
+// hyphen in a number range or a bullet, and a comma everywhere else.
+const STYLE = ' Write plain text: no markdown formatting and no backticks. Never use an em dash or an en dash; use a comma, colon or period instead.';
+
+function houseCopy(text) {
+  return text
+    .replace(/`/g, '')
+    .replace(/(\d)[ \t]*[\u2012\u2013][ \t]*(\d)/g, '$1-$2')
+    .replace(/^([ \t]*)[\u2012-\u2015][ \t]*/gm, '$1- ')
+    .replace(/[ \t]*[\u2012-\u2015][ \t]*$/gm, '')
+    .replace(/[ \t]*[\u2012-\u2015][ \t]*/g, ', ')
+    .replace(/\u2212/g, '-')
+    .replace(/,(?:[ \t]*,)+/g, ',');
+}
+
 function json(body, status = 200) {
   return new Response(JSON.stringify(body), {
     status,
@@ -183,7 +202,7 @@ export async function onRequestPost({ request, env }) {
       body: JSON.stringify({
         model: MODEL,
         max_tokens: 500,
-        system: agent.system,
+        system: agent.system + STYLE,
         messages: [{ role: 'user', content: userContent }],
       }),
     });
@@ -192,7 +211,7 @@ export async function onRequestPost({ request, env }) {
       return json({ mode: 'replay', agent: agent.name, step, output: REPLAY[step], note: 'live call failed, replay served', ...intel });
     }
     const data = await res.json();
-    const text = (data.content || []).map(b => b.text || '').join('');
+    const text = houseCopy((data.content || []).map(b => b.text || '').join(''));
     return json({ mode: 'live', agent: agent.name, step, output: text || REPLAY[step], ...intel });
   } catch {
     return json({ mode: 'replay', agent: agent.name, step, output: REPLAY[step], note: 'live call failed, replay served', ...intel });
