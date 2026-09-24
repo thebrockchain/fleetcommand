@@ -1,6 +1,6 @@
 # On Your Go: what is still open
 
-## RESUME HERE (2026-09-23, 18:14 PDT, semisonic, share card fonts and crawler 403 headers)
+## RESUME HERE (2026-09-23, 18:42 PDT, share card fonts, crawler 403 headers, live mode spend guard)
 
 Ran on **Brockchains-MacBook-Pro** (user `thebrockchain`, fleet root
 `/Users/thebrockchain/Documents/thebrockchain`, this repo at
@@ -29,8 +29,8 @@ the world still matches this file:
 The open work on this repo is elsewhere: the rename leftovers in
 `docs/NAMING.md`, and the last step of arming live mode, below.
 
-**LIVE MODE: the spend guard is built, the key is not set (Brock asked
-on 2026-09-23 to arm it).** This page is public with no login, and until
+**LIVE MODE: the spend guard is built and deployed (`70dc5ee`, 2026-09-23
+18:42 PDT), the key is not set (Brock asked on 2026-09-23 to arm it).** This page is public with no login, and until
 this change nothing capped how many live Claude calls a visitor could trigger.
 `functions/run.js` now caps live calls at 100 per UTC day (a `LIVE_DAILY_CAP`
 Pages variable overrides it), counted in the `MARKET_CACHE` KV, and FAILS
@@ -121,6 +121,13 @@ some zones and never reaches the middleware. To re-check:
   `node tools/check-entry.mjs` 14 of 14 at 18:14 PDT; `node --test test/`,
   `tools/test-market.mjs` and `tools/test-domains.mjs` pass; a DotBot request
   to `/` and `/run` gets 403 with the five security headers at 18:14 PDT.
+- VERIFIED 18:42 PDT, after deploying `70dc5ee`: the live page carries the
+  replay reason line, `/run` still answers `replay` with no note (no key, so
+  the cap never runs), the crawler 403 still has its five headers, and
+  `check-entry` is 14 of 14. The cap itself was seen working on a local
+  `wrangler pages dev` with a fake key and `LIVE_DAILY_CAP=1`: the footer read
+  "Replay mode: today's live runs are used up". It has NOT run live, because
+  no key is set.
 - BELIEVED, not re-checked: everything in the 2026-09-03 block below that this
   block does not repeat.
 
