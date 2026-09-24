@@ -19,8 +19,9 @@ connection to the walled ainow room.
 ## Live
 
 - URL: https://fleetcommand-2u0.pages.dev
-- Healthy answer: 200 on `/`, replay mode by default and labeled honestly
-  in the chip and the footer. `/google` serves the Google-native build.
+- Healthy answer: 200 on `/`, and a Run shows the `live` chip (armed
+  2026-09-23). Past the daily cap, or if a call fails, it shows replay and the
+  footer says why. `/google` serves the Google-native build.
 - Press kit: https://fleetcommand-2u0.pages.dev/press
   Healthy answer: 200, and its four download buttons resolve on
   files.thebrockchain.com. A 404 on any of those means the asset lane broke,
@@ -61,8 +62,8 @@ The redeploy is part of it: a Pages secret reaches only deploys made after it.
 The `cd` is part of it too: run from `~` on 2026-09-23 without it, the secret
 half failed with "Missing Pages project name" and nothing was set. That path is
 the MacBook Pro's fleet root; on a merged checkout use this repo's own folder.
-**No fleetcommand key exists as of 2026-09-23.** The only Anthropic key line a
-search found on Brockchains-MacBook-Pro was earpiece's own (`earpiece/.dev.vars`,
+**Armed 2026-09-23 19:03 PDT with a key Brock issued for this site.** Before
+that, the only Anthropic key line a search found on Brockchains-MacBook-Pro was earpiece's own (`earpiece/.dev.vars`,
 value never read), and it was NOT borrowed: one creation's spend never rides another's key
 (Constitution Article I #4), least of all on a public page. Live calls are
 capped per UTC day by the spend guard in `functions/run.js` (default 100),

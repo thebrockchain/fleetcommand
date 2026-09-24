@@ -1,14 +1,15 @@
 # On Your Go: what is still open
 
-## RESUME HERE (2026-09-23, 18:42 PDT, share card fonts, crawler 403 headers, live mode spend guard)
+## RESUME HERE (2026-09-23, 19:07 PDT, share card fonts, crawler 403 headers, live mode armed)
 
 Ran on **Brockchains-MacBook-Pro** (user `thebrockchain`, fleet root
 `/Users/thebrockchain/Documents/thebrockchain`, this repo at
 `~/Documents/thebrockchain/fleetcommand`).
 
-**The spot.** Finished, on main and live, nothing in flight. Two changes
-landed 2026-09-23: the crawler 403 headers (`e7169da`, deployed 18:10 PDT, its
-own paragraph below) and the share card fonts. For the fonts, `97acdd8` makes
+**The spot.** Finished, on main and live, nothing in flight. Three things
+landed 2026-09-23: live mode, armed with a spend guard and a house copy
+filter (its own section below), the crawler 403 headers (`e7169da`, deployed
+18:10 PDT, its own paragraph below), and the share card fonts. For the fonts, `97acdd8` makes
 `tools/build-og.mjs` write the self hosted font link
 (`<link rel="stylesheet" href="/fonts/fonts.css">`) into `brand/og-card.html`.
 The 2026-09-10 font cleanup (`cd57150`) had only HAND EDITED that file, which
@@ -27,37 +28,34 @@ the world still matches this file:
     node tools/check-entry.mjs     # expect 14 of 14 green
 
 The open work on this repo is elsewhere: the rename leftovers in
-`docs/NAMING.md`, and the last step of arming live mode, below.
+`docs/NAMING.md`, and one thing only Brock can confirm, below.
 
-**LIVE MODE: the spend guard is built and deployed (`70dc5ee`, 2026-09-23
-18:42 PDT), the key is not set (Brock asked on 2026-09-23 to arm it).** This page is public with no login, and until
-this change nothing capped how many live Claude calls a visitor could trigger.
-`functions/run.js` now caps live calls at 100 per UTC day (a `LIVE_DAILY_CAP`
-Pages variable overrides it), counted in the `MARKET_CACHE` KV, and FAILS
-CLOSED to replay when the counter is missing or errors. Past the cap the page
-says so ("today's live runs are used up") instead of its unarmed line. One
-call is at most about one cent (about 2,700 input and 500 output tokens at
-`claude-sonnet-5`'s $2 / $10 per million), so the cap is about a dollar a day
-at worst. `node --test test/` covers it with a fake KV and a fake endpoint.
-What is NOT done: no key is set, because no key for this creation exists. The
-one move that finishes it is Brock's, since issuing a key happens behind his
-console login:
+**LIVE MODE IS ARMED AND VERIFIED (2026-09-23, 19:07 PDT).** Brock issued a
+key for this site and set it with
+`npx wrangler pages secret put ANTHROPIC_API_KEY --project-name fleetcommand`
+followed by a deploy (`7513256`). The public page now runs every step as a
+real call to `claude-sonnet-5`. Two guards ship with it:
+- **The spend guard** (`70dc5ee`): live calls are capped at 100 per UTC day
+  (`LIVE_DAILY_CAP` overrides), counted in the `MARKET_CACHE` KV under
+  `live-calls:YYYY-MM-DD`, failing closed to replay, and the page says why
+  when it falls back. One call is at most about a cent at $2 / $10 per million
+  tokens, so about a dollar a day at worst.
+- **House copy on live output** (`3bfbcce`): the first live mission put eight
+  em and en dashes and raw markdown backticks on the page. Every agent is now
+  asked for plain text, and `houseCopy()` strips what the model writes anyway.
 
-1. At console.anthropic.com, make a workspace for this site with a monthly
-   spend limit (that limit is the HARD ceiling; the daily cap is approximate
-   under a burst), and create an API key inside it.
-2. Run this whole line from any folder (the `cd` is part of it) and paste the
-   key at the prompt:
-   `cd ~/Documents/thebrockchain/fleetcommand && npx wrangler pages secret put ANTHROPIC_API_KEY --project-name fleetcommand && npx wrangler pages deploy --branch main`
-   The first try on 2026-09-23 ran from `~` without the `cd` and failed with
-   "Missing Pages project name", so nothing was set. The redeploy matters: a Pages secret reaches
-   only deploys made after it.
-3. Then a session proves it: one Run on https://fleetcommand-2u0.pages.dev
-   should show the `live` chip, and
-   `npx wrangler pages secret list --project-name fleetcommand` should list
-   `ANTHROPIC_API_KEY`. SERPAPI_KEY and NAMECOM_USER / NAMECOM_TOKEN stay
-   unset: no such accounts were found, and SCOUT and SHIP already label their
-   sample data honestly.
+**OPEN, and only Brock can answer it:** whether the key's Anthropic workspace
+has a monthly spend limit. That limit is the HARD ceiling; the daily cap is
+approximate under a burst. Nothing in the repo can see it.
+SERPAPI_KEY and NAMECOM_USER / NAMECOM_TOKEN stay unset: no such accounts were
+found, and SCOUT and SHIP label their sample data honestly.
+
+To re-check live mode (each Run on the page is 4 calls, about 4 cents):
+
+    npx wrangler kv key get "live-calls:$(date -u +%F)" --namespace-id 654e70203d71438282b70d663aa6d201 --remote
+                                   # today's live call count
+    curl -s -X POST -H "content-type: application/json" -d '{"step":"audit","prior":""}' https://fleetcommand-2u0.pages.dev/run
+                                   # expect "mode":"live" and no dash in "output"
 
 **LANDED AND DEPLOYED 2026-09-23 18:10 PDT, on Brock's word: the crawler 403
 headers.** Another session's commit `6af3290` (branch `wt/wall-headers`) was
@@ -79,13 +77,13 @@ some zones and never reaches the middleware. To re-check:
   it, after it was told the main commit (gone from `git worktree list` by
   18:14 PDT 2026-09-23). Its change lives on main as `e7169da`.
 - This session left no worktree alive: `wt/og-fonts`, `wt/semisonic-og`,
-  `wt/land-wall-headers`, `wt/semisonic-2` and `wt/live-cap` were retired
-  with `wt done`.
-- The Pages project `fleetcommand` has ZERO production secrets (checked
-  2026-09-23 about 18:01 PDT with
+  `wt/land-wall-headers`, `wt/semisonic-2`, `wt/live-cap`, `wt/arm-cmd` and
+  `wt/live-copy` were retired with `wt done`.
+- The Pages project `fleetcommand` has ONE production secret,
+  `ANTHROPIC_API_KEY` (listed 2026-09-23 19:03 PDT with
   `npx wrangler pages secret list --project-name fleetcommand`). So `/run`
-  is in replay mode, SCOUT gets labelled sample data, and SHIP's registrar
-  check is unarmed.
+  is LIVE; SCOUT still gets labelled sample data and SHIP's registrar check
+  is unarmed.
 - Carried from the 2026-09-03 block and NOT re-checked today: two deliberate
   film copies on Brockchain-Personal's Desktop (a session does not delete them
   unless Brock says so), and the 1080p master under `submission/youtube/videos/`
@@ -130,6 +128,12 @@ some zones and never reaches the middleware. To re-check:
   `wrangler pages dev` with a fake key and `LIVE_DAILY_CAP=1`: the footer read
   "Replay mode: today's live runs are used up". It has NOT run live, because
   no key is set.
+- VERIFIED 19:07 PDT, after deploying `3bfbcce` with the key set: a full
+  mission on the live page shows the `live` chip on all four agents, the
+  footer reads "Live mode: each step is a real Claude call.", SHIP ends
+  HOLDING FOR HUMAN APPROVAL, and the page text holds zero em or en dashes and
+  zero backticks. The KV counter read 9, exactly the calls made while testing
+  (one direct call and two four step missions). `check-entry` 14 of 14.
 - BELIEVED, not re-checked: everything in the 2026-09-03 block below that this
   block does not repeat.
 

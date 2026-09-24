@@ -173,7 +173,8 @@ No build step, no dependencies beyond `wrangler`:
     npx wrangler pages dev
 
 Open the printed local URL. With no keys set the cockpit runs in replay mode
-and says so on screen, which is exactly how the public deploy runs. To see
+and says so on screen. The public deploy runs live since 2026-09-23, capped
+at 100 calls a day. To see
 the parsers work against real payload shapes:
 
     node tools/test-market.mjs
