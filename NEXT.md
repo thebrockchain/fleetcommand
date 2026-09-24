@@ -1,6 +1,6 @@
 # On Your Go: what is still open
 
-## RESUME HERE (2026-09-23, 19:07 PDT, share card fonts, crawler 403 headers, live mode armed)
+## RESUME HERE (2026-09-23, 19:12 PDT, share card fonts, crawler 403 headers, live mode armed)
 
 Ran on **Brockchains-MacBook-Pro** (user `thebrockchain`, fleet root
 `/Users/thebrockchain/Documents/thebrockchain`, this repo at
@@ -20,12 +20,17 @@ Grotesk woff2 was never fetched. The rendered card is byte identical to the
 one already live, `site/og-4d4f7d8333.png`, so `site/` did not change and
 nothing was deployed.
 
-**The next action.** Nothing owed by a session for the share card. To prove
-the world still matches this file:
+**The next action.** First, get Brock's answer on the one open question in
+the live mode section below: does the key's Anthropic workspace carry a
+monthly spend limit. Nothing else is owed. To prove the world still matches
+this file (the `/run` call spends about a cent):
 
+    node tools/check-entry.mjs     # expect 14 of 14 green
+    node --test test/              # expect 8 of 8
+    curl -s -X POST -H "content-type: application/json" -d '{"step":"audit","prior":""}' https://fleetcommand-2u0.pages.dev/run
+                                   # expect "mode":"live" and no dash in "output"
     node tools/build-og.mjs && git status --short
                                    # expect "card built: site/og-4d4f7d8333.png" and an empty status
-    node tools/check-entry.mjs     # expect 14 of 14 green
 
 The open work on this repo is elsewhere: the rename leftovers in
 `docs/NAMING.md`, and one thing only Brock can confirm, below.
@@ -77,8 +82,8 @@ some zones and never reaches the middleware. To re-check:
   it, after it was told the main commit (gone from `git worktree list` by
   18:14 PDT 2026-09-23). Its change lives on main as `e7169da`.
 - This session left no worktree alive: `wt/og-fonts`, `wt/semisonic-og`,
-  `wt/land-wall-headers`, `wt/semisonic-2`, `wt/live-cap`, `wt/arm-cmd` and
-  `wt/live-copy` were retired with `wt done`.
+  `wt/land-wall-headers`, `wt/semisonic-2`, `wt/live-cap`, `wt/arm-cmd`,
+  `wt/live-copy` and `wt/semisonic-3` were retired with `wt done`.
 - The Pages project `fleetcommand` has ONE production secret,
   `ANTHROPIC_API_KEY` (listed 2026-09-23 19:03 PDT with
   `npx wrangler pages secret list --project-name fleetcommand`). So `/run`
@@ -134,6 +139,12 @@ some zones and never reaches the middleware. To re-check:
   HOLDING FOR HUMAN APPROVAL, and the page text holds zero em or en dashes and
   zero backticks. The KV counter read 9, exactly the calls made while testing
   (one direct call and two four step missions). `check-entry` 14 of 14.
+- VERIFIED 19:12 PDT, semisonic: one direct `/run` call answered `live` with
+  zero dashes and zero backticks, the counter read 10, production is still
+  on `3bfbcce` (nothing deployable changed after it), `check-entry` 14 of 14,
+  `node --test test/` 8 of 8, and the dash sweep read 75 of 75 files clean.
+  The portfolio card already says On Your Go and makes no replay claim, so it
+  needed no edit.
 - BELIEVED, not re-checked: everything in the 2026-09-03 block below that this
   block does not repeat.
 
