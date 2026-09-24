@@ -21,8 +21,10 @@ const HEADERS = {
 };
 
 async function fleetHandle(context) {
+  // The crawler 403 is built here, so it wears the same five headers as every
+  // other page. It went out with none until 2026-09-23 (measured from outside).
   if (nobotsBlocked(context.request)) {
-    return new Response('Forbidden', { status: 403, headers: { 'cache-control': 'no-store' } });
+    return new Response('Forbidden', { status: 403, headers: { 'cache-control': 'no-store', ...HEADERS } });
   }
   const res = await context.next();
   const out = new Response(res.body, res);
