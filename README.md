@@ -47,8 +47,9 @@ build below is finished work entered nowhere.
 requires it. It was swept for keys and secret-named files across all commits
 first. Keep secrets out of it.
 
-`NEXT.md` RESUME HERE carries the full state. The press kit offers ONE film
-download, `fleet-command-narrated.mp4`, the 1080p narrated 2:46 master. The
+`NEXT.md` carries the full state, in its 2026-09-03 judging day block. The
+press kit offers ONE film download, `fleet-command-narrated.mp4`, the 1080p
+narrated 2:46 master. The
 43.6 second raw capture that `fleet-command-demo.mp4` used to serve was
 overwritten with the master on 2026-09-03 and is gone from both Macs, so that
 button was retired rather than left mislabelled. The demo key is kept because
@@ -62,8 +63,9 @@ Google-native build in `google/`: the same crew on Google ADK, Gemini through
 Vertex AI, deployed to Cloud Run, with the approval gate enforced by the
 framework's own `require_confirmation` pause. That is the All Things Agentic
 entry, served at `/google`. Both demo films are live and public (links and the
-whole submission state live in `NEXT.md` RESUME HERE). The video pipeline that
-built them (narration, Lyria score, ffmpeg mix) is in `submission/video-pipeline/`.
+whole submission state live in `NEXT.md`, in the 2026-09-03 judging day
+block). The video pipeline that built them (narration, Lyria score, ffmpeg mix)
+is in `submission/video-pipeline/`.
 
 ## The on-switch (fleet pattern)
 

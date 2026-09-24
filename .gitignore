@@ -42,3 +42,5 @@ submission/fleetcommand-NARRATOR-music.mp4
 # VO session media: reference takes, too big for git. NOTES.md IS tracked.
 submission/vo/*.wav
 submission/vo/*.mp3
+# build-og.mjs screenshot scratch, written at the repo root and deleted after
+.og-tmp.png

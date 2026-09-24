@@ -1,15 +1,93 @@
 # On Your Go: what is still open
 
+## RESUME HERE (2026-09-23, 18:03 PDT, semisonic, share card fonts)
+
+Ran on **Brockchains-MacBook-Pro** (user `thebrockchain`, fleet root
+`/Users/thebrockchain/Documents/thebrockchain`, this repo at
+`~/Documents/thebrockchain/fleetcommand`).
+
+**The spot.** Finished and on main, nothing in flight. `97acdd8` makes
+`tools/build-og.mjs` write the self hosted font link
+(`<link rel="stylesheet" href="/fonts/fonts.css">`) into `brand/og-card.html`.
+The 2026-09-10 font cleanup (`cd57150`) had only HAND EDITED that file, which
+the script generates, so the 2026-09-23 rename rebuild (`e608283`) quietly put
+the Google Fonts link back. The build now screenshots the card from a one shot
+server on 127.0.0.1 instead of `file://`, and fails if the Montserrat or Space
+Grotesk woff2 was never fetched. The rendered card is byte identical to the
+one already live, `site/og-4d4f7d8333.png`, so `site/` did not change and
+nothing was deployed.
+
+**The next action.** Nothing owed by a session for the share card. To prove
+the world still matches this file:
+
+    node tools/build-og.mjs && git status --short
+                                   # expect "card built: site/og-4d4f7d8333.png" and an empty status
+    node tools/check-entry.mjs     # expect 14 of 14 green
+
+The open work on this repo is elsewhere: the peer branch below, the rename
+leftovers in `docs/NAMING.md`, and arming live mode (item 3 in the 2026-09-03
+block further down).
+
+**State of the machines.**
+- `wt/wall-headers` (worktree
+  `~/Documents/thebrockchain/.worktrees/fleetcommand/wall-headers`) holds ONE
+  commit that is not on main: `6af3290` "The crawler 403 wears the site's
+  security headers" (`functions/_middleware.js` plus
+  `test/crawler403.test.mjs`), pushed to origin, dated 2026-09-23 17:35 PDT.
+  It is ANOTHER session's work. This session did not merge, review or deploy
+  it. If nobody claims it, read it, run its test, and decide.
+- This session left no worktree alive: `wt/og-fonts` and `wt/semisonic-og`
+  were retired with `wt done`.
+- The Pages project `fleetcommand` has ZERO production secrets (checked
+  2026-09-23 about 18:01 PDT with
+  `npx wrangler pages secret list --project-name fleetcommand`). So `/run`
+  is in replay mode, SCOUT gets labelled sample data, and SHIP's registrar
+  check is unarmed.
+- Carried from the 2026-09-03 block and NOT re-checked today: two deliberate
+  film copies on Brockchain-Personal's Desktop (a session does not delete them
+  unless Brock says so), and the 1080p master under `submission/youtube/videos/`
+  (gitignored) on both Macs and in R2 `brock-public`.
+
+**Decisions this session, one line each.**
+- The card is edited in `tools/build-og.mjs` only. `brand/og-card.html` is
+  generated just like the share tags, and README and CLAUDE.md now say so,
+  because "change the card in those sources" is what invited the hand edit.
+- Fonts come from a local server, not `@font-face` inlined with file paths, so
+  the template's link line matches the cleanup's byte for byte and the card
+  uses the exact files the site ships.
+- No deploy: the PNG hash did not change, and redeploying an identical `site/`
+  proves nothing.
+
+**Dead ends, do not repeat.**
+- Swapping the link alone, as the 2026-09-10 hand edit did, renders the
+  headline in Times: under `file://` a root relative `/fonts/` is the root of
+  the disk. Rendered and looked at on 2026-09-23, not assumed.
+- `execFileSync` for Chrome blocks the event loop the local server needs, so
+  the build uses async `execFile`.
+
+**Verified live vs believed (2026-09-23, 18:00 to 18:03 PDT).**
+- VERIFIED: `/`, `/google` and `/press` all name `og-4d4f7d8333.png` as
+  `og:image`; the card serves 200 at 74,946 bytes, byte identical to the repo
+  copy; `/` titles itself "On Your Go, the agentic ops command center";
+  `node tools/check-entry.mjs` 14 of 14 at 18:03 PDT; `tools/test-market.mjs`
+  and `tools/test-domains.mjs` pass.
+- BELIEVED, not re-checked: everything in the 2026-09-03 block below that this
+  block does not repeat.
+
+**Transcript pointer**, Brockchains-MacBook-Pro only, verified to exist:
+`~/.claude/projects/-Users-thebrockchain-Developer-BROCK--claude-worktrees-wizardly-wright-10a508/1345f341-1f71-42ea-a28f-c56ca553a83f.jsonl`
+
 ## 2026-09-23: renamed from Fleet Command
 
 The site was renamed to On Your Go on Brock's call and redeployed. The judged
 entry keeps its name: Devpost, the film, the press downloads and `submission/`
 still say Fleet Command, and /press and `llms.txt` say so in one line. The
 decision, the evidence and what is left (the domain tap, presence.mjs, which
-name the IBM Bob entry wears) live in `docs/NAMING.md`. The RESUME HERE block
-below is the judging day record from 2026-09-03 and is history.
+name the IBM Bob entry wears) live in `docs/NAMING.md`. The judging day record
+from 2026-09-03 is the next block down. It is history, and it still carries the
+entry's full submission state.
 
-## RESUME HERE (2026-09-03, 06:55 EDT, semisonic, judging day)
+## Superseded: the 2026-09-03 judging day block (the entry's full record)
 
 Ran on **Brockchain-Personal** (user `themac`, fleet `/Users/themac/Developer/BROCK`).
 
