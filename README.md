@@ -78,7 +78,9 @@ is in `submission/video-pipeline/`.
   reaches no bank and changes no credential). Issuing a NEW key is Brock's,
   because the console sits behind his login. A secret reaches only deploys
   made after it, so set it and redeploy:
-  `cd fleetcommand && npx wrangler pages secret put ANTHROPIC_API_KEY && npx wrangler pages deploy --branch main`
+  `cd fleetcommand && npx wrangler pages secret put ANTHROPIC_API_KEY --project-name fleetcommand && npx wrangler pages deploy --branch main`
+  from the folder that holds this repo. Without the `cd` the secret half fails
+  with "Missing Pages project name" and the deploy half has nothing to ship.
 - **The spend guard (2026-09-23):** this page is public with no login, so
   live calls are capped at 100 per UTC day (a `LIVE_DAILY_CAP` Pages variable
   overrides it), counted in the `MARKET_CACHE` KV. Past the cap, or with no

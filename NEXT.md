@@ -46,9 +46,11 @@ console login:
 1. At console.anthropic.com, make a workspace for this site with a monthly
    spend limit (that limit is the HARD ceiling; the daily cap is approximate
    under a burst), and create an API key inside it.
-2. From `~/Documents/thebrockchain/fleetcommand` on a clean, current main, run
-   `npx wrangler pages secret put ANTHROPIC_API_KEY && npx wrangler pages deploy --branch main`
-   and paste the key at the prompt. The redeploy matters: a Pages secret reaches
+2. Run this whole line from any folder (the `cd` is part of it) and paste the
+   key at the prompt:
+   `cd ~/Documents/thebrockchain/fleetcommand && npx wrangler pages secret put ANTHROPIC_API_KEY --project-name fleetcommand && npx wrangler pages deploy --branch main`
+   The first try on 2026-09-23 ran from `~` without the `cd` and failed with
+   "Missing Pages project name", so nothing was set. The redeploy matters: a Pages secret reaches
    only deploys made after it.
 3. Then a session proves it: one Run on https://fleetcommand-2u0.pages.dev
    should show the `live` chip, and

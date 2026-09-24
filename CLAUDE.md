@@ -55,9 +55,12 @@ no bank and changes no credential. Only ISSUING a new key is his, because
 the console sits behind his login (#32c). This line read "Brock's hands,
 one of the five human-only acts" until then, and that gate was never real:
 
-    npx wrangler pages secret put ANTHROPIC_API_KEY && npx wrangler pages deploy --branch main
+    cd ~/Documents/thebrockchain/fleetcommand && npx wrangler pages secret put ANTHROPIC_API_KEY --project-name fleetcommand && npx wrangler pages deploy --branch main
 
 The redeploy is part of it: a Pages secret reaches only deploys made after it.
+The `cd` is part of it too: run from `~` on 2026-09-23 without it, the secret
+half failed with "Missing Pages project name" and nothing was set. That path is
+the MacBook Pro's fleet root; on a merged checkout use this repo's own folder.
 **No fleetcommand key exists as of 2026-09-23.** The only Anthropic key line a
 search found on Brockchains-MacBook-Pro was earpiece's own (`earpiece/.dev.vars`,
 value never read), and it was NOT borrowed: one creation's spend never rides another's key
