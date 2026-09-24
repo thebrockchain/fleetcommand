@@ -1,12 +1,14 @@
 # On Your Go: what is still open
 
-## RESUME HERE (2026-09-23, 18:03 PDT, semisonic, share card fonts)
+## RESUME HERE (2026-09-23, 18:14 PDT, semisonic, share card fonts and crawler 403 headers)
 
 Ran on **Brockchains-MacBook-Pro** (user `thebrockchain`, fleet root
 `/Users/thebrockchain/Documents/thebrockchain`, this repo at
 `~/Documents/thebrockchain/fleetcommand`).
 
-**The spot.** Finished and on main, nothing in flight. `97acdd8` makes
+**The spot.** Finished, on main and live, nothing in flight. Two changes
+landed 2026-09-23: the crawler 403 headers (`e7169da`, deployed 18:10 PDT, its
+own paragraph below) and the share card fonts. For the fonts, `97acdd8` makes
 `tools/build-og.mjs` write the self hosted font link
 (`<link rel="stylesheet" href="/fonts/fonts.css">`) into `brand/og-card.html`.
 The 2026-09-10 font cleanup (`cd57150`) had only HAND EDITED that file, which
@@ -44,13 +46,11 @@ some zones and never reaches the middleware. To re-check:
                                    # expect 403 with the five headers
 
 **State of the machines.**
-- `wt/wall-headers` and its worktree
-  `~/Documents/thebrockchain/.worktrees/fleetcommand/wall-headers` belong to
-  the session that wrote it, which was told the main commit. Its
-  `wt done fleetcommand wall-headers` should find the change already on main
-  by patch, under the new id `e7169da`.
-- This session left no worktree alive: `wt/og-fonts`, `wt/semisonic-og` and
-  `wt/land-wall-headers` were retired with `wt done`.
+- The worktree for `wt/wall-headers` was retired by the session that wrote
+  it, after it was told the main commit (gone from `git worktree list` by
+  18:14 PDT 2026-09-23). Its change lives on main as `e7169da`.
+- This session left no worktree alive: `wt/og-fonts`, `wt/semisonic-og`,
+  `wt/land-wall-headers` and `wt/semisonic-2` were retired with `wt done`.
 - The Pages project `fleetcommand` has ZERO production secrets (checked
   2026-09-23 about 18:01 PDT with
   `npx wrangler pages secret list --project-name fleetcommand`). So `/run`
@@ -78,12 +78,13 @@ some zones and never reaches the middleware. To re-check:
 - `execFileSync` for Chrome blocks the event loop the local server needs, so
   the build uses async `execFile`.
 
-**Verified live vs believed (2026-09-23, 18:00 to 18:03 PDT).**
+**Verified live vs believed (2026-09-23, 18:00 to 18:14 PDT).**
 - VERIFIED: `/`, `/google` and `/press` all name `og-4d4f7d8333.png` as
   `og:image`; the card serves 200 at 74,946 bytes, byte identical to the repo
   copy; `/` titles itself "On Your Go, the agentic ops command center";
-  `node tools/check-entry.mjs` 14 of 14 at 18:03 PDT; `tools/test-market.mjs`
-  and `tools/test-domains.mjs` pass.
+  `node tools/check-entry.mjs` 14 of 14 at 18:14 PDT; `node --test test/`,
+  `tools/test-market.mjs` and `tools/test-domains.mjs` pass; a DotBot request
+  to `/` and `/run` gets 403 with the five security headers at 18:14 PDT.
 - BELIEVED, not re-checked: everything in the 2026-09-03 block below that this
   block does not repeat.
 

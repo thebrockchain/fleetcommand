@@ -164,6 +164,11 @@ the parsers work against real payload shapes:
     node tools/test-market.mjs
     node tools/test-domains.mjs
 
+To check the middleware (a crawler refused with a 403 still gets the same
+security headers as a page):
+
+    node --test test/
+
 To check the entry's public surfaces (the cockpit, the press kit, the public
 assets, the repo, the Devpost page) from outside, the way a judge meets them:
 
