@@ -799,9 +799,14 @@ async function runMission(){
     sys.parentElement.remove();
     modeChip.textContent = data.mode;
     modeChip.className = 'chip ' + data.mode;
+    // The server says WHY a step fell back to replay (the daily cap, a failed
+    // call). Show that reason instead of the unarmed line, which would be false
+    // once a key is set.
     modeNote.textContent = data.mode === 'live'
       ? 'Live mode: each step is a real Claude call.'
-      : 'Replay mode: a recorded run of this mission, served honestly until the live key is armed.';
+      : data.note
+        ? 'Replay mode: ' + data.note + '.'
+        : 'Replay mode: a recorded run of this mission, served honestly until the live key is armed.';
     // SCOUT's market lens, shown as its own entry so the search layer is
     // visible and not just inferred from SCOUT's prose. Labelled live or sample
     // exactly like the crew is.

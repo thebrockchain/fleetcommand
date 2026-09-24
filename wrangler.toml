@@ -23,7 +23,10 @@ pages_build_output_dir = "site"
 
 # Market-search cache. Holds SerpApi usage near 60 searches a month worldwide no
 # matter how many visitors press Run. Caches public search results only, never
-# anything about a visitor.
+# anything about a visitor. Since 2026-09-23 it also holds one number per UTC
+# day, the count of live Claude calls, which the spend guard in
+# functions/run.js caps (default 100, LIVE_DAILY_CAP overrides). A count, not
+# who made the calls.
 [[kv_namespaces]]
 binding = "MARKET_CACHE"
 id = "654e70203d71438282b70d663aa6d201"

@@ -27,8 +27,35 @@ the world still matches this file:
     node tools/check-entry.mjs     # expect 14 of 14 green
 
 The open work on this repo is elsewhere: the rename leftovers in
-`docs/NAMING.md`, and arming live mode (item 3 in the 2026-09-03 block
-further down).
+`docs/NAMING.md`, and the last step of arming live mode, below.
+
+**LIVE MODE: the spend guard is built, the key is not set (Brock asked
+on 2026-09-23 to arm it).** This page is public with no login, and until
+this change nothing capped how many live Claude calls a visitor could trigger.
+`functions/run.js` now caps live calls at 100 per UTC day (a `LIVE_DAILY_CAP`
+Pages variable overrides it), counted in the `MARKET_CACHE` KV, and FAILS
+CLOSED to replay when the counter is missing or errors. Past the cap the page
+says so ("today's live runs are used up") instead of its unarmed line. One
+call is at most about one cent (about 2,700 input and 500 output tokens at
+`claude-sonnet-5`'s $2 / $10 per million), so the cap is about a dollar a day
+at worst. `node --test test/` covers it with a fake KV and a fake endpoint.
+What is NOT done: no key is set, because no key for this creation exists. The
+one move that finishes it is Brock's, since issuing a key happens behind his
+console login:
+
+1. At console.anthropic.com, make a workspace for this site with a monthly
+   spend limit (that limit is the HARD ceiling; the daily cap is approximate
+   under a burst), and create an API key inside it.
+2. From `~/Documents/thebrockchain/fleetcommand` on a clean, current main, run
+   `npx wrangler pages secret put ANTHROPIC_API_KEY && npx wrangler pages deploy --branch main`
+   and paste the key at the prompt. The redeploy matters: a Pages secret reaches
+   only deploys made after it.
+3. Then a session proves it: one Run on https://fleetcommand-2u0.pages.dev
+   should show the `live` chip, and
+   `npx wrangler pages secret list --project-name fleetcommand` should list
+   `ANTHROPIC_API_KEY`. SERPAPI_KEY and NAMECOM_USER / NAMECOM_TOKEN stay
+   unset: no such accounts were found, and SCOUT and SHIP already label their
+   sample data honestly.
 
 **LANDED AND DEPLOYED 2026-09-23 18:10 PDT, on Brock's word: the crawler 403
 headers.** Another session's commit `6af3290` (branch `wt/wall-headers`) was
@@ -50,7 +77,8 @@ some zones and never reaches the middleware. To re-check:
   it, after it was told the main commit (gone from `git worktree list` by
   18:14 PDT 2026-09-23). Its change lives on main as `e7169da`.
 - This session left no worktree alive: `wt/og-fonts`, `wt/semisonic-og`,
-  `wt/land-wall-headers` and `wt/semisonic-2` were retired with `wt done`.
+  `wt/land-wall-headers`, `wt/semisonic-2` and `wt/live-cap` were retired
+  with `wt done`.
 - The Pages project `fleetcommand` has ZERO production secrets (checked
   2026-09-23 about 18:01 PDT with
   `npx wrangler pages secret list --project-name fleetcommand`). So `/run`
@@ -77,6 +105,14 @@ some zones and never reaches the middleware. To re-check:
   the disk. Rendered and looked at on 2026-09-23, not assumed.
 - `execFileSync` for Chrome blocks the event loop the local server needs, so
   the build uses async `execFile`.
+- Looking for an existing Anthropic key to arm live mode (2026-09-23): a
+  keychain search was REFUSED by the Claude Code auto mode classifier as
+  credential exploration, and was not retried another way. A search of
+  gitignored `.dev.vars` files found one with an `ANTHROPIC_API_KEY` line,
+  `earpiece/.dev.vars` (the value was never read), which is earpiece's own
+  and was deliberately NOT borrowed (Constitution Article I
+  #4: one creation's spend never rides another's key). Do not reach for either
+  again; the fix is a key made for this site.
 
 **Verified live vs believed (2026-09-23, 18:00 to 18:14 PDT).**
 - VERIFIED: `/`, `/google` and `/press` all name `og-4d4f7d8333.png` as

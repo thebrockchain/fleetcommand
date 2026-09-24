@@ -76,8 +76,17 @@ is in `submission/video-pipeline/`.
   becomes a real Claude call (`claude-sonnet-5`). **Setting it is Claude's**
   (Constitution XI #32a as narrowed 2026-09-03: a prepaid, spend capped key
   reaches no bank and changes no credential). Issuing a NEW key is Brock's,
-  because the console sits behind his login:
-  `cd fleetcommand && npx wrangler pages secret put ANTHROPIC_API_KEY`
+  because the console sits behind his login. A secret reaches only deploys
+  made after it, so set it and redeploy:
+  `cd fleetcommand && npx wrangler pages secret put ANTHROPIC_API_KEY && npx wrangler pages deploy --branch main`
+- **The spend guard (2026-09-23):** this page is public with no login, so
+  live calls are capped at 100 per UTC day (a `LIVE_DAILY_CAP` Pages variable
+  overrides it), counted in the `MARKET_CACHE` KV. Past the cap, or with no
+  counter, a step is served from the replay and the page says why. One call
+  costs at most about a cent, so the cap is about a dollar a day at worst.
+  The cap is approximate under a burst, so the HARD ceiling is a spend limit
+  on the Anthropic workspace the key lives in. `node --test test/` proves the
+  guard with a fake KV and a fake endpoint, spending nothing.
 
 ## Deploy
 

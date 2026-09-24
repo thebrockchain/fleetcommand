@@ -55,7 +55,16 @@ no bank and changes no credential. Only ISSUING a new key is his, because
 the console sits behind his login (#32c). This line read "Brock's hands,
 one of the five human-only acts" until then, and that gate was never real:
 
-    npx wrangler pages secret put ANTHROPIC_API_KEY
+    npx wrangler pages secret put ANTHROPIC_API_KEY && npx wrangler pages deploy --branch main
+
+The redeploy is part of it: a Pages secret reaches only deploys made after it.
+**No fleetcommand key exists as of 2026-09-23.** The only Anthropic key line a
+search found on Brockchains-MacBook-Pro was earpiece's own (`earpiece/.dev.vars`,
+value never read), and it was NOT borrowed: one creation's spend never rides another's key
+(Constitution Article I #4), least of all on a public page. Live calls are
+capped per UTC day by the spend guard in `functions/run.js` (default 100),
+which fails closed to replay and says why on screen. The hard ceiling is the
+spend limit on the key's own Anthropic workspace, not this code.
 
 The link preview card is generated: `node tools/build-og.mjs` rewrites the
 block between `share:start` and `share:end`, and writes `brand/og-card.html`
