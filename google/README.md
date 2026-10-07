@@ -39,7 +39,9 @@ carries by default; the script guards for that.
 
 - Project: `fleet-command-506619` (Fleet Command), billing-linked 2026-08-25.
 - Region: `us-central1` (the always-free tier region); Vertex location `global`,
-  because gemini-3.7-flash is not published regionally.
+  because gemini-3.8-flash is not published regionally. Moved off
+  gemini-3.7-flash (Google retires it 2027-01-28) on 2026-10-07; the live
+  service keeps 3.7 until the next `./deploy.sh`.
 - Live: https://fleet-command-r453w22nfq-uc.a.run.app - full mission verified
   against production 2026-08-25, gate pause and resume included. No API key
   exists in this deployment; the service reaches Vertex as its own identity.

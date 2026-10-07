@@ -27,7 +27,7 @@ gcloud services enable run.googleapis.com cloudbuild.googleapis.com \
 
 # No model key anywhere, on purpose. The service reaches Gemini through Vertex
 # AI as its own service identity, so there is no secret to arm, store, or leak.
-# GOOGLE_CLOUD_LOCATION is "global" because gemini-3.7-flash is not published
+# GOOGLE_CLOUD_LOCATION is "global" because gemini-3.8-flash is not published
 # to regional Vertex endpoints (us-central1 answered 404); the Cloud Run
 # service itself still lives in us-central1 where the free tier applies.
 

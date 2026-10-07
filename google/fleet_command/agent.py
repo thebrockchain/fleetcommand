@@ -18,7 +18,7 @@ from .prompts import (
     SHIP_INSTRUCTION,
 )
 
-MODEL = "gemini-3.7-flash"
+MODEL = "gemini-3.8-flash"
 
 scout = LlmAgent(
     name="SCOUT",

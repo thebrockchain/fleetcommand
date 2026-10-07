@@ -62,7 +62,7 @@
   <text x="484" y="370" fill="#565f7c" font-size="12" font-family="ui-monospace, Menlo, monospace">medic_fix → ship_summary</text>
   <text x="484" y="422" fill="#8b93af" font-size="13">Each agent writes an output_key; the next</text>
   <text x="484" y="441" fill="#8b93af" font-size="13">reads it as a {placeholder}. No hand-threading.</text>
-  <text x="484" y="472" fill="#565f7c" font-size="12" font-family="ui-monospace, Menlo, monospace">model: gemini-3.7-flash</text>
+  <text x="484" y="472" fill="#565f7c" font-size="12" font-family="ui-monospace, Menlo, monospace">model: gemini-3.8-flash</text>
 
   <!-- Tools row -->
   <rect x="464" y="508" width="472" height="138" rx="10" fill="#141926" stroke="#232b45"/>
@@ -79,7 +79,7 @@
   <!-- ===== Right column ===== -->
   <rect x="1060" y="130" width="280" height="170" rx="12" fill="#141926" stroke="#232b45"/>
   <text x="1080" y="164" fill="#79839a" font-size="13" letter-spacing="2">VERTEX AI · global</text>
-  <text x="1080" y="192" fill="#eef1fb" font-size="18" font-weight="600">Gemini 3.7 Flash</text>
+  <text x="1080" y="192" fill="#eef1fb" font-size="18" font-weight="600">Gemini 3.8 Flash</text>
   <text x="1080" y="218" fill="#8b93af" font-size="14">Called as the service's own</text>
   <text x="1080" y="238" fill="#8b93af" font-size="14">identity. No API key exists</text>
   <text x="1080" y="258" fill="#8b93af" font-size="14">anywhere in the deployment.</text>
