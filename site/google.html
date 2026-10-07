@@ -524,6 +524,24 @@ footer .f-right{margin-left:auto}
 </footer>
 
 <script>
+function splitSentences(text) {
+  // One sentence per span, every character kept. A sentence ends at . ! ? (and
+  // a closing quote or bracket) before space and a capital, a digit or an
+  // opening quote, so "3.5", "$9.99" and "a.m." never split. This replaced a
+  // matcher that silently DROPPED the words before any such period
+  // ("Replaced 3.5 ton unit." read "5 ton unit."), BROCK/WRITING.md 4b, 2026-10-07.
+  var s = String(text), out = [], start = 0, m,
+      END = /[.!?]+["'\u201d\u2019)\]]*\s+(?=["'\u201c\u2018(\[]?[A-Z0-9])/g,
+      ABBR = /(?:^|\s)(?:e\.g|i\.e|a\.m|p\.m|vs|etc|Mr|Mrs|Ms|Dr|St|No|Inc|Ltd|Co)\.$/i;
+  while ((m = END.exec(s))) {
+    if (ABBR.test(s.slice(0, m.index + 1))) continue;
+    out.push(s.slice(start, END.lastIndex));
+    start = END.lastIndex;
+  }
+  if (start < s.length) out.push(s.slice(start));
+  return out.length ? out : [s];
+}
+
 // ?pace controls RENDER SPEED ONLY. The mission itself is identical in every
 // mode: the same four agents make the same calls and return the same content.
 //   video  stretches typing to the demo voice-over timeline, with a breath
@@ -550,7 +568,7 @@ const gateHead = document.getElementById('gateHead');
 function writeSentences(el, text){
   el.textContent = '';
   el.classList.add('sentences');
-  const parts = String(text).match(/[^.!?]+[.!?]+["')\]]?(?=\s|$)|[^.!?]+$/g) || [String(text)];
+  const parts = splitSentences(text);
   parts.forEach(function(part, i){
     const span = document.createElement('span');
     span.textContent = part.trim() + (i < parts.length - 1 ? ' ' : '');
