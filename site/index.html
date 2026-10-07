@@ -415,6 +415,10 @@ footer .f-right{margin-left:auto}
    word. The break lands where the MEANING breaks, never where the box runs out.
    CHILD selector, so a nested accent span is never blocked onto its own line. */
 .sentences > span{display:block;text-wrap:balance}
+/* TWO SHORT SENTENCES THAT SHARE A LINE WHILE THEY FIT (WRITING.md 3). The
+   header sub reads as one line at desktop width; on a phone each sentence drops
+   WHOLE to its own line instead of breaking mid sentence. */
+.inline-sentences > span{display:inline-block;text-wrap:balance}
 </style>
 <!-- There is always a Keeper. -->
 
@@ -440,7 +444,7 @@ footer .f-right{margin-left:auto}
 <header>
   <div>
     <h1 class="mark"><a href="/" style="color:inherit;text-decoration:none">ON YOUR <b>GO</b></a></h1>
-    <div class="sub">An AI ops crew that does the work. A human gate that holds the trigger.</div>
+    <div class="sub inline-sentences"><span>An AI ops crew that does the work.</span> <span>A human gate that holds the trigger.</span></div>
   </div>
   <div class="spacer"></div>
   <!-- Hidden until a mission reports, so the opening frame stays as recorded. -->
@@ -460,7 +464,7 @@ footer .f-right{margin-left:auto}
     </section>
     <section class="panel target">
       <h2>Mission Target</h2>
-      <p><span class="tname">Harbor Lane Bakery</span> (a fictional demo site, synthetic on purpose). Four pages, a broken order form, no security headers, a six second load. The crew finds it, drafts the fix, and stages the ship.</p>
+      <p class="sentences"><span><span class="tname">Harbor Lane Bakery</span> (a fictional demo site, synthetic on purpose). </span><span>Four pages, a broken order form, no security headers, a six second load. </span><span>The crew finds it, drafts the fix, and stages the ship.</span></p>
     </section>
   </div>
 
@@ -468,7 +472,7 @@ footer .f-right{margin-left:auto}
     <section class="panel" id="stage" style="flex:1">
       <h2>Mission Console</h2>
       <div id="console">
-        <div class="entry"><div class="body sys">Crew standing by. Run the mission to watch four agents work a target in sequence: recon, inspection, fix drafting, and a staged deploy that stops at the human gate. Every risky action waits for a person. That is the product.</div></div>
+        <div class="entry"><div class="body sys sentences"><span>Crew standing by. </span><span>Run the mission to watch four agents work a target in sequence: recon, inspection, fix drafting, and a staged deploy that stops at the human gate. </span><span>Every risky action waits for a person. </span><span>That is the product.</span></div></div>
       </div>
     </section>
   </div>
@@ -477,7 +481,7 @@ footer .f-right{margin-left:auto}
     <section class="panel" id="gate">
       <h2>Approval Gate</h2>
       <div class="ghead" id="gateHead">Your call.</div>
-      <div class="gbody" id="gateBody">Nothing staged. When SHIP stages a deploy it holds here, and only a human click releases it. AI drafts; people decide.</div>
+      <div class="gbody sentences" id="gateBody"><span>Nothing staged. </span><span>When SHIP stages a deploy it holds here, and only a human click releases it. </span><span>AI drafts; people decide.</span></div>
       <!-- TWO KEY IGNITION (docs/PREMISE.md): the human gate as hardware.
            Releasing a staged deploy takes two deliberate turns: KEY 1 arms,
            KEY 2 releases. Send back stays an ordinary button, because only
@@ -496,8 +500,8 @@ footer .f-right{margin-left:auto}
     </section>
     <section class="panel why" style="flex:1">
       <h2>Why This Matters</h2>
-      <p><b>Small teams cannot staff an ops crew.</b> On Your Go gives one person four specialists that never sleep: recon, audit, fixes, and deploys.</p>
-      <p style="margin-top:.6em"><b>Autonomy without the gate is a liability.</b> Every consequential action stops at a named human. The gate is not a limitation of the product. The gate is the product.</p>
+      <p class="sentences"><span><b>Small teams cannot staff an ops crew.</b> </span><span>On Your Go gives one person four specialists that never sleep: recon, audit, fixes, and deploys.</span></p>
+      <p style="margin-top:.6em" class="sentences"><span><b>Autonomy without the gate is a liability.</b> </span><span>Every consequential action stops at a named human. </span><span>The gate is not a limitation of the product. </span><span>The gate is the product.</span></p>
       <p style="margin-top:.6em" class="sentences"><span><b>This engine runs a real fleet.</b></span><span>The same pattern operates a private production ops room managing dozens of live sites today.</span></p>
     </section>
   </div>
@@ -528,6 +532,21 @@ const runBtn = document.getElementById('runBtn');
 const gate = document.getElementById('gate');
 const gateBody = document.getElementById('gateBody');
 const gateHead = document.getElementById('gateHead');
+// ONE SENTENCE PER LINE FOR TEXT THE SCRIPT WRITES (BROCK/WRITING.md 4b). A
+// plain textContent write would erase the sentence spans the markup carries, so
+// the gate's status copy goes through here. The separating space stays INSIDE
+// each span, so textContent still reads back as the original string.
+function writeSentences(el, text){
+  el.textContent = '';
+  el.classList.add('sentences');
+  const parts = String(text).match(/[^.!?]+[.!?]+["')\]]?(?=\s|$)|[^.!?]+$/g) || [String(text)];
+  parts.forEach(function(part, i){
+    const span = document.createElement('span');
+    span.textContent = part.trim() + (i < parts.length - 1 ? ' ' : '');
+    el.appendChild(span);
+  });
+  return el.lastChild;
+}
 const approveBtn = document.getElementById('approveBtn');
 const rejectBtn = document.getElementById('rejectBtn');
 const keyArm = document.getElementById('keyArm');
@@ -779,7 +798,7 @@ async function runMission(){
   document.body.classList.remove('gated');
   unslam();
   gateHead.textContent = 'Your call.';
-  gateBody.textContent = 'Mission running. SHIP will hold here.';
+  writeSentences(gateBody, 'Mission running. SHIP will hold here.');
   STEPS.forEach(s => { setAgent(s, '', 'idle'); setMeta(s, ''); });
   let prior = '';
   for(const step of STEPS){
@@ -792,7 +811,7 @@ async function runMission(){
       const res = await fetch('/run', {method:'POST', headers:{'content-type':'application/json'}, body:JSON.stringify({step, prior})});
       data = await res.json();
     }catch(err){
-      sys.textContent = 'The crew lost contact on ' + step.toUpperCase() + '. Run again.';
+      writeSentences(sys, 'The crew lost contact on ' + step.toUpperCase() + '. Run again.');
       setAgent(step, '', 'error'); setMeta(step, 'no response'); runBtn.disabled = false; return;
     }
     const rtt = performance.now() - tStart;
@@ -844,7 +863,7 @@ async function runMission(){
   fieldState('frozen');
   slam();
   gateHead.textContent = 'Your call.';
-  gateBody.textContent = 'SHIP has staged the order-route fix and is holding. The release takes both keys: turn one to arm, two to release. This is the moment the whole product exists for.';
+  writeSentences(gateBody, 'SHIP has staged the order-route fix and is holding. The release takes both keys: turn one to arm, two to release. This is the moment the whole product exists for.');
   keyArm.disabled = false; rejectBtn.disabled = false;
   runBtn.disabled = false;
 }
@@ -853,7 +872,7 @@ keyArm.addEventListener('click', () => {
   if(keyArm.classList.contains('turned')) return;
   keyArm.classList.add('turned'); keyArm.setAttribute('aria-pressed','true');
   approveBtn.disabled = false;
-  gateBody.textContent = 'Armed. Key two is live. Turn it and the staged deploy releases; Send back stands down both keys.';
+  writeSentences(gateBody, 'Armed. Key two is live. Turn it and the staged deploy releases; Send back stands down both keys.');
 });
 approveBtn.addEventListener('click', () => {
   approveBtn.classList.add('turned'); approveBtn.setAttribute('aria-pressed','true');
@@ -863,8 +882,8 @@ approveBtn.addEventListener('click', () => {
   unslam();
   approveBtn.disabled = true; rejectBtn.disabled = true;
   setAgent('ship', 'done', 'released');
-  gateBody.textContent = 'Approved. In production this releases the staged deploy. In this demo nothing actually ships, and it says so, because honesty is a feature.';
-  addEntry('GATE', '', '', false).textContent = 'Human approval given. Deploy released (simulated in this demo). Mission complete.';
+  writeSentences(gateBody, 'Approved. In production this releases the staged deploy. In this demo nothing actually ships, and it says so, because honesty is a feature.');
+  writeSentences(addEntry('GATE', '', '', false), 'Human approval given. Deploy released (simulated in this demo). Mission complete.');
   consoleEl.scrollTop = consoleEl.scrollHeight;
 });
 rejectBtn.addEventListener('click', () => {
@@ -875,8 +894,8 @@ rejectBtn.addEventListener('click', () => {
   approveBtn.disabled = true; rejectBtn.disabled = true;
   setAgent('ship', '', 'sent back');
   setAgent('medic', 'working', 'revising');
-  gateBody.textContent = 'Sent back. MEDIC gets the fix again with your objection attached. The crew iterates; the gate holds.';
-  addEntry('GATE', '', '', false).textContent = 'Human sent the staged deploy back to MEDIC. Nothing shipped.';
+  writeSentences(gateBody, 'Sent back. MEDIC gets the fix again with your objection attached. The crew iterates; the gate holds.');
+  writeSentences(addEntry('GATE', '', '', false), 'Human sent the staged deploy back to MEDIC. Nothing shipped.');
   consoleEl.scrollTop = consoleEl.scrollHeight;
   setTimeout(() => setAgent('medic', 'done', 'done'), 1500);
 });
