@@ -47,7 +47,9 @@ build below is finished work entered nowhere.
 requires it. It was swept for keys and secret-named files across all commits
 first. Keep secrets out of it.
 
-`NEXT.md` carries the full state, in its 2026-09-03 judging day block. The
+`NEXT.md` carries the full state: start at its `RESUME HERE` cursor (the Google
+build moved to gemini-3.8-flash and redeployed on 2026-10-08), then the
+2026-09-03 judging day block below it for the entry's record. The
 press kit offers ONE film download, `fleet-command-narrated.mp4`, the 1080p
 narrated 2:46 master. The
 43.6 second raw capture that `fleet-command-demo.mp4` used to serve was

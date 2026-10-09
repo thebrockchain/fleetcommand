@@ -1,6 +1,45 @@
 # On Your Go: what is still open
 
-## RESUME HERE (2026-09-23, 19:12 PDT, share card fonts, crawler 403 headers, live mode armed)
+## RESUME HERE
+
+Written 2026-10-09 00:05 ET on Brocks-iMac, session 205af81f, ledger sessions/2026-10-07-Brocks-iMac-205af81f-eec9-403c-8829-f70f70e7586b.md (in the brock repo)
+
+### 205af81f Brocks-iMac (the Gemini model move)
+
+- **The spot.** Finished and live, nothing in flight. Google mailed
+  falfasbrock@gmail.com on 2026-10-05 that Vertex retires Gemini 3.7 Flash on
+  2027-01-28 (requests 404 after that) and named project
+  `fleet-command-506619` as affected. Brock, 2026-10-07 01:18 ET
+  (205af81f#D03): "Let's go ahead and we need to migrate our Flash models. How
+  do we do that? The easiest". The easiest path was one line: `afec0d0` moved
+  `MODEL` in `google/fleet_command/agent.py` from `gemini-3.7-flash` to
+  `gemini-3.8-flash` (Google's recommended target), plus the deploy.sh comment,
+  the README line and both labels in `google/architecture.svg`. Nothing else in
+  the fleet calls 3.6 or 3.7 Flash (grep of `~/Developer/BROCK`, 2026-10-07).
+- **How it was deployed, 2026-10-08 23:53 ET.** From Brocks-iMac over
+  `ssh mbp` (the iMac has no gcloud), on the MacBook Pro in
+  `~/Documents/thebrockchain/fleetcommand/google`: `git pull --ff-only`, then
+  `CLOUDSDK_ACTIVE_CONFIG_NAME=fleetcommand ./deploy.sh`. The env var pins the
+  `fleetcommand` gcloud config (falfasbrock@gmail.com) for that one command, so
+  the MBP's default config (guevara@thezarape.com, the El Zarape client) stayed
+  active; checked after. Revision `fleet-command-00006-5ns`, 100 percent of
+  traffic.
+- **Verified live, 2026-10-08 23:58 ET.** `GET /list-apps` 200. One
+  `POST /run` mission against https://fleet-command-r453w22nfq-uc.a.run.app
+  returned 17 events; SCOUT, AUDIT and MEDIC each report `modelVersion`
+  `gemini-3.8-flash`. Before deploying, a direct Vertex `generateContent` on
+  `publishers/google/models/gemini-3.8-flash` at location `global` answered
+  200. That test left two throwaway sessions under user `semisonic` in the
+  service's in memory store; they vanish with the next instance.
+- **Next action.** None needed. To recheck: create a session
+  (`POST /apps/fleet_command/users/<u>/sessions`), `POST /run` with "Run the
+  mission.", expect events whose `modelVersion` is `gemini-3.8-flash`.
+- **Dead ends.** The iMac has no gcloud and no `.venv`; deploy from the MBP.
+  `gcloud config configurations activate fleetcommand` would also work but
+  flips the MBP's global default; the env var does not.
+- Transcript: Brocks-iMac `~/.claude/projects/-Users-homeimac-Library-Application-Support-Claude-scratch-workspaces-02f59733-faf9-4d26-a077-41102279f0bf-d0e2a280-4449-4bf6-af2a-2d0c424bebc7-scratch-2026-10-07-8c4e36/205af81f-eec9-403c-8829-f70f70e7586b.jsonl`
+
+## Earlier cursor (was RESUME HERE, 2026-09-23, 19:12 PDT, share card fonts, crawler 403 headers, live mode armed)
 
 Ran on **Brockchains-MacBook-Pro** (user `thebrockchain`, fleet root
 `/Users/thebrockchain/Documents/thebrockchain`, this repo at
