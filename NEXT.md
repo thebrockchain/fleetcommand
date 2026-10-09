@@ -6,8 +6,8 @@ Written 2026-10-09 00:05 ET on Brocks-iMac, session 205af81f, ledger sessions/20
 
 ### 205af81f Brocks-iMac (the Gemini model move)
 
-- **The spot.** Finished and live, nothing in flight. Google mailed
-  falfasbrock@gmail.com on 2026-10-05 that Vertex retires Gemini 3.7 Flash on
+- **The spot.** Finished and live, nothing in flight. Google mailed the
+  falfasbrock Gmail account on 2026-10-05 that Vertex retires Gemini 3.7 Flash on
   2027-01-28 (requests 404 after that) and named project
   `fleet-command-506619` as affected. Brock, 2026-10-07 01:18 ET
   (205af81f#D03): "Let's go ahead and we need to migrate our Flash models. How
@@ -20,8 +20,8 @@ Written 2026-10-09 00:05 ET on Brocks-iMac, session 205af81f, ledger sessions/20
   `ssh mbp` (the iMac has no gcloud), on the MacBook Pro in
   `~/Documents/thebrockchain/fleetcommand/google`: `git pull --ff-only`, then
   `CLOUDSDK_ACTIVE_CONFIG_NAME=fleetcommand ./deploy.sh`. The env var pins the
-  `fleetcommand` gcloud config (falfasbrock@gmail.com) for that one command, so
-  the MBP's default config (guevara@thezarape.com, the El Zarape client) stayed
+  `fleetcommand` gcloud config (the falfasbrock Google account) for that one command, so
+  the MBP's default config (the El Zarape client's account) stayed
   active; checked after. Revision `fleet-command-00006-5ns`, 100 percent of
   traffic.
 - **Verified live, 2026-10-08 23:58 ET.** `GET /list-apps` 200. One
