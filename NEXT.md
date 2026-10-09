@@ -4,6 +4,15 @@
 
 Written 2026-10-09 00:05 ET on Brocks-iMac, session 205af81f, ledger sessions/2026-10-07-Brocks-iMac-205af81f-eec9-403c-8829-f70f70e7586b.md (in the brock repo)
 
+### 5e8b7e5a Brockchains-MacBook-Pro (written 2026-10-09 00:55 ET, ledger sessions/2026-10-06-Brockchains-MacBook-Pro-5e8b7e5a-3611-40d3-84bf-9c88f9daab8b.md in the brock repo)
+
+**The spot.** 2026-10-07: crew A's paragraph pass (`341ea30`, deploy 45e8396a) and the sentence splitter fix (`50b6bc0`: the old matcher from WRITING.md 4b dropped the words before any inner period, "3.5" or "$9.99") are on main.
+**Next action.** Nothing owed from this session.
+**In flight.** Nothing.
+**Verified live.** Cloudflare pages deploy ce00d92b, 2026-10-07 about 01:20 ET: `/` and `/google` both serve `function splitSentences`, no console errors in a browser.
+Transcript: `~/.claude/projects/-Users-thebrockchain-Documents/5e8b7e5a-3611-40d3-84bf-9c88f9daab8b.jsonl` on Brockchains-MacBook-Pro.
+
+
 ### 205af81f Brocks-iMac (the Gemini model move)
 
 - **The spot.** Finished and live, nothing in flight. Google mailed the
