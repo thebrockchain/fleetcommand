@@ -2,7 +2,7 @@
 
 ## RESUME HERE
 
-Written 2026-10-09 00:05 ET on Brocks-iMac, session 205af81f, ledger sessions/2026-10-07-Brocks-iMac-205af81f-eec9-403c-8829-f70f70e7586b.md (in the brock repo)
+Written 2026-10-10 03:01 ET on Brocks-iMac, session 205af81f, ledger sessions/2026-10-07-Brocks-iMac-205af81f-eec9-403c-8829-f70f70e7586b.md (in the brock repo)
 
 ### 5e8b7e5a Brockchains-MacBook-Pro (written 2026-10-09 00:55 ET, ledger sessions/2026-10-06-Brockchains-MacBook-Pro-5e8b7e5a-3611-40d3-84bf-9c88f9daab8b.md in the brock repo)
 
@@ -47,6 +47,11 @@ Transcript: `~/.claude/projects/-Users-thebrockchain-Documents/5e8b7e5a-3611-40d
   `gcloud config configurations activate fleetcommand` would also work but
   flips the MBP's global default; the env var does not.
 - Transcript: Brocks-iMac `~/.claude/projects/-Users-homeimac-Library-Application-Support-Claude-scratch-workspaces-02f59733-faf9-4d26-a077-41102279f0bf-d0e2a280-4449-4bf6-af2a-2d0c424bebc7-scratch-2026-10-07-8c4e36/205af81f-eec9-403c-8829-f70f70e7586b.jsonl`
+
+### 205af81f completed-session audit, 2026-10-10
+
+- README checked: removed its stale claim that live mode has no code cap; the existing guard remains 100 calls per UTC day plus the prepaid workspace ceiling. Documentation only, no new deploy or metered run.
+- Next action: none for this cleanup. In flight: none. Prior live model proof above is dated, not re-run. Local Claude transcript was deleted; the saved brain ledger preserves the earlier harvest and CLOSED record.
 
 ## Earlier cursor (was RESUME HERE, 2026-09-23, 19:12 PDT, share card fonts, crawler 403 headers, live mode armed)
 

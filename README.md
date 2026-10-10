@@ -148,9 +148,8 @@ the `div` it replaced (the recorded demo capture depends on that), and the
 schema is `HowTo` rather than `FAQPage` because Google wants FAQ text visible on
 the page and this page is one screen with zero scroll. Reasoning in `NEXT.md`.
 
-Live-mode spend has no code cap on purpose: the guard is the KEY, armed only
-as a spend-capped key per NEXT.md, which is the fleet's prepaid-ceiling
-pattern. Replay mode costs nothing and is the default.
+Live-mode spend is guarded by the 100-call daily code cap and the prepaid
+workspace ceiling described above. Replay mode costs nothing and is the default.
 
 ## The entry, as it stands (2026-09-03)
 
